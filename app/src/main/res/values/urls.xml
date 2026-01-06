@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="url_playstore" translatable="false">https://play.google.com/store/apps/details?id=</string>
+    <string name="url_youtube" translatable="false">https://www.youtube.com/feeds/videos.xml?channel_id=</string>
+    <string name="url_club" translatable="false">aHR0cHM6Ly91bml2ZXJzb2ZlbWluaW5vLnRpY2tldHNzLmFwcC8=</string>
+    <string name="url_lab" translatable="false">aHR0cHM6Ly93d3cudmlydHVlc2xhYi5hcHAv</string>
+    <string name="url_lab_devapi" translatable="false">aHR0cHM6Ly9kZXZhcGkudmlydHVlc2xhYi5hcHAvMTIuMS8=</string>
+    <string name="url_weather_meteo" translatable="false">aHR0cHM6Ly9hcGkub3Blbi1tZXRlby5jb20v</string>
+    <string name="url_open_weather" translatable="false">aHR0cHM6Ly9hcGkub3BlbndlYXRoZXJtYXAub3JnL2RhdGEvMi41Lw==</string>
+    <string name="url_weather" translatable="false">aHR0cHM6Ly9jbGltYXRlbXBvLnRpY2tldHNzLmFwcC8=</string>
+    <string name="open_weather_token" translatable="false">5144236122285f1aede4054d3538ff90</string>
+    <string name="url_share" translatable="false">aHR0cHM6Ly9hcGkudmlydHVlc2xhYi5hcHAvc2hhcmU/</string>
+    <string name="like" translatable="false">aHR0cHM6Ly9kZXZhcGkudmlydHVlc2xhYi5hcHAvMTAuMi9saWtlLnBocA==</string>
+    <string name="url_spotify" translatable="false">https://open.spotify.com/search/</string>
+    <string name="url_lyric" translatable="false">aHR0cHM6Ly9sZXRyYXMudGlja2V0c3MuYXBwLw</string>
+    <string name="url_youtube2" translatable="false">aHR0cHM6Ly9yYWRpb2ludGVncmF0aW9uLnRpY2tldHNzLmFwcC8</string>
+    <string name="url_chat" translatable="false">aHR0cHM6Ly9haS50aWNrZXRzcy5hcHAv</string>
+    <string name="url_banners" translatable="false">aHR0cHM6Ly9kZXZhcGkudmlydHVlc2xhYi5hcHAvMTAuMi9iYW5uZXIucGhwP3JhZGlvPSVzJnNpc3RlbWE9JXMmcGxhdGFmb3JtYT0lcyZmb3JtYXRvPWh0bWw=</string>
+    <string name="url_radio" translatable="false">aHR0cHM6Ly9yYWRpb2ludGVncmF0aW9uLnRpY2tldHNzLmFwcC8</string>
+    <string name="url_reflexoes" translatable="false">aHR0cHM6Ly9yZWZsZXhvZXMudGlja2V0c3MuYXBwLw</string>
+    <string name="url_calendario" translatable="false">aHR0cHM6Ly9jYWxlbmRhcmlvbGl0dXJnaWNvLnRpY2tldHNzLmFwcC8</string>
+    <string name="url_enquete" translatable="false">aHR0cHM6Ly9kZXZhcGkudmlydHVlc2xhYi5hcHAvMTUuMC8</string>
+    <string name="enquete_key" translatable="false">TVRBeE5ERT06TnpFMk56Y3dNamN4TldJNE56QTFaV1ExTVRFMk9UY3VOakkxT1RFek1UWQ==</string>
+    <string name="url_horoscope" translatable="false">aHR0cHM6Ly9ob3Jvc2NvcG8udGlja2V0c3MuYXBwLw==</string>
+    <string name="url_quiz" translatable="false">aHR0cHM6Ly9kZXZhcGkudmlydHVlc2xhYi5hcHAvMTUuMC8</string>
+    <string name="pub" translatable="false">aHR0cHM6Ly9kZXZhcGkudmlydHVlc2xhYi5hcHAvMTAuMi9iYW5uZXIucGhwP3JhZGlvPSVzJnNpc3RlbWE9JXMmcGxhdGFmb3JtYT0lcyZmb3JtYXRvPWh0bWw=</string>
+</resources>

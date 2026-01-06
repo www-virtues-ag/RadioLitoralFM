@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/txtRadioName"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="12dp" >
+
+    <ImageView
+        android:id="@+id/iconLocation"
+        android:layout_width="@dimen/_16sdp"
+        android:layout_height="@dimen/_16sdp"
+        app:srcCompat="@drawable/icon_localizacao_inicial"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:contentDescription="Ícone de localização" />
+
+    <TextView
+        android:id="@+id/txtRadioNm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/_12sdp"
+        android:textColor="@android:color/white"
+        android:fontFamily="@font/montserrat_bold"
+        app:fontFamily="@font/montserrat_bold"
+        android:ellipsize="end"
+        android:singleLine="true" />
+
+</LinearLayout>
+

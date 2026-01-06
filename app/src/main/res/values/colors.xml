@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Cores principais do design -->
+    <color name="background_dark">#1E1E1E</color>
+    <color name="bg_main">#1E1E1E</color>z
+    <color name="colorBlack">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#EE2525</color>
+    <color name="yellow">#E3CE4D</color>
+    <color name="green">#3FB54A</color>
+    <color name="gray">#2d2d2d</color>
+    <color name="primary_red">#F5140E</color>
+    <color name="decorative_blue">#085D94</color>
+    <color name="decorative_red">#F5140E</color>
+    <color name="primary_grey">#807F7F</color>
+    <color name="grey70">#B3807F7F</color>
+    <color name="grey30">#4D807F7F</color>
+    <color name="secondary_grey">#424242</color>
+    <color name="azul">#085D94</color>
+    <color name="text_secondary">#B3B3B3</color>
+    <color name="color_background">#FFFFFF</color>
+    <color name="text_primary">#000000</color>
+    <color name="bg_pix">#D9D9D9</color>
+    <color name="black">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="background">#1E1E1E</color>
+    <color name="Primary">#1E1E1E</color>
+    <color name="colorBar2">#424242</color>
+    <color name="colorWidget">#F5F5F5</color>
+    <color name="colorBlack25">#40000000</color>
+    <color name="colorBackground">#141414</color>
+    <color name="colorRemoval">#fdffe2</color>
+    <color name="colorDots">#848484</color>
+    <color name="colorDots2">#2d2d2d</color>
+    <color name="colorDescItem">#E0E0E0</color>
+    <color name="colorCard2">#171717</color>
+    <color name="colorRed">#EE2525</color>
+    <color name="colorGreen">#3FB54A</color>
+
+    <color name="colorGradient1">#EE2525</color>
+    <color name="colorGradient2">#E3CE4D</color>
+    <color name="colorGradient3">#00BA00</color>
+
+    <color name="colorCard">#2D2D2D</color>
+    <color name="status_bar_red">#EC1D23</color>
+
+    <color name="colorPrimary">#1E1E1E</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#000000</color>
+    <color name="colorAccent2">#F5140E</color>
+    <color name="colorLine">#0E0E25</color>
+    <color name="colorWhite50">#80FFFFFF</color>
+    <color name="line">#17675860</color>
+    <color name="hint">#DEDEDE</color>
+    <color name="colorBlack10">#1a000000</color>
+    <color name="colorSecondaryText">#2e2e2e</color>
+    <color name="colorGray3">#767676</color>
+    <color name="colorGrayDark">#858585</color>
+
+    <color name="vermelho">#FF531414</color>
+    <color name="vermelho_dark">#FF531414</color>
+    <color name="vermelho_claro">#EC1D23</color>
+    <color name="vermelho_claro_dark">#FFEC1D23</color>
+    <color name="vermelho_secundario">#D41E23</color>
+    <color name="colorText">#000000</color>
+
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="circle_preference">#EC1D23</color>
+    <color name="light_gray">#F0F0F0</color>
+    <color name="transparente">#00000000</color>
+    <color name="blue_contact">#007AFF</color>
+
+</resources>

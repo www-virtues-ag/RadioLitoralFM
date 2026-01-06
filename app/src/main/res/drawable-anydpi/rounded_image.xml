@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Cor de fundo padrão (quando a imagem ainda não foi carregada) -->
+    <solid android:color="@android:color/darker_gray" />
+
+    <!-- Cantos arredondados -->
+    <corners android:radius="8dp" />
+
+</shape>

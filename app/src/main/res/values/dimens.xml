@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="splash_video" translatable="false">splash_video.mp4</string>
+
+    <dimen name="mt_logo">@dimen/_25sdp</dimen>
+
+    <dimen name="mt_ll">@dimen/_5sdp</dimen>
+
+    <dimen name="btn_voltar_w">@dimen/_50sdp</dimen>
+    <dimen name="btn_voltar_h">@dimen/_20sdp</dimen>
+    <dimen name="logo_w">@dimen/_70sdp</dimen>
+    <dimen name="logo_h">@dimen/_30sdp</dimen>
+    <dimen name="linha_locutores">@dimen/_50sdp</dimen>
+    <dimen name="img_locutor_h">@dimen/_165sdp</dimen>
+    <dimen name="img_locutor_w">@dimen/_125sdp</dimen>
+    <dimen name="spacing_locutores1">@dimen/_minus30sdp</dimen>
+    <dimen name="spacing_locutores2">@dimen/_20sdp</dimen>
+    <dimen name="spacing_locutores3">@dimen/_60sdp</dimen>
+    <dimen name="locutor_nome_txtsize">@dimen/_18sdp</dimen>
+    <dimen name="det_locutor_forma_cima_w">@dimen/_40sdp</dimen>
+    <dimen name="txt_nome_locutor">@dimen/_40sdp</dimen>
+    <dimen name="icon_socials">@dimen/_25sdp</dimen>
+    <dimen name="img_locutor_desc_w">@dimen/_125sdp</dimen>
+    <dimen name="img_locutor_desc_h">@dimen/_165sdp</dimen>
+    <dimen name="spacing_txt_img_desc">@dimen/_5sdp</dimen>
+    <dimen name="locutor_desc_txt">@dimen/_10sdp</dimen>
+    <dimen name="desc_margin">@dimen/_20sdp</dimen>
+    <dimen name="menu_header_padding">@dimen/_10sdp</dimen>
+    <dimen name="logo_menu_w">@dimen/_85sdp</dimen>
+    <dimen name="logo_menu_spacing">@dimen/_15sdp</dimen>
+    <dimen name="menu_title_size">@dimen/_30sdp</dimen>
+    <dimen name="menu_options_text_size">@dimen/_10sdp</dimen>
+    <dimen name="menu_icons_size">@dimen/_20sdp</dimen>
+    <dimen name="menu_icons_socials_size">@dimen/_25sdp</dimen>
+    <dimen name="menu_icons_spacing">@dimen/_15sdp</dimen>
+    <dimen name="menu_url_size">@dimen/_10sdp</dimen>
+</resources>

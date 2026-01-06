@@ -1,0 +1,428 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:id="@+id/header_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/_15sdp">
+
+                <ImageView
+                    android:id="@+id/bt_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/btn_voltar_radio" />
+
+                <ImageView
+                    android:id="@+id/bt_home"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/btn_home_radio" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="@dimen/_130sdp"
+                android:layout_height="@dimen/_90sdp"
+                android:layout_marginStart="@dimen/_18sdp"
+                android:layout_marginEnd="@dimen/_18sdp"
+                app:srcCompat="@drawable/logo_radio" />
+
+            <LinearLayout
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/_15sdp">
+
+                <ImageView
+                    android:id="@+id/bt_menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/btn_menu_radio" />
+
+                <ImageView
+                    android:id="@+id/bt_notif_program"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:padding="@dimen/_6sdp"
+                    app:srcCompat="@drawable/bt_notification" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:fontFamily="@font/insanibu"
+            android:text="@string/string_schedule"
+            android:textColor="@color/status_bar_red"
+            android:textSize="@dimen/_29sdp"
+            app:fontFamily="@font/insanibu" />
+
+        <ImageView
+            android:layout_width="@dimen/_45sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/_9sdp"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/bar_red" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_25sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:gravity="center_horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <br.com.fivecom.litoralfm.ui.spinners.SearchableSpinner
+                    android:id="@+id/spinner_weekday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_spinner_weekday"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    app:hintText="TODOS" />
+
+                <ImageView
+                    android:id="@+id/spinner_weekday_arrow"
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_9sdp"
+                    android:layout_marginStart="@dimen/_6sdp"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/bt_dropdown_arrow" />
+
+                <br.com.fivecom.litoralfm.ui.spinners.SearchableSpinner
+                    android:id="@+id/spinner_region"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_25sdp"
+                    android:background="@drawable/bg_spinner_weekday"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    app:hintText="VITÓRIA" />
+
+                <ImageView
+                    android:id="@+id/spinner_region_arrow"
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_9sdp"
+                    android:layout_marginStart="@dimen/_6sdp"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/bt_dropdown_arrow" />
+            </LinearLayout>
+        </LinearLayout>
+        <!--  GONE -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/live_item_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:visibility="gone">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_gravity="bottom"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_clipToCompositionBounds="false"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/fundo_ao_vivo_programao" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/_13sdp">
+
+                <FrameLayout
+                    android:id="@+id/schedule_item_image_frame"
+                    android:layout_width="@dimen/_90sdp"
+                    android:layout_height="@dimen/_76sdp"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:cardBackgroundColor="@color/colorWhite"
+                        app:cardCornerRadius="@dimen/_10sdp">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            app:cardBackgroundColor="@color/colorWhite"
+                            app:cardCornerRadius="@dimen/_15sdp">
+
+                            <ImageView
+                                android:id="@+id/schedule_item_image_live"
+                                android:layout_width="@dimen/_85sdp"
+                                android:layout_height="@dimen/_70sdp"
+                                android:layout_gravity="center"
+                                android:padding="@dimen/_2sdp"
+                                android:scaleType="centerCrop"
+                                app:srcCompat="@color/colorPrimary" />
+
+                            <ImageView
+                                android:layout_width="@dimen/_18sdp"
+                                android:layout_height="@dimen/_18sdp"
+                                android:layout_gravity="center|bottom"
+                                android:layout_marginStart="@dimen/_3sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:contentDescription="@null"
+                                app:srcCompat="@drawable/ic_equalizer" />
+                        </androidx.cardview.widget.CardView>
+                    </androidx.cardview.widget.CardView>
+
+                    <ImageView
+                        android:layout_width="@dimen/_29sdp"
+                        android:layout_height="@dimen/_29sdp"
+                        android:layout_gravity="bottom|end"
+                        android:elevation="4dp"
+                        app:srcCompat="@drawable/bt_play_schedule" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:id="@+id/item_content_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/schedule_item_image_frame"
+                    app:layout_constraintTop_toTopOf="@id/schedule_item_image_frame">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txt_on_live"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/insanibu"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/_16sdp"
+                            tools:text="@string/string_on_live" />
+
+                        <TextView
+                            android:id="@+id/txt_title_live"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/montserrat_extrabold"
+                            android:maxLines="1"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/_10sdp"
+                            tools:text="Litoral Rádio Show" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/txt_content_live"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_1sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/_6sdp"
+                        tools:text="Ei, ouvinte, eu sei que você gosta de ficar conectado com a gente, e na Litoral Rádio Show, a atração principal é você! Abrimos espaço para a voz dos LitoLovers ecoarem na 102.3, mandando aquele alô, pedindo música ou compartilhando aquela história engraçada que nos tira boas risadas." />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_14sdp"
+                    app:srcCompat="@drawable/bt_save_schedule"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!--  message/hint shown over the list when empty or error  -->
+        <TextView
+            android:id="@+id/hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_12sdp"
+            android:gravity="center"
+            android:textColor="#9e9e9e"
+            android:textSize="@dimen/_12sdp"
+            android:visibility="gone" />
+    </LinearLayout>
+    <!--  SwipeRefreshLayout constrained between header and bottom_layout so it ends where bottom_layout starts  -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingBottom="@dimen/_13sdp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_layout">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+        <!--  PUBLICIDADE  -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="@dimen/_250sdp"
+            android:layout_height="@dimen/_68sdp"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="@dimen/_14sdp"
+            app:cardCornerRadius="@dimen/_10sdp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/img_banner">
+
+                <WebView
+                    android:id="@+id/webView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:visibility="gone" />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+        <!--  NAVBAR  -->
+        <RelativeLayout
+            android:id="@+id/rlNavBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:background="@drawable/forma_barra_bottom">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_55sdp"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="6">
+
+                <ImageView
+                    android:id="@+id/bt_promotion"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:focusable="true"
+                    app:srcCompat="@drawable/btn_promo_barra_off" />
+
+                <ImageView
+                    android:layout_width="@dimen/_2sdp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/traco_barra" />
+
+                <ImageView
+                    android:id="@+id/bt_news"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:focusable="true"
+                    android:onClick="onClick"
+                    app:srcCompat="@drawable/btn_noticia_barra_off" />
+
+                <ImageView
+                    android:layout_width="@dimen/_2sdp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/traco_barra" />
+
+                <ImageView
+                    android:id="@+id/bt_radio"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_25sdp"
+                    android:layout_weight="2"
+                    android:background="@android:color/transparent"
+                    android:focusable="true"
+                    android:onClick="onClick"
+                    app:srcCompat="@drawable/btn_ao_vivo_barra_off" />
+
+                <ImageView
+                    android:layout_width="@dimen/_2sdp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/traco_barra" />
+
+                <ImageView
+                    android:id="@+id/bt_program"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:focusable="true"
+                    android:onClick="onClick"
+                    app:srcCompat="@drawable/btn_prog_barra_on" />
+
+                <ImageView
+                    android:layout_width="@dimen/_2sdp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/traco_barra" />
+
+                <ImageView
+                    android:id="@+id/bt_whatsapp"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:focusable="true"
+                    android:onClick="onClick"
+                    app:srcCompat="@drawable/btn_wp_barra" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

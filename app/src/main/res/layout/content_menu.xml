@@ -1,0 +1,304 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/menu_drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/vermelho_claro"
+    android:fitsSystemWindows="true">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/forma_menu_cima"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.55"
+        app:srcCompat="@drawable/forma_menu_baixo"
+        tools:ignore="ContentDescription" />
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/menu_header_padding">
+
+        <ImageView
+            android:id="@+id/btn_voltar"
+            android:layout_width="@dimen/btn_voltar_w"
+            android:layout_height="@dimen/btn_voltar_h"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/btn_voltar_radio_escuro" />
+
+        <ImageView
+            android:layout_width="@dimen/logo_menu_w"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/logo_menu_spacing"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/logo_main" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/menu_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_10sdp"
+        android:fontFamily="@font/insanibu"
+        android:text="MENU"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/menu_title_size"
+        app:fontFamily="@font/insanibu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header" />
+
+    <LinearLayout
+        android:id="@+id/ll_menu_options"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/ll_social_media"
+        app:layout_constraintTop_toBottomOf="@id/menu_title">
+
+        <LinearLayout
+            android:id="@+id/btn_programacao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end|center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/string_menu_programacao"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_options_text_size"
+                app:fontFamily="@font/montserrat_semibold" />
+
+            <ImageView
+                android:layout_width="@dimen/menu_icons_size"
+                android:layout_height="@dimen/menu_icons_size"
+                android:layout_marginHorizontal="@dimen/menu_icons_spacing"
+                app:srcCompat="@drawable/btn_prog_menu" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_noticias"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end|center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/string_menu_noticias"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_options_text_size"
+                app:fontFamily="@font/montserrat_semibold" />
+
+            <ImageView
+                android:layout_width="@dimen/menu_icons_size"
+                android:layout_height="@dimen/menu_icons_size"
+                android:layout_marginHorizontal="@dimen/menu_icons_spacing"
+                app:srcCompat="@drawable/btn_noticias_menu" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_agenda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end|center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/string_menu_agenda_litoral"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_options_text_size"
+                app:fontFamily="@font/montserrat_semibold" />
+
+            <ImageView
+                android:layout_width="@dimen/menu_icons_size"
+                android:layout_height="@dimen/menu_icons_size"
+                android:layout_marginHorizontal="@dimen/menu_icons_spacing"
+                app:srcCompat="@drawable/btn_agenda_menu" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_promocoes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end|center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/string_menu_promocoes"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_options_text_size"
+                app:fontFamily="@font/montserrat_semibold" />
+
+            <ImageView
+                android:layout_width="@dimen/menu_icons_size"
+                android:layout_height="@dimen/menu_icons_size"
+                android:layout_marginHorizontal="@dimen/menu_icons_spacing"
+                app:srcCompat="@drawable/btn_promo_menu" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_pedido_musical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end|center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/string_menu_pedido_musical"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_options_text_size"
+                app:fontFamily="@font/montserrat_semibold" />
+
+            <ImageView
+                android:layout_width="@dimen/menu_icons_size"
+                android:layout_height="@dimen/menu_icons_size"
+                android:layout_marginHorizontal="@dimen/menu_icons_spacing"
+                app:srcCompat="@drawable/btn_musical_menu" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_quem_somos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end|center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/string_menu_quem_somos"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_options_text_size"
+                app:fontFamily="@font/montserrat_semibold" />
+
+            <ImageView
+                android:layout_width="@dimen/menu_icons_size"
+                android:layout_height="@dimen/menu_icons_size"
+                android:layout_marginHorizontal="@dimen/menu_icons_spacing"
+                app:srcCompat="@drawable/btn_quem_somos_menu" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_contato"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end|center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/string_menu_contato"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_options_text_size"
+                app:fontFamily="@font/montserrat_semibold" />
+
+            <ImageView
+                android:layout_width="@dimen/menu_icons_size"
+                android:layout_height="@dimen/menu_icons_size"
+                android:layout_marginHorizontal="@dimen/menu_icons_spacing"
+                app:srcCompat="@drawable/btn_contato_menu" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_configuracoes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end|center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/string_menu_configuracoes"
+                android:textColor="@color/white"
+                android:textSize="@dimen/menu_options_text_size"
+                app:fontFamily="@font/montserrat_semibold" />
+
+            <ImageView
+                android:layout_width="@dimen/menu_icons_size"
+                android:layout_height="@dimen/menu_icons_size"
+                android:layout_marginHorizontal="@dimen/menu_icons_spacing"
+                app:srcCompat="@drawable/btn_config_menu" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_social_media"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:background="@color/vermelho_secundario"
+        android:gravity="center"
+        android:padding="@dimen/_10sdp"
+        app:layout_constraintBottom_toTopOf="@id/url_radio_litoral"
+        app:layout_constraintTop_toBottomOf="@id/ll_menu_options">
+
+        <ImageView
+            android:id="@+id/btn_instagram"
+            android:layout_width="@dimen/menu_icons_socials_size"
+            android:layout_height="@dimen/menu_icons_socials_size"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/btn_it_menu" />
+
+        <ImageView
+            android:id="@+id/btn_youtube"
+            android:layout_width="@dimen/menu_icons_socials_size"
+            android:layout_height="@dimen/menu_icons_socials_size"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/btn_yt_menu" />
+
+        <ImageView
+            android:id="@+id/btn_whatsapp"
+            android:layout_width="@dimen/menu_icons_socials_size"
+            android:layout_height="@dimen/menu_icons_socials_size"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/btn_wp_menu" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/url_radio_litoral"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/montserrat_semibold"
+        android:paddingVertical="@dimen/_10sdp"
+        android:text="@string/url_radio_litoral"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/menu_url_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_social_media" />
+</androidx.constraintlayout.widget.ConstraintLayout>

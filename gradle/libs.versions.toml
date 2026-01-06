@@ -1,0 +1,170 @@
+[versions]
+agp = "8.13.1"
+multidex = "2.0.1"
+appcompat = "1.7.1"
+material = "1.13.0"
+activity = "1.12.0"
+dotsindicator = "5.1.0"
+playServicesLocation = "21.3.0"
+swiperefreshlayout = "1.1.0"
+constraintlayout = "2.2.1"
+intuit = "1.1.1"
+browser = "1.9.0"
+firebase-bom = "34.6.0"
+firebase-perf = "2.0.2"
+firebase-crashlytics = "3.0.6"
+firebaseCrashlyticsGradle = "3.0.6"
+exomedia = "5.2.0"
+media = "1.7.1"
+mediarouter = "1.8.1"
+chromecast = "22.2.0"
+onesignal = "5.4.1"
+glide = "5.0.5"
+lottie = "6.7.1"
+update = "2.1.0"
+review = "2.0.2"
+services = "4.4.4"
+okhttp = "5.3.2"
+loggingInterceptor = "5.3.2"
+gson = "2.13.2"
+retrofit = "3.0.0"
+junit = "4.13.2"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
+xxpermissions = "26.5"
+dimen = "1.0.8"
+shimmer = "0.5.0"
+cutetoast = "1.2"
+mpandroidchart = "v3.1.0"
+
+[libraries]
+multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
+xxpermissions = { module = "com.github.getActivity:XXPermissions", version.ref = "xxpermissions" }
+appdimens = { module = "io.github.bodenberg:appdimens-sdps", version.ref = "dimen" }
+
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
+swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+intuit = { group = "com.intuit.sdp", name = "sdp-android", version.ref = "intuit" }
+browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
+mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
+
+dotsindicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindicator" }
+cutetoast = { module = "com.github.ahmmedrejowan.CuteToast:CuteToast", version.ref = "cutetoast" }
+shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
+
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config" }
+firebase-perf = { group = "com.google.firebase", name = "firebase-perf" }
+firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
+
+media = { group = "androidx.media", name = "media", version.ref = "media" }
+exomedia = { group = "com.devbrackets.android", name = "exomedia", version.ref = "exomedia" }
+mediarouter = { module = "androidx.mediarouter:mediarouter", version.ref = "mediarouter" }
+chromecast = { module = "com.google.android.gms:play-services-cast-framework", version.ref = "chromecast" }
+
+onesignal = { group = "com.onesignal", name = "OneSignal", version.ref = "onesignal" }
+
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
+
+update = { group = "com.google.android.play", name = "app-update", version.ref = "update" }
+review = { group = "com.google.android.play", name = "review", version.ref = "review" }
+
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+retrofit-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" }
+
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+
+[bundles]
+firebase = [
+    "firebase-analytics",
+    "firebase-crashlytics",
+    "firebase-config",
+    "firebase-perf"
+]
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+googleService = { id = "com.google.gms.google-services", version.ref = "services" }
+firebasePerf = { id = "com.google.firebase.firebase-perf", version.ref = "firebase-perf" }
+firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
+
+#BACKUP
+#verticalseekbar = "1.0.0"
+#extensionokhttp = "2.9.1"
+#persistentcookiejar = "v1.0.1"
+#sunrisesunsetcalculatorVersion = "1.2"
+#billing = "7.1.1"
+#searchablespinnerlibraryVersion = "1.3.1"
+#palette = "1.0.0"
+#roundablelayout = "1.1.4"
+#library = "1.1.5"
+#androidDatabaseSqlcipher = "4.5.1"
+#bottomBar = "2.3.1"
+#circularseekbar = "v1.1"
+#colorpicker = "0.0.13"
+#commons = "0.9.6.0"
+#coreVersion = "12.1.0"
+#androidxMedia3ExoplayerRtsp = "1.5.1"
+#blurryVersion = "4.0.1"
+#core = "3.5.3"
+#glidetovectoryou = "v2.0.0"
+#media3SessionVersion = "1.8.0"
+#shaperipplelibrary = "1.0.0"
+#meCircularseekbar = "1.4.2"
+#lifecycleLivedataKtx = "2.9.4"
+#lifecycleViewmodelKtx = "2.9.4"
+#navigationFragment = "2.9.5"
+#navigationUi = "2.9.5"
+#coreVersion = "13.0.0"
+#chromecastSender = "0.32"
+#zxingAndroidEmbedded = "4.3.0"
+#fadingEgde = "1.0.0"
+#searchablespinnerlibrary = { module = "com.toptoche.searchablespinner:searchablespinnerlibrary", version.ref = "searchablespinnerlibraryVersion" }
+#roundablelayout = { module = "com.github.zladnrms:RoundableLayout", version.ref = "roundablelayout" }
+#verticalseekbar = { module = "com.h6ah4i.android.widget.verticalseekbar:verticalseekbar", version.ref = "verticalseekbar" }
+#androidyoutubeplayer-core = { module = "com.pierfrancescosoffritti.androidyoutubeplayer:core", version.ref = "coreVersion" }
+#extensionokhttp = { group = "com.google.android.exoplayer", name = "extension-okhttp", version.ref = "extensionokhttp" }
+#palette = { module = "androidx.palette:palette", version.ref = "palette" }
+#persistentcookiejar = { group = "com.github.franmontiel", name = "PersistentCookieJar", version.ref = "persistentcookiejar" }
+#library = { module = "com.daimajia.slider:library", version.ref = "library" }
+#luckycatlabs-sunrisesunsetcalculator = { module = "com.luckycatlabs:SunriseSunsetCalculator", version.ref = "sunrisesunsetcalculatorVersion" }
+#me-circularseekbar = { module = "me.tankery.lib:circularSeekBar", version.ref = "meCircularseekbar" }
+#billing = { group = "com.android.billingclient", name = "billing", version.ref = "billing" }
+#android-database-sqlcipher = { module = "net.zetetic:android-database-sqlcipher", version.ref = "androidDatabaseSqlcipher" }
+#bottom-bar = { module = "com.roughike:bottom-bar", version.ref = "bottomBar" }
+#commons = { module = "com.afollestad.material-dialogs:commons", version.ref = "commons" }
+#colorpicker = { module = "com.github.QuadFlask:colorpicker", version.ref = "colorpicker" }
+#core = { module = "com.afollestad.material-dialogs:core", version.ref = "commons" }
+#circularseekbar = { module = "com.github.Triggertrap:SeekArc", version.ref = "circularseekbar" }
+#lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
+#lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+#navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
+#navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
+#shaperipplelibrary = { module = "com.rodolfonavalon:ShapeRippleLibrary", version.ref = "shaperipplelibrary" }
+#wasabeef-blurry = { module = "jp.wasabeef:blurry", version.ref = "blurryVersion" }
+#gif-drawable = { module = "pl.droidsonroids.gif:android-gif-drawable", version = "1.2.29" }
+#androidx-media3-session = { module = "androidx.media3:media3-session", version.ref = "media3SessionVersion" }
+#core = { module = "com.google.zxing:core", version.ref = "core" }
+#glidetovectoryou = { module = "com.github.corouteam:GlideToVectorYou", version.ref = "glidetovectoryou" }
+#fadingedgelayout = { module = "com.github.bosphere.android-fadingedgelayout:fadingedgelayout", version.ref = "fadingEgde" }
+#me-circularseekbar = { module = "me.tankery.lib:circularSeekBar", version.ref = "meCircularseekbar" }
+#androidyoutubeplayer-core = { module = "com.pierfrancescosoffritti.androidyoutubeplayer:core", version.ref = "coreVersion" }
+#chromecast-sender = { module = "com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender", version.ref = "chromecastSender" }
+#androidx-media3-cast = { module = "androidx.media3:media3-cast", version.ref = "androidxMedia3ExoplayerRtsp" }
+#androidx-media3-datasource-rtmp = { module = "androidx.media3:media3-datasource-rtmp", version.ref = "androidxMedia3ExoplayerRtsp" }
+#androidx-media3-exoplayer-rtsp = { module = "androidx.media3:media3-exoplayer-rtsp", version.ref = "androidxMedia3ExoplayerRtsp" }
+#zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }

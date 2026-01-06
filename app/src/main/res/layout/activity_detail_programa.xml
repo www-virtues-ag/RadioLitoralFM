@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/_20sdp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_15sdp">
+
+            <ImageView
+                android:id="@+id/btn_fechar"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/btn_fecha_noticia_desc"
+                android:contentDescription="Fechar" />
+        </RelativeLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_img_programa"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_180sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
+            app:cardCornerRadius="@dimen/_8sdp"
+            app:cardUseCompatPadding="false"
+            app:cardPreventCornerOverlap="true"
+            android:clipToPadding="true"
+            android:clipChildren="true">
+
+            <ImageView
+                android:id="@+id/img_programa_principal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_launcher" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/txt_titulo_programa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:fontFamily="@font/montserrat_bold"
+            app:fontFamily="@font/montserrat_bold"
+            android:textColor="#531414"
+            android:textSize="@dimen/_15sdp"
+            android:lineSpacingExtra="@dimen/_2sdp"
+            android:textAllCaps="true"
+            tools:text="LITORAL RÁDIO SHOW" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                app:srcCompat="@drawable/ic_clock" />
+
+            <TextView
+                android:id="@+id/txt_horario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                app:fontFamily="@font/montserrat_medium"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/_9sdp"
+                tools:text="10h00 - 12h00" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/container_apresentador"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                app:srcCompat="@drawable/user" />
+
+            <TextView
+                android:id="@+id/txt_apresentador"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                app:fontFamily="@font/montserrat_medium"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/_9sdp"
+                tools:text="João Silva" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/container_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                app:srcCompat="@drawable/ic_radio" />
+
+            <TextView
+                android:id="@+id/txt_radio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                app:fontFamily="@font/montserrat_medium"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/_9sdp"
+                tools:text="Vitória" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorBlack25"
+            android:layout_marginVertical="@dimen/_15sdp" />
+
+        <TextView
+            android:id="@+id/txt_descricao_programa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            app:fontFamily="@font/montserrat_medium"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/_10sdp"
+            android:lineSpacingExtra="@dimen/_3sdp"
+            tools:text="Ei, ouvinte, eu sei que você gosta de ficar conectado com a gente, e na Litoral Rádio Show, a atração principal é você! Abrimos espaço para a voz dos LitoLovers ecoarem na 102.3, mandando aquele alô, pedindo música ou compartilhando aquela história engraçada que nos tira boas risadas." />
+
+    </LinearLayout>
+
+</ScrollView>
+

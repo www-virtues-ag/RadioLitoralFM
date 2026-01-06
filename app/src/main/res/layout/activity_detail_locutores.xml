@@ -1,0 +1,178 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/detalhes_locutor"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/bg_top"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.6"
+        app:srcCompat="@drawable/fundo_locutor_desc_top"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/fundo_locutor_desc_btm"
+        tools:ignore="ContentDescription" />
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_20sdp">
+
+        <ImageView
+            android:id="@+id/btn_voltar"
+            android:layout_width="@dimen/btn_voltar_w"
+            android:layout_height="@dimen/btn_voltar_h"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/btn_voltar_radio_escuro" />
+
+        <ImageView
+            android:layout_width="@dimen/logo_w"
+            android:layout_height="@dimen/logo_h"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/logo_radio" />
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_id_locutor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_minus20sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header">
+
+        <ImageView
+            android:id="@+id/img_locutor"
+            android:layout_width="@dimen/img_locutor_w"
+            android:layout_height="@dimen/img_locutor_h"
+            android:layout_marginStart="@dimen/_25sdp"
+            android:layout_marginTop="@dimen/_minus10sdp"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/sol" />
+
+        <TextView
+            android:id="@+id/txt_nome_locutor"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginHorizontal="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_60sdp"
+            android:autoSizeMaxTextSize="@dimen/_50sdp"
+            android:autoSizeMinTextSize="@dimen/_20sdp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:ellipsize="end"
+            android:fontFamily="@font/insanibu"
+            app:fontFamily="@font/insanibu"
+            android:includeFontPadding="true"
+            android:maxLines="1"
+            android:text="LOCUTOR"
+            android:textAlignment="center"
+            android:textColor="#740C0F"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/img_locutor"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/img_locutor"
+            app:layout_constraintTop_toBottomOf="@id/txt_nome_locutor">
+
+            <ImageView
+                android:id="@+id/btn_facebook"
+                android:layout_width="@dimen/icon_socials"
+                android:layout_height="@dimen/icon_socials"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/btn_face_desc" />
+
+            <ImageView
+                android:id="@+id/btn_instagram"
+                android:layout_width="@dimen/icon_socials"
+                android:layout_height="@dimen/icon_socials"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/btn_insta_desc" />
+
+            <ImageView
+                android:id="@+id/btn_x"
+                android:layout_width="@dimen/icon_socials"
+                android:layout_height="@dimen/icon_socials"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/btn_xdesc" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_desc"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/desc_margin"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/cardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/container_id_locutor">
+
+        <TextView
+            android:id="@+id/txt_descricao_locutor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            app:fontFamily="@font/montserrat_medium"
+            android:includeFontPadding="true"
+            android:lineSpacingExtra="4dp"
+            android:lineSpacingMultiplier="1.1"
+            android:padding="12dp"
+            android:scrollbars="none"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer velit ligula, porta sit amet tortor ut, rhoncus porttitor lacus. Suspendisse quis turpis a est venenatis ultricies. Quisque at ipsum vehicula, hendrerit massa eget, fermentum elit. Nunc fermentum, diam vel varius cursus, lectus lacus malesuada leo, id sollicitudin eros purus et elit. Curabitur vulputate orci at tincidunt varius. Sed blandit a odio id elementum. Nullam feugiat urna sit amet euismod pharetra. Curabitur sed urna eget libero fringilla bibendum eu eget sem. Aliquam condimentum iaculis dignissim."
+            android:textColor="@color/black"
+            android:textIsSelectable="false"
+            android:textSize="@dimen/locutor_desc_txt" />
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/_20sdp"
+        app:cardCornerRadius="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/banner_radio">
+
+            <WebView
+                android:id="@+id/webView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+        </FrameLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

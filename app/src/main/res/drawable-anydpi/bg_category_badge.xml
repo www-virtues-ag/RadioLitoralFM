@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Usa a cor existente circle_preference para manter o visual atual -->
+    <solid android:color="@color/circle_preference" />
+
+    <!-- Raio arredondado para deixar em formato de badge/pill -->
+    <corners android:radius="12dp" />
+
+    <!-- Opcional: sombra/linha fina -->
+    <stroke android:width="0dp" android:color="@android:color/transparent" />
+
+</shape>

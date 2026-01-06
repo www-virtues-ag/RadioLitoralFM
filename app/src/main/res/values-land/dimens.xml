@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="splash_video" translatable="false">splash_video_land.mp4</string>
+
+    <dimen name="img_locutor_h">@dimen/_190sdp</dimen>
+    <dimen name="img_locutor_w">@dimen/_150sdp</dimen>
+    <dimen name="spacing_locutores1">@dimen/_minus20sdp</dimen>
+    <dimen name="spacing_locutores2">@dimen/_15sdp</dimen>
+    <dimen name="logo_w">@dimen/_90sdp</dimen>
+    <dimen name="logo_h">@dimen/_50sdp</dimen>
+    <dimen name="img_locutor_desc_w">@dimen/_125sdp</dimen>
+    <dimen name="img_locutor_desc_h">@dimen/_165sdp</dimen>
+    <dimen name="icon_socials">@dimen/_18sdp</dimen>
+    <dimen name="menu_icons_size">@dimen/_15sdp</dimen>
+    <dimen name="menu_title_size">@dimen/_20sdp</dimen>
+    <dimen name="menu_icons_socials_size">@dimen/_20sdp</dimen>
+</resources>

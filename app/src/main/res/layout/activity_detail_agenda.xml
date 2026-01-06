@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/_20sdp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_15sdp">
+
+            <RelativeLayout
+                android:id="@+id/badge_recorrencia"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_25sdp"
+                android:background="@drawable/forma_categoria_noticia_desc"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/txt_recorrencia_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingHorizontal="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    app:fontFamily="@font/montserrat_semibold"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sdp"
+                    android:text="Recorrente" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/btn_fechar"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/btn_fecha_noticia_desc"
+                android:contentDescription="@string/close_news" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txt_titulo_agenda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:fontFamily="@font/montserrat_bold"
+            app:fontFamily="@font/montserrat_bold"
+            android:textColor="#531414"
+            android:textSize="@dimen/_15sdp"
+            android:lineSpacingExtra="@dimen/_2sdp"
+            tools:text="Show de Talentos na Praia" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_img_agenda"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_180sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
+            app:cardCornerRadius="@dimen/_8sdp"
+            app:cardUseCompatPadding="false"
+            app:cardPreventCornerOverlap="true"
+            android:clipToPadding="true"
+            android:clipChildren="true">
+
+            <ImageView
+                android:id="@+id/img_agenda_principal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_launcher" />
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                app:srcCompat="@drawable/icon_noticia_main" />
+
+            <TextView
+                android:id="@+id/txt_data_hora"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                app:fontFamily="@font/montserrat_medium"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/_9sdp"
+                tools:text="15/06/2025 às 20:00 até 16/06/2025 às 22:00" />
+        </LinearLayout>
+
+        <!-- Local -->
+        <LinearLayout
+            android:id="@+id/container_local"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                app:srcCompat="@drawable/local_main" />
+
+            <TextView
+                android:id="@+id/txt_local"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                app:fontFamily="@font/montserrat_medium"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/_9sdp"
+                tools:text="Praia da Costa - Vila Velha/ES" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorBlack25"
+            android:layout_marginVertical="@dimen/_15sdp" />
+
+        <TextView
+            android:id="@+id/txt_descricao_agenda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            app:fontFamily="@font/montserrat_medium"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/_10sdp"
+            android:lineSpacingExtra="@dimen/_3sdp"
+            tools:text="Venha participar do maior show de talentos da região! Evento gratuito com diversas apresentações..." />
+
+    </LinearLayout>
+
+</ScrollView>
+
+
+
+

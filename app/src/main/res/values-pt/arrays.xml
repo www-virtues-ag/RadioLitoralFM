@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="horoscope_signs">
+        <item>Áries</item>
+        <item>Touro</item>
+        <item>Gêmeos</item>
+        <item>Câncer</item>
+        <item>Leão</item>
+        <item>Virgem</item>
+        <item>Libra</item>
+        <item>Escorpião</item>
+        <item>Sagitário</item>
+        <item>Capricórnio</item>
+        <item>Aquário</item>
+        <item>Peixes</item>
+    </string-array>
+</resources>

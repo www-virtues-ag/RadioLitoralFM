@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
+
+    <ImageView
+        android:id="@+id/bgTop"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_420sdp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/form_background"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/rlNavBar"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_50sdp"
+        android:background="@drawable/forma_barra_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_55sdp"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="6">
+
+            <ImageView
+                android:id="@+id/bt_promotion"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:focusable="true"
+                android:onClick="onClick"
+                app:srcCompat="@drawable/btn_promo_barra_off" />
+
+            <ImageView
+                android:layout_width="@dimen/_2sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/traco_barra" />
+
+            <ImageView
+                android:id="@+id/bt_news"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:focusable="true"
+                android:onClick="onClick"
+                app:srcCompat="@drawable/btn_noticia_barra_off" />
+
+            <ImageView
+                android:layout_width="@dimen/_2sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/traco_barra" />
+
+            <ImageView
+                android:id="@+id/bt_radio"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_weight="2"
+                android:background="@android:color/transparent"
+                android:focusable="true"
+                android:onClick="onClick"
+                app:srcCompat="@drawable/btn_ao_vivo_barra_off" />
+
+            <ImageView
+                android:layout_width="@dimen/_2sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/traco_barra" />
+
+            <ImageView
+                android:id="@+id/bt_program"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:focusable="true"
+                android:onClick="onClick"
+                app:srcCompat="@drawable/btn_prog_barra_off" />
+
+            <ImageView
+                android:layout_width="@dimen/_2sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/traco_barra" />
+
+            <ImageView
+                android:id="@+id/bt_whatsapp"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:focusable="true"
+                android:onClick="onClick"
+                app:srcCompat="@drawable/btn_wp_barra" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/_5sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/rlNavBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_90sdp">
+
+                <ImageView
+                    android:layout_width="@dimen/_180sdp"
+                    android:layout_height="@dimen/_70sdp"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    app:srcCompat="@drawable/logo_radio_escuro" />
+
+                <ImageView
+                    android:id="@+id/bt_menu"
+                    android:layout_width="@dimen/_50sdp"
+                    android:layout_height="@dimen/_50sdp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    app:srcCompat="@drawable/btn_menu_radio_escuro" />
+
+                <ImageView
+                    android:id="@+id/bt_notif"
+                    android:layout_width="@dimen/_25sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    android:layout_marginTop="@dimen/_35sdp"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:layout_toStartOf="@+id/bt_menu"
+                    app:srcCompat="@drawable/btn_notif_radio_escuro" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_90sdp">
+
+                <ImageView
+                    android:layout_width="@dimen/_150sdp"
+                    android:layout_height="@dimen/_50sdp"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    app:srcCompat="@drawable/txt_main" />
+
+                <RelativeLayout
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_60sdp"
+                    android:layout_alignParentEnd="true">
+
+                    <TextView
+                        android:id="@+id/number_hour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@+id/nm_day"
+                        android:fontFamily="@font/montserrat_extrabold"
+                        android:includeFontPadding="false"
+                        android:text="10:41"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_17sdp"
+                        app:fontFamily="@font/montserrat_extrabold" />
+
+                    <TextView
+                        android:id="@+id/txt_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/number_hour"
+                        android:layout_toStartOf="@+id/nm_day"
+                        android:fontFamily="@font/font_msa_medium"
+                        android:includeFontPadding="false"
+                        android:text="16/05/2025"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_10sdp"
+                        app:fontFamily="@font/font_msa_medium" />
+
+                    <TextView
+                        android:id="@+id/nm_day"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:fontFamily="@font/montserrat_extrabold"
+                        android:includeFontPadding="false"
+                        android:rotation="-90"
+                        android:text="SEX"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_14sdp"
+                        app:fontFamily="@font/montserrat_extrabold" />
+
+                    <RelativeLayout
+                        android:id="@+id/rl_city"
+                        android:layout_width="@dimen/_80sdp"
+                        android:layout_height="@dimen/_18sdp"
+                        android:layout_below="@+id/txt_date"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:background="@drawable/forma_local_main"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <TextView
+                            android:id="@+id/txt_city"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_4sdp"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:text="VITÓRIA - ES"
+                            android:textColor="#531414"
+                            android:textSize="@dimen/_7sdp"
+                            app:fontFamily="@font/montserrat_bold" />
+
+                        <ImageView
+                            android:layout_width="@dimen/_10sdp"
+                            android:layout_height="@dimen/_10sdp"
+                            android:layout_marginTop="@dimen/_4sdp"
+                            android:layout_marginStart="@dimen/_3sdp"
+                            android:layout_toEndOf="@+id/txt_city"
+                            app:srcCompat="@drawable/local_main" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_140sdp">
+
+                <FrameLayout
+                    android:layout_width="@dimen/_190sdp"
+                    android:layout_height="@dimen/_130sdp"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:background="@drawable/bg_frame_rounded_white">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="bottom|center"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/img_capa_main" />
+
+                    <ProgressBar
+                        android:id="@+id/progress_bar"
+                        android:layout_width="@dimen/_25sdp"
+                        android:layout_height="@dimen/_25sdp"
+                        android:layout_marginStart="@dimen/_40sdp"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        android:background="@drawable/border_progress"
+                        android:padding="@dimen/_3sdp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_35sdp"
+                        android:layout_gravity="bottom|center"
+                        android:layout_marginBottom="@dimen/_3sdp">
+
+                        <ImageView
+                            android:layout_width="@dimen/_183sdp"
+                            android:layout_height="@dimen/_35sdp"
+                            android:layout_marginStart="@dimen/_4sdp"
+                            android:scaleType="fitXY"
+                            app:srcCompat="@drawable/barra_programa_main" />
+
+                        <ImageView
+                            android:id="@+id/vw_white"
+                            android:layout_width="@dimen/_10sdp"
+                            android:layout_height="@dimen/_25sdp"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            app:srcCompat="@drawable/traco_main" />
+
+                        <RelativeLayout
+                            android:layout_width="@dimen/_80sdp"
+                            android:layout_height="@dimen/_40sdp"
+                            android:layout_toEndOf="@+id/vw_white">
+
+                            <TextView
+                                android:id="@+id/music_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_5sdp"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:includeFontPadding="false"
+                                android:text="Rádio Litoral"
+                                android:textColor="@color/white"
+                                style="@style/TextRun"
+                                android:textSize="@dimen/_11sdp"
+                                app:fontFamily="@font/montserrat_semibold" />
+
+                            <TextView
+                                android:id="@+id/artist_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/music_name"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:includeFontPadding="false"
+                                android:text="Ao vivo"
+                                style="@style/TextRun"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_9sdp"
+                                app:fontFamily="@font/montserrat_semibold" />
+
+                        </RelativeLayout>
+
+                        <ImageView
+                            android:id="@+id/bt_play"
+                            android:layout_width="@dimen/_25sdp"
+                            android:layout_height="@dimen/_25sdp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="@dimen/_20sdp"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            app:srcCompat="@drawable/btn_play_radio" />
+
+                    </RelativeLayout>
+
+                </FrameLayout>
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:layout_width="@dimen/_60sdp"
+                    android:layout_height="@dimen/_80sdp"
+                    android:layout_marginTop="@dimen/_25sdp"
+                    android:layout_alignParentEnd="true"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/equalizer_white" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginTop="@dimen/_10sdp">
+
+            <ImageView
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginStart="@dimen/_20sdp"
+                app:srcCompat="@drawable/novo"/>
+
+            <ImageView
+                android:id="@+id/btn_agenda"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_40sdp"
+                app:srcCompat="@drawable/btn_agenda_main"/>
+
+            </RelativeLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_120sdp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_agenda"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <TextView
+                    android:id="@+id/txt_empty_agenda"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Nenhum evento disponível"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sdp"
+                    android:visibility="gone"
+                    android:fontFamily="@font/montserrat_medium"
+                    app:fontFamily="@font/montserrat_medium"/>
+
+                <ProgressBar
+                    android:id="@+id/progress_agenda"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    style="?android:attr/progressBarStyle"/>
+
+            </FrameLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_60sdp"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                app:cardCornerRadius="@dimen/_10sdp"
+                app:cardElevation="@dimen/_5sdp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/banner_main">
+
+                    <WebView
+                        android:id="@+id/webView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:visibility="gone" />
+
+                </FrameLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp">
+
+            <ImageView
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginStart="@dimen/_20sdp"
+                app:srcCompat="@drawable/last_news"/>
+
+                <ImageView
+                    android:id="@+id/btn_news"
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_40sdp"
+                    app:srcCompat="@drawable/btn_ver_noticiais_main"/>
+
+            </RelativeLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_120sdp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_news"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <ProgressBar
+                    android:id="@+id/progress_news"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    style="?android:attr/progressBarStyle"/>
+
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_10sdp"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

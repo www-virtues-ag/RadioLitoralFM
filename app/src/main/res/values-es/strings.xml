@@ -1,0 +1,555 @@
+<resources>
+
+    <!-- Strings -->
+    <string name="chat2">Vivir</string>
+    <string name="static_mode">Modo estático</string>
+    <string name="about">Sobre nosotros</string>
+    <string name="review">Para evaluar</string>
+    <string name="terms">Términos</string>
+    <string name="string_copy">Texto copiado al portapapeles.</string>
+    <string name="desc_cep">Campo para entrada de código postal</string>
+    <string name="desc_go_to_radio">ir a la radio</string>
+    <string name="string_lost">Conexión interrumpida</string>
+    <string name="string_lost_sub">Parece que no tienes señal ni conexión a internet estable. Comprueba que la conexión a internet o a datos móviles de tu dispositivo esté activada.</string>
+    <string name="music">Nombre de la canción y artista.</string>
+    <string name="string_playing2">Escuchando ahora</string>
+    <string name="music_live">Musica en vivo</string>
+    <string name="string_name">Nombre</string>
+    <string name="string_name3">Tu nombre...</string>
+    <string name="string_email">E-mail:</string>
+    <string name="string_email2">Tu correo electrónico...</string>
+    <string name="string_subject2">Asunto del mensaje</string>
+    <string name="string_message">Mensaje</string>
+    <string name="string_music">Song name</string>
+    <string name="menu_midia_kit">Kit Midia</string>
+    <string name="string_artist">Artist name</string>
+    <string name="menu_midia_kit2">¡Consulta los datos de la emisora ​​de radio!</string>
+    <string name="string_message2">Tu mensaje...</string>
+    <string name="nav_save">Guardar información de contacto</string>
+    <string name="string_send">Enviar</string>
+    <string name="string_playing">Escuchando</string>
+    <string name="string_play">Player</string>
+    <string name="string_paused">Pausa</string>
+    <string name="string_loading">Cargar...</string>
+    <string name="string_close">Cerrar</string>
+    <string name="string_help">ayuda</string>
+    <string name="string_open">Abrir</string>
+    <string name="string_access">Acessar</string>
+    <string name="string_content">Sin contenido!</string>
+    <string name="string_avaliable">No disponible!</string>
+    <string name="string_after">Después</string>
+    <string name="string_updatenow">Actualizar</string>
+    <string name="string_attempts">Intentos agotados!</string>
+    <string name="string_next_attempt">Siguiente intento en:</string>
+    <string name="string_seconds"> segundo(s).</string>
+    <string name="string_connect">Conectar</string>
+    <string name="string_disconnect">Desconectar</string>
+    <string name="string_sending">Enviando&#8230;</string>
+    <string name="string_retry">Inténtalo de nuevo</string>
+    <string name="string_phone">Teléfono</string>
+    <string name="bible_new">Nuevo Testamento</string>
+    <string name="alert_storage">Houve um erro ao abrir o app, verifique se há espaço suficiente de armazenamento para carregarmos o app!</string>
+    <string name="testing">Pruebas...</string>
+    <string name="loading_lyrics">Cargando letras...</string>
+    <string name="lyrics_loaded_click_to_sync">¡Letra cargada! Haz clic para sincronizar.</string>
+    <string name="total_lines">Total: %d líneas</string>
+    <string name="error_format">Error: %s</string>
+    <string name="string_programming">Programación:</string>
+    <string name="string_anjo">Angel of the day</string>
+    <string name="string_horo">Horoscope</string>
+    <string name="string_num">Numerology</string>
+    <string name="string_sonho">Meaning of Dreams</string>
+    <string name="string_volume_up">Volume Up</string>
+    <string name="string_volume_down">Volume Down</string>
+    <string name="cast_tutorial_title">Toca para transmitir contenido multimedia a tu TV</string>
+    <string name="string_country">Estado</string>
+    <string name="string_address">Dirección</string>
+    <string name="string_city">Ciudad</string>
+    <string name="string_birthdate">Fecha de cumpleaños</string>
+    <string name="string_district">Distrito</string>
+    <string name="string_remove_data">Eliminar datos guardados</string>
+    <string name="string_accept_data">Toca para leer y aceptar los términos</string>
+    <string name="string_loc">Narración:</string>
+    <string name="live">en vivo</string>
+    <string name="string_content2">Espere\nmás promociones</string>
+    <string name="string_live">Estamos en vivo</string>
+    <string name="string_content3">¡Más promociones pronto!</string>
+    <string name="string_next">Siguiente</string>
+    <string name="string_previous">Anterior</string>
+    <string name="string_rate2">¡Agradecemos la revisión!</string>
+    <string name="string_change">Cambiar local</string>
+    <string name="string_change2">Cambiar</string>
+    <string name="string_like">Me gusta</string>
+    <string name="string_dislike">Disgusto</string>
+    <string name="search">Busqueda</string>
+    <string name="string_start">Inicio:</string>
+    <string name="string_end">Finalización:</string>
+    <string name="string_all_reserved">Reservados todos los derechos</string>
+
+    <string name="string_cast">Chromecast</string>
+    <string name="string_anonymous">Anónimo</string>
+    <string name="string_anonymous2">Iniciar sesión…</string>
+
+    <string name="nav_announcers">Locutores</string>
+    <string name="nav_advertising">Anuncie</string>
+    <string name="nav_location">Ubicación</string>
+    <string name="nav_help">Ayuda</string>
+    <string name="nav_interesting">CURIOSIDADES</string>
+
+    <string name="string_version">Versión: 2.0</string>
+    <string name="string_developed_by">Desarrollado por APPRADIO.PRO</string>
+
+    <string name="string_cloud">Condición: %s</string>
+    <string name="string_termal">%d °C</string>
+    <string name="string_atm">%d mBar</string>
+    <string name="string_wind">%d Km/h</string>
+    <string name="string_humidity">%s - humedad del aire</string>
+
+    <string name="string_rain2">Lluvia</string>
+    <string name="string_humidity2">Humedad</string>
+    <string name="string_wind2">Viento</string>
+
+    <string name="inicio">Inicio:</string>
+    <string name="fim">Finalización:</string>
+    <string name="locutor">Locutor:</string>
+    <string name="toast_music_like">¡Ya has votado en esta canción!</string>
+    <string name="toast_music_like2">¡Inicie el reproductor o espere la carga!</string>
+
+    <string name="string_ccontactpers">Contact Personalized</string>
+
+    <string name="desligar">Apagado Después:</string>
+    <string name="iniciar">Inicio</string>
+    <string name="stop">Stop</string>
+    <string name="start">Start</string>
+    <string-array name="timer">
+        <item>Desactivar Después de</item>
+        <item>10 Minutos</item>
+        <item>20 Minutos</item>
+        <item>30 Minutos</item>
+        <item>1 hora</item>
+        <item>2 Horas</item>
+    </string-array>
+    <string name="sleep">¡Elija una opción de tiempo!</string>
+    <string name="sleep2">Para activar la función siesta, inicie el reproductor.</string>
+
+    <!-- Menu -->
+    <string name="nav_week">Días de la semana</string>
+    <string name="nav_scheduler">Programación</string>
+    <string name="nav_scheduler2">Programación</string>
+    <string name="nav_magazine">Revista</string>
+    <string name="nav_promotion2">Promoción:</string>
+    <string name="string_more">Ver más</string>
+    <string name="nav_sleep">Modo de Sueño</string>
+    <string name="nav_weather">Previsión del Tempo</string>
+    <string name="nav_title_social">Redes</string>
+    <string name="nav_title_more">Más Información</string>
+    <string name="nav_menu">MENU</string>
+    <string name="nav_contact">HABLE CON NOSOTROS</string>
+    <string name="nav_events">Eventos</string>
+    <string name="nav_share">Compartir</string>
+    <string name="nav_about2">Acerca de</string>
+    <string name="nav_about">Acerca de</string>
+    <string name="nav_settings">Configuraciones</string>
+    <string name="nav_rate">Nos califica</string>
+    <string name="nav_term">Términos y Políticas</string>
+    <string name="nav_promotion">Promociones</string>
+    <string name="nav_notification">Notificaciones</string>
+    <string name="nav_donation">Donaciones</string>
+    <string name="nav_prayer">Petición de oración</string>
+    <string name="nav_static">Modo estático</string>
+    <string name="nav_music">PIDA LA MUSICA</string>
+    <string name="nav_news">Noticias</string>
+    <string name="nav_accessibility">Accesibilidad</string>
+    <string name="nav_weather2">Seleccione una Ciuad</string>
+    <string name="now2">Ahora</string>
+    <string name="alert_location">Acceso a localización</string>
+    <string name="alert_location_msg">Precisamos hacer acesso a localização para carregarmos os dados do clima da sua região, deseja habilita-lo?</string>
+    <string name="string_Pair">Par</string>
+    <string name="string_dispair">desemparear</string>
+    <string name="string_support2">Bluetooth no compatible</string>
+    <string name="string_try2">Intentando conectar:</string>
+
+    <string name="toast_enable_location">Habilite la ubicación para continuar</string>
+
+    <string name="days1">LUN</string>
+    <string name="days2">MAR</string>
+    <string name="days3">MIE</string>
+    <string name="days4">JUE</string>
+    <string name="days5">VIE</string>
+    <string name="days6">SAB</string>
+    <string name="days7">DOM</string>
+
+    <string name="frag_one2">En proceso</string>
+    <string name="frag_one">Proceso</string>
+    <string name="frag_two">Cerrado</string>
+    <string name="frag_three">Galardonado</string>
+    <string name="frag_insc">Suscripción:</string>
+    <string name="frag_insc2">hasta</string>
+    <string name="participe">Participar</string>
+    <string name="string_empty">No proporcionado</string>
+
+    <!-- Alerts -->
+    <string name="alert_ops">Oops, lo siento 😥</string>
+    <string name="alert_internet">Internet no disponible!</string>
+    <string name="alert_internet_desc">Internet no disponible!</string>
+    <string name="alert_internet_message">Por favor revise su conexion a internet.</string>
+    <string name="alert_update">Una nueva actualización está disponible para descargar!</string>
+    <string name="alert_action">Incapaz de completar la acción!</string>
+    <string name="alert_send">Mensaje enviado con éxito, gracias por contactar!</string>
+    <string name="alert_download">Lo dirigiremos a la tienda de aplicaciones.</string>
+    <string name="alert_audio">No fue posible cargar la transmisión de audio.\n\nVerifique su conexión a Internet, si el problema persiste, contáctenos.</string>
+    <string name="alert_video">Por favor verifique su conexión a internet, si persiste el problema podemos estar en mantenimiento.\n\nEn caso de dudas entre en contacto con nosotros.</string>
+
+
+    <!-- Toasts -->
+    <string name="toast_inputs">Rellene el campo correctamente!</string>
+    <string name="toast_inputs2">¡El campo debe contener al menos %d caracteres!</string>
+    <string name="toast_inputs3">¡Las contraseñas no coinciden!</string>
+    <string name="toast_permissions">Enable permissions!</string>
+    <string name="toast_permissions2">Para usar esta función, debe habilitar los permisos de cámara y almacenamiento.</string>
+    <string name="toast_version">¡Disponible en la próxima versión!</string>
+
+    <!-- About -->
+    <string name="toast_static_stop">¡Modo estático deshabilitado!</string>
+    <string name="about_description_agency">Agencia de aplicaciones Virtues</string>
+    <string name="about_description">Términos, Políticas y Directrices: \n
+        www.virtues.ag/legal/app_virtues_ag_privacy.html\n\n
+        Sitio web: www.appradio.pro\n\n
+        Facebook: www.facebook.com/appradio.pro\n\n
+        La responsabilidad por el uso y la supervisión de los contenidos publicados / insertados es de total
+        compromiso / deber de los usuarios y administradores de la Aplicación.\n\n
+        En caso de duda, sugerencia, reclamación, soporte, nuevas funcionalidades y / o cualquier
+        inquietud entrar en contacto con nuestros canales de relación.\n
+        \nAgencia de Aplicaciones Virtues
+        \nwww.virtues.ag / comercial@virtues.ag \n
+     </string>
+
+    <string name="terms_promotion">Al aceptar los términos, acepta que Radio guarde sus datos para usarlos en el sorteo y la divulgación del nombre y el final del teléfono en la aplicación si es el ganador. Para participar en la promoción es necesario aceptar estos términos.
+        \n\nLos datos se guardarán en ese dispositivo para completarlos automáticamente. ¿Quieres salvarlos?
+        \n\nNecesario aceptar los términos para enviar datos</string>
+
+    <string name="string_removal">ESTA APLICACIÓN ESTÁ BLOQUEADA TEMPORALMENTE PARA ACCEDER, CONTINÚA CON ACOMPAÑARNOS A TRAVÉS DE LA PLATAFORMA APPRADIO.PRO.</string>
+    <string name="string_removal2">Descargar ahora</string>
+
+    <string name="string_morning">¡Buen día!</string>
+    <string name="string_afternoon">¡Buenas tardes!</string>
+    <string name="string_evening">¡Buenas noches!</string>
+    <string name="string_loading2">Espera un minuto más…</string>
+    <string name="string_permission_negative">No permito</string>
+    <string name="string_permission_positive">Permito</string>
+    <string name="string_title_update_notification">Mantente actualizado</string>
+    <string name="string_description_notification">Empieza a recibir nuestras novedades, promociones\n¡Y mucho más de primera mano!</string>
+    <string name="string_slogan">¡Todo el mundo escuche!</string>
+    <string name="string_advertise2">Quiero</string>
+    <string name="string_change_color">Cambiar color</string>
+    <string name="string_change_icon">Cambiar icone</string>
+    <string name="string_change_theme">Cambiar tema</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_live">IN VIVO</string>
+    <string name="nav_media">Medios</string>
+    <string name="string_site2">Visita nuestro sitio:</string>
+    <string name="string_spotify">Nuestras playlists</string>
+    <string name="string_whatsapp">Únete en vivo</string>
+    <string name="string_contact">Contáctenos:</string>
+    <string name="string_announcer">Locutores</string>
+    <string name="string_bluetooth">Conectado en</string>
+    <string name="string_cast2">Transmitir a la TV</string>
+    <string name="alert_app_erro">Hubo un error al cargar la aplicación, ¡inténtalo nuevamente!</string>
+    <string name="alert_error_login">No se puede iniciar sesión, ¡verifique sus datos y vuelva a intentarlo!</string>
+    <string name="alert_email_send_password">Correo electrónico para restablecer la contraseña enviado correctamente.</string>
+    <string name="alert_error_register">Error de autenticación. ¡Inténtalo de nuevo!</string>
+    <string name="alert_error_register2">¡Este correo electrónico ya está registrado!</string>
+    <string name="alert_user_not_found">Usuario no encontrado.</string>
+    <string name="string_promo_title">Sin promociones</string>
+    <string name="string_promo_desc">Nuevas promociones próximamente…</string>
+    <string name="string_promo_status">Cerrado</string>
+    <string name="string_period1">Mañana</string>
+    <string name="string_period2">Tarde</string>
+    <string name="string_period3">Noche</string>
+
+    <string name="desc_theme_sky">Tema Gracia Divina</string>
+    <string name="desc_theme_rainbow">Tema Color de la Promesa</string>
+    <string name="desc_theme_green">Tema Sendero de la Verdad</string>
+    <string name="desc_them_sun">Tema Luz de Cristo</string>
+    <string name="select_or_search">Seleccionar o Buscar</string>
+    <string name="select_option">--Seleccionar--</string>
+    <string name="string_back">Volver</string>
+    <string name="string_exit">Salir</string>
+    <string name="string_settings">Configuraciones</string>
+    <string name="string_icon">Iconos alternativos</string>
+    <string name="string_icon2">Al cambiar el ícono la aplicación se reiniciará.</string>
+    <string name="login_welcome">¡Bienvenido!</string>
+    <string name="login_session">COMIENZA TU SESIÓN</string>
+    <string name="login_session2">Y DISFRUTA DE LAS MARAVILLAS</string>
+    <string name="login_app">DE LA APLICACIÓN DE</string>
+    <string name="login_remember_email">Olvidé mi correo electrónico</string>
+    <string name="login_remember_password">Olvidé mi contraseña</string>
+    <string name="login_remember_password2">Recordar contraseña</string>
+    <string name="login_view_password">Ver contraseña</string>
+    <string name="login_access">Iniciar sin login</string>
+    <string name="login_access2">Log-in</string>
+    <string name="login_register_1">¿No tienes una cuenta?</string>
+    <string name="login_register_2">Registro</string>
+    <string name="login_password">CONTRASEÑA</string>
+    <string name="login_password2">CONFIRMAR CONTRASEÑA</string>
+    <string name="login_name">NOMBRE</string>
+    <string name="login_start">Iniciar sesión</string>
+    <string name="announcers_title">Conozca nuestros locutores</string>
+    <string name="profile_settings_title">Configuraciones de usuario</string>
+    <string name="profile_settings_remove">Eliminar cuenta</string>
+    <string name="profile_settings_logout">Cerrar sesión</string>
+    <string name="string_save">Salvar</string>
+    <string name="string_password">Contraseña</string>
+    <string name="string_password2">Confirmar senha</string>
+    <string name="string_password3">Mantener la misma contraseña</string>
+    <string name="string_favorite_scheduler">Tu Programa Favorito</string>
+    <string name="string_name2">Visita nuestro sitio web:</string>
+    <string name="main_site_title">Acesse nosso site:</string>
+    <string name="main_onair">EN VIVO:</string>
+    <string name="main_promotion">Quiero participar</string>
+    <string name="main_author1">Por:</string>
+    <string name="item_scheduler_text">Presenta el(los) programa(s):</string>
+    <string name="scheduler_item_live">Vive ahora</string>
+    <string name="menu_timer_use">Tiempo de uso</string>
+    <string name="profile_image">Cambiar imagen</string>
+    <string name="nav_alarm">Despertador</string>
+    <string name="nav_themes">Temas</string>
+    <string name="string_profile">PERFIL</string>
+    <string name="string_theme">TEMA</string>
+    <string name="theme_description">¿QUIERES PERSONALIZAR TU APP?\nELIGE EL TEMA QUE MEJOR SE ADAPTE A TU\nENERGÍA.</string>
+    <string name="theme_name_red">Predeterminado</string>
+    <string name="theme_name_green">Monstruo</string>
+    <string name="theme_name_pink">Chicle</string>
+    <string name="theme_name_blue">Medianoche</string>
+    <string name="theme_name_orange">Amanecer</string>
+    <string name="theme_modes">Modos</string>
+    <string name="theme_dark">Oscuro</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_icons">Icones</string>
+    <string name="theme_icones2">PERSONALIZA EL ICONO DE TU\nAPLICACIÓN</string>
+    <string name="string_take_photo">Tomar foto</string>
+    <string name="string_gallery">Elegir de la galería</string>
+    <string name="update_image">Actualizando imagen…</string>
+    <string name="alert_image">Imagen actualizada correctamente!</string>
+    <string name="alert_image_error">Hubo un error al actualizar la imagen, por favor inténtalo nuevamente.</string>
+
+    <string name="weather_clear_sky">Cielo despejado</string>
+    <string name="weather_few_clouds">Pocas nubes</string>
+    <string name="weather_cloudy">Nublado</string>
+    <string name="weather_fog">Niebla</string>
+    <string name="weather_drizzle">Llovizna</string>
+    <string name="weather_rain">Lluvia</string>
+    <string name="weather_light_snow">Nieve ligera</string>
+    <string name="weather_storm">Tormenta</string>
+    <string name="weather_random">Impredecible</string>
+    <string name="virtues_contact">Contacto: <b>comercial@virtues.ag</b></string>
+    <string name="virtues_about">La responsabilidad del uso y la supervisión del contenido publicado/insertado es exclusiva de los usuarios y administradores de la Aplicación.\n\nEn caso de preguntas, sugerencias, quejas, soporte, nuevas funcionalidades y/o cualquier inquietud, por favor contáctenos a través de nuestros canales de atención.</string>
+
+    <string name="donation_text"><b>¡Ayuda a Radio Manhattan a mantener viva la época dorada de la música!</b>\n\nDel soul al disco, del jazz al funk... cada ritmo tiene una historia, y tú eres parte de ella.\n\nCon tu donación a través de Pix, nos ayudas a seguir en antena, reproduciendo los clásicos que han sacudido a generaciones.\n\n<b>¡Cualquier cantidad ayuda mucho!</b></string>
+    <string name="string_pix">Nuestra clave Pix:</string>
+    <string name="artist">Artista</string>
+    <string name="chat1">Accede a nuestro chat</string>
+    <string name="themes">Temas</string>
+    <string name="share">Para compartir</string>
+    <string name="cast">Transmitir a la televisión</string>
+    <string name="schedule">Cronograma</string>
+    <string name="contact">Contacto</string>
+    <string name="sub_text">Que la paz del Señor esté con vosotros.</string>
+    <string name="desc_text_sub">Texto del subtítulo</string>
+    <string name="desc_url_site">Sitio web de radio</string>
+    <string name="desc_logo">logotipo de radio</string>
+    <string name="desc_music">Campo para introducir recomendaciones musicales</string>
+    <string name="desc_chat">chat en vivo</string>
+    <string name="desc_themes">Botón para cambiar la pantalla de temas</string>
+    <string name="desc_bluetooth">Botón bluetooth</string>
+    <string name="desc_cast">Botón espejo para TV</string>
+    <string name="desc_contact">Botón para pantalla de contacto</string>
+    <string name="desc_schedule">Botón para la pantalla de Programación</string>
+    <string name="desc_share">Botón para compartir</string>
+    <string name="desc_review">Para evaluar</string>
+    <string name="desc_terms">Botón para pantalla de términos</string>
+    <string name="desc_static">Modo estático</string>
+    <string name="desc_name">Campo de entrada de nombre</string>
+    <string name="desc_email">Campo de entrada de correo electrónico</string>
+    <string name="desc_telefone">Campo para entrada de número de teléfono celular</string>
+    <string name="desc_msg">Campo de entrada de mensaje</string>
+    <string name="desc_about">Sobre nosotros</string>
+    <string name="desc_help">Botón de ayuda</string>
+    <string name="desc_logo_virtues">Logotipo de la empresa desarrolladora</string>
+    <string name="desc_date_time">Fecha y hora actuales</string>
+    <string name="toast_static">¡Modo estático activado!</string>
+    <string name="desc_send">boton enviar</string>
+    <string name="desc_text_logo">La radio vive en el altar</string>
+    <string name="string_offline">¡Ups! Algo pasó</string>
+    <string name="string_offline_sub">¡Radio Vidas no Altar está temporalmente fuera de servicio! Pero no se preocupen, ya nos estamos encargando de ello.</string>
+    <string name="offline_question">¿Tiene preguntas?</string>
+    <string name="static_mode_desc">El Modo Estático es una opción de la app diseñada para quienes prefieren la practicidad y la simplicidad en la navegación. A diferencia del modo estándar, no utiliza animaciones, efectos de transición ni movimientos visuales al cambiar de pantalla o abrir funciones. Esto significa que cada acción dentro de la app se realiza de forma inmediata y directa, sin los efectos visuales que suelen acompañar a los menús, botones y pantallas de carga.</string>
+    <string name="help_title">Rádio Vidas no Altar fue creada para llevar la palabra de Dios a ti, el oyente, y la Gracia de Dios puede acompañarte donde quiera que estés, en cualquier momento y hora, ¡estamos felices de tenerte aquí!</string>
+    <string name="help_question">Si tiene alguna pregunta, puede contactarnos a través de Contáctenos o puede hablar con nuestro equipo de soporte si tiene más preguntas.</string>
+    <string name="desc_contact_us">Contáctenos</string>
+    <string name="desc_technical_support">Apoyo técnico</string>
+    <string name="press_now">Presiona ahora</string>
+    <string name="try_again_button_description">Intentar reconectar a internet</string>
+
+    <string name="btn_menu">Navegar al menú</string>
+    <string name="playing_now">¡Escucha ahora!</string>
+    <string name="btn_play">Botón de reproducción</string>
+    <string name="btn_cast">Botón de transmisión</string>
+    <string name="btn_weather">Abrir página del clima</string>
+    <string name="btn_bible">Abrir biblia</string>
+    <string name="btn_donation">Botón de donación</string>
+    <string name="btn_share2">Compartir inspiración</string>
+    <string name="btn_change">Cambiar inspiración</string>
+    <string name="btn_midias">Ir a página de redes sociales</string>
+    <string name="btn_whatsapp">WhatsApp</string>
+    <string name="btn_share">Botón de compartir</string>
+    <string name="btn_bluetooth">Botón Bluetooth</string>
+    <string name="ad">Anuncio</string>
+    <string name="daily_verse">Inspiracion Diaria:</string>
+    <string name="daily_verse_text">"Confie no Senhor de todo o seu coração e não se apoie em seu próprio entendimento; reconheça o Senhor em todos os seus caminhos, e ele endireitará as suas veredas."</string>
+    <string name="midias_title">Síguenos en</string>
+    <string name="midias_title2">Redes Sociales</string>
+    <string name="midias_fale">Contáctenos</string>
+    <string name="midias_share">Compartir</string>
+    <string name="midias_duvida">¿Tiene alguna otra pregunta?</string>
+    <string name="midias_share_text">¡No olvides compartir!</string>
+    <string name="donation_copy_pix">Copiar clave de imagen</string>
+    <string name="donation_copy_link">Copiar clave de enlace</string>
+    <string name="donation_title">Haz una donación</string>
+    <string name="donation_subtitle">Ayúdanos a difundir la palabra de Dios a más personas. Toda ayuda es bienvenida.</string>
+    <string name="donation_pix_title">Copia la clave Pix:</string>
+    <string name="donation_link_title">O copia el enlace:</string>
+    <string name="clima_location">Tu ubicación</string>
+    <string name="clima_vento">Viento:</string>
+    <string name="clima_umidade">Humedad:</string>
+    <string name="clima_chuva">Lluvia:</string>
+    <string name="load">Cargando...</string>
+    <string name="bible_all">todo</string>
+    <string name="bible_old">Antiguo Testamento</string>
+    <string name="string_read">Marcar como leído</string>
+    <string name="bible_title">Elija el capítulo</string>
+    <string name="about_title">Sobre nosotros:</string>
+    <string name="about_subtitle">Desarrollado por:</string>
+    <string name="main_welcome">¡Bienvenido!</string>
+    <string name="main_weather">Pronóstico del tiempo</string>
+    <string name="main_curiosidade">Datos interesantes sobre el reggae</string>
+    <string name="main_whatsapp">¿Tiene alguna pregunta?</string>
+    <string name="menu_conect2">Buscar dispositivos Bluetooth y Chromecast.</string>
+    <string name="menu_rate">Califica la aplicación</string>
+    <string name="menu_rate2">Envíanos tus comentarios sobre la aplicación.</string>
+    <string name="menu_terms">Términos y condiciones</string>
+    <string name="menu_terms2">Conozca los términos de privacidad y más.</string>
+    <string name="menu_contact">Contáctenos</string>
+    <string name="menu_contact2">Entre em contato comigo, pois sou o responsável pelo suporte do aplicativo.</string>
+    <string name="menu_saiba2">Obtén más información sobre la emisora ​​de radio.</string>
+    <string name="menu_horoscopo">Horóscopo</string>
+    <string name="menu_horoscopo2">Aprende más sobre los signos del zodíaco.</string>
+    <string name="menu_static">Modo estático</string>
+    <string name="menu_static2">Desactivar las animaciones de la aplicación</string>
+    <string name="menu_conect">Conectar</string>
+    <string name="sub_whatsapp">Contáctanos vía WhatsApp</string>
+    <string name="menu_about2">Conócenos</string>
+    <string name="contact_footer">¡Envíanos un mensaje! Puede ser un comentario, una sugerencia o incluso para informar de un error.</string>
+    <string name="contact_footer2">¡Gracias por enviarnos la canción que elegiste! ¡Sintoniza la radio para escucharla en vivo!</string>
+    <string name="string_loading_location">Cargando ubicación...</string>
+    <string name="nav_lyrics">Letras</string>
+    <string name="string_customize_player_color">Personaliza tu aplicación:</string>
+    <string name="string_customize_player_text">Elige el color del jugador.</string>
+    <string name="string_about2">Quiénes somos</string>
+    <string name="string_about_desc">El Movimiento de Coleccionistas de Reggae de Princesa do Sul fue concebido y fundado en agosto de 2010 por los DJ Edson Pedra, Ítalo Roots, Alécio Pedra, Nenê Pedra, Cosme Pedra, Raílson Jamaica y Chiquinho Pedra. El primer encuentro se realizó en el barrio Cajueiro 2, en la pulpería RM, propiedad de la madre del DJ Edson Pedra. Al principio, ¡era solo una reunión amistosa para escuchar reggae y beber cerveza! Cada mes el encuentro se repitió, contando con nuevos participantes como Homim Pedra, Rogério Roots, Mauro Pedra, Léo Pedra, DJ Juliermes y Sílvio Marley.</string>
+    <string name="string_about_desc2">El logo representa esta esencia: amigos apasionados por el reggae, unidos por el mismo propósito de compartir la cultura y difundir la energía positiva de este ritmo que conecta corazones y generaciones.</string>
+    <string name="slogan">Siente la energía y vive la música</string>
+    <string name="string_connect2">Conectar</string>
+    <string name="string_searching_for_devices">Buscando dispositivos</string>
+    <string name="string_horoscope">Horóscopo virtual</string>
+    <string name="string_horoscope_desc">¡Selecciona tu signo del zodíaco!</string>
+    <string name="string_horoscope_text1">Consulta también</string>
+    <string name="horoscope_bt3">Horóscopo Mensual</string>
+    <string name="horoscope_bt2">Horóscopo Semanal</string>
+    <string name="horoscope_bt1">Horóscopo Diario</string>
+    <string name="horoscope_love_title">Tu signo en el amor: </string>
+    <string name="horoscope_work_title">Tu signo en el trabajo: </string>
+    <string name="horoscope_preview_text">Ve tu previsión %1$s:</string>
+
+    <string name="string_quiz_text1">Origen del nombre y del ritmo</string>
+    <string name="string_quiz_text2">El nombre "reggae" se inspiró en el sonido de la guitarra, donde "re" representa el golpe hacia abajo y "gae" el golpe hacia arriba.</string>
+    <string name="string_quiz_text3">El ritmo se caracteriza por pausas rítmicas y la batería, que utiliza un ritmo "one drop", con el tiempo principal cayendo en el tercer tiempo del compás, lo que hace que el ritmo sea lento y fácil de bailar.</string>
+    <string name="string_quiz_text4">Los colores del reggae</string>
+    <string name="string_quiz_text5">Los colores del reggae son el verde, el amarillo y el rojo, que provienen de la bandera de Etiopía, la tierra natal del emperador Haile Selassie, un ícono del movimiento rastafari.</string>
+    <string name="string_quiz_text6">Se refiere a la sangre de los mártires y a la fe, que representa la perseverancia hacia una meta y la capacidad de transformar los sueños en realidad.</string>
+    <string name="string_quiz_text7">Simboliza las riquezas naturales, el oro, la prosperidad, el amor y la espiritualidad que une a los pueblos.</string>
+    <string name="string_quiz_text8">Representa la naturaleza, los campos fértiles, la prosperidad y la esperanza.</string>
+    <string name="string_quiz_text9">¿Qué sabes de REGGAE?</string>
+    <string name="string_quiz_text10">IR AL QUIZ</string>
+
+    <string name="string_quiz_text11">En este cuestionario, pondremos a prueba tus conocimientos básicos de reggae con 5 preguntas. ¡Y al final, podrás consultar tu puntuación!</string>
+    <string name="string_music3">Petición musical</string>
+    <string name="string_quiz_text12">Iniciar quiz</string>
+    <string name="string_quiz_welcome">Bienvenido a</string>
+
+    <string name="bluetooth_permission_required">Se requieren permisos de Bluetooth</string>
+    <string name="bluetooth_required">Bluetooth requerido</string>
+    <string name="bluetooth_not_supported">Bluetooth no compatible</string>
+    <string name="no_devices_found">No se encontraron dispositivos</string>
+    <string name="string_connected_chromecast">Conectado a Chromecast</string>
+    <string name="string_disconnected_chromecast">Desconectado de Chromecast</string>
+    <string name="string_connecting_to">Conectando a</string>
+    <string name="string_disconnecting_from">Desconectando de</string>
+    <string name="string_error_connecting">Error al conectar</string>
+    <string name="string_device_not_found">Dispositivo no encontrado</string>
+    <string name="bluetooth_connect_title">Dispositivo Bluetooth</string>
+    <string name="bluetooth_connect_message">¿Desea conectar o ¿Desconectar?</string>
+    <string name="bluetooth_connect">Conectar</string>
+    <string name="bluetooth_disconnect">Desconectar</string>
+    <string name="bluetooth_pairing">Emparejando</string>
+    <string name="bluetooth_pairing_started">Iniciando emparejamiento con %1$s</string>
+    <string name="bluetooth_pairing_failed">Error al emparejar con %1$s</string>
+    <string name="bluetooth_connecting_a2dp">Conectando con %1$s</string>
+    <string name="bluetooth_connected_a2dp">Conectado con %1$s</string>
+    <string name="bluetooth_connection_failed">Error de conexión con %1$s</string>
+    <string name="bluetooth_unpaired_success">¡Dispositivo desemparejado correctamente!</string>
+    <string name="bluetooth_unpair_failed">Error al desemparejar el dispositivo</string>
+    <string name="bluetooth_unknown_device">Dispositivo desconocido</string>
+
+    <string name="string_quiz11">¡CUESTIONARIO TERMINADO!</string>
+    <string name="string_quiz12">Tu puntuación final fue:</string>
+    <string name="string_quiz13">¿Te gustó este cuestionario? ¡Deja tu comentario!</string>
+    <string name="string_quiz14">REPRODUCIR DE NUEVO</string>
+    <string name="string_quiz15">VOLVER A LA RADIO</string>
+    <string name="string_quiz16">Comentar</string>
+    <string name="string_quiz17">%d/10</string>
+
+    <string name="string_quiz18">PREGUNTA %d</string>
+
+    <string name="locutores_title">
+CONOCE A NUESTROS\n
+<big>LOCUTORES</big>
+</string>
+    <string name="sol_desc">¡La musa fitness de Litoral tiene nombre! Nuestra Sol es alegre y anima a nuestros oyentes con su energía inigualable.\n\nSolange Correa realiza acciones externas, es cercana al público y conocida por donde pasa. La atleta de Radio Litoral siempre está presente en las redes sociales mostrando su rutina de ejercicios y los pagodes del fin de semana.</string>
+    <string name="cleide_desc">¡Cleide es la diversión en persona! La principal locutora de Rádio Litoral lleva su alegría a donde vaya.\n\nElla cree que, ya sea en línea u offline, la función de un comunicador es conquistar a las personas de una manera ligera y divertida. Animando las mañanas de Espírito Santo con su voz inconfundible, ¡nuestra Cleide cautiva a los oyentes!</string>
+    <string name="sergio_desc">Nuestro locutor de exteriores es divertido, gracioso y tiene una voz muy, muy característica.\n\nConocido por entretener al público en las calles, Sérgio Pontes es quien realiza las acciones y conecta la marca con la gente. ¡Se divierte y deja nuestra huella por donde pasa!</string>
+    <string name="nat_desc">¡La Natizinha de Litoral es nuestra mamá de mascotas! Apasionada por los animales, siempre está dispuesta a ayudarlos.\n\nCarismática, animada y auténtica: estos son los adjetivos que definen a Nathália Ferreira. Nuestra comunicadora es licenciada en Periodismo y cumple su papel de locutora de manera brillante, con la diversión que tanto les gusta. ¡Nuestra más joven es increíble!</string>
+    <string name="alex_desc">Locutor de Litoral FM, Alex Bonno es conocido por su voz marcante, su buen humor y su forma auténtica de comunicarse con el público. Amante de los gatos (orgulloso padre de dos), le encanta compartir momentos del día a día con ligereza y creatividad. En las redes sociales mezcla lifestyle, cultura pop y el detrás de escena de la radio, siempre con contenido relajado, actual y enfocado en lo que genera interacción.</string>
+    <string name="bruninho_desc">¡Holaaa, chaval! Nuestro locutor más joven es realmente diferente.\n\nBruninho Andrade se destaca en las mañanas y tardes de Litoral y está muy presente en las redes sociales, mostrando su rutina y su forma súper divertida de ser. Es muy querido por nuestros oyentes y le encanta recibirlos en nuestro estudio para charlar.</string>
+    <string name="jonas_desc">¡Es él, nuestro DJ de Segue o Baile Litoral! Es el responsable de elegir los verdaderos temazos que escuchamos por la tarde, y seamos sinceros, ¡nunca falla!\n\nJonas Braum tiene un carisma especial y, aunque parezca muy serio, es muy divertido. Nuestro DJ realiza eventos externos y es multifuncional: además de elegir las mejores canciones para tu radio favorita, también es sonidista, productor de audio y locutor.</string>
+    <string name="roliber_desc">Mira, es imposible no reconocer esta voz… ¡Roliber Anderson no pasa desapercibido en ningún lugar!\n\nNuestro locutor habla francés, es abogado y llama especialmente la atención de los oyentes. Son 26 años en Rádio Litoral, una voz cautivadora y un carisma incomparable.</string>
+    <string name="string_menu_programacao">PROGRAMACIÓN</string>
+    <string name="string_menu_noticias">NOTICIAS</string>
+    <string name="string_menu_agenda_litoral">AGENDA LITORAL</string>
+    <string name="string_menu_promocoes">PROMOCIONES</string>
+    <string name="string_menu_pedido_musical">PEDIDO MUSICAL</string>
+    <string name="string_menu_quem_somos">QUIÉNES SOMOS</string>
+    <string name="string_menu_contato">CONTACTO COMERCIAL</string>
+    <string name="string_menu_configuracoes">CONFIGURACIONES</string>
+
+    <string name="share_news">Compartir</string>
+    <string name="close_news">Cerrar</string>
+    <string name="news_detail">Detalles de la noticia</string>
+    <string name="share_via">Compartir vía %s</string>
+    <string name="news_content_not_available">Contenido no disponible</string>
+
+    <string name="string_schedule">Cronograma</string>
+    <string name="string_on_live">En vivo ahora</string>
+    <string name="string_time">Tiempo:</string>
+
+</resources>

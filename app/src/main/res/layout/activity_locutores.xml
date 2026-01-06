@@ -1,0 +1,296 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/locutores"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/vermelho_claro">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/bgLocutor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/bg_locutor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <LinearLayout
+            android:id="@+id/locutores_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:padding="@dimen/_20sdp">
+
+                <ImageView
+                    android:id="@+id/btn_voltar"
+                    android:layout_width="@dimen/btn_voltar_w"
+                    android:layout_height="@dimen/btn_voltar_h"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@drawable/btn_voltar_radio_escuro" />
+
+                <ImageView
+                    android:layout_width="@dimen/logo_w"
+                    android:layout_height="@dimen/logo_h"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/logo_main" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/insanibu"
+                app:fontFamily="@font/insanibu"
+                android:text="@string/locutores_title"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_20sdp" />
+
+            <ImageView
+                android:layout_width="@dimen/linha_locutores"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                app:srcCompat="@drawable/traco" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_locutores"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/_40sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/locutores_header">
+
+            <LinearLayout
+                android:id="@+id/btn_locutor_sol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginRight="@dimen/_40sdp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/sol_img"
+                    android:layout_width="@dimen/img_locutor_w"
+                    android:layout_height="@dimen/img_locutor_h"
+                    app:srcCompat="@drawable/sol" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/insanibu"
+                    app:fontFamily="@font/insanibu"
+                    android:text="SOL"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/locutor_nome_txtsize" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_locutor_cleide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btn_locutor_sol"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/spacing_locutores1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/cleide_img"
+                    android:layout_width="@dimen/img_locutor_w"
+                    android:layout_height="@dimen/img_locutor_h"
+                    app:srcCompat="@drawable/cleide" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/insanibu"
+                    app:fontFamily="@font/insanibu"
+                    android:text="CLEIDE"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/locutor_nome_txtsize" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_locutor_sergio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btn_locutor_cleide"
+                android:layout_marginTop="@dimen/spacing_locutores1"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/sergio_img"
+                    android:layout_width="@dimen/img_locutor_w"
+                    android:layout_height="@dimen/img_locutor_h"
+                    app:srcCompat="@drawable/sergio" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:fontFamily="@font/insanibu"
+                    app:fontFamily="@font/insanibu"
+                    android:text="SERGIO"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/locutor_nome_txtsize" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_locutor_bruninho"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btn_locutor_sergio"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/spacing_locutores2"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:fontFamily="@font/insanibu"
+                    android:text="BRUNINHO"
+                    app:fontFamily="@font/insanibu"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/locutor_nome_txtsize" />
+
+                <ImageView
+                    android:id="@+id/bruninho_img"
+                    android:layout_width="@dimen/img_locutor_w"
+                    android:layout_height="@dimen/img_locutor_h"
+                    app:srcCompat="@drawable/bruninho" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_locutor_nat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btn_locutor_bruninho"
+                android:layout_marginStart="@dimen/spacing_locutores2"
+                android:layout_marginTop="@dimen/spacing_locutores2"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/nat_img"
+                    android:layout_width="@dimen/img_locutor_w"
+                    android:layout_height="@dimen/img_locutor_h"
+                    app:srcCompat="@drawable/nat" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/insanibu"
+                    android:text="NAT"
+                    app:fontFamily="@font/insanibu"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/locutor_nome_txtsize" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_locutor_alex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btn_locutor_nat"
+                android:layout_marginStart="@dimen/spacing_locutores3"
+                android:layout_marginTop="@dimen/spacing_locutores2"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/alex_img"
+                    android:layout_width="@dimen/img_locutor_w"
+                    android:layout_height="@dimen/img_locutor_h"
+                    app:srcCompat="@drawable/alex" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:fontFamily="@font/insanibu"
+                    android:text="ALEX"
+                    app:fontFamily="@font/insanibu"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/locutor_nome_txtsize" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_locutor_jonas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btn_locutor_alex"
+                android:layout_marginStart="@dimen/_minus10sdp"
+                android:layout_marginTop="@dimen/spacing_locutores2"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/jonas_img"
+                    android:layout_width="@dimen/img_locutor_w"
+                    android:layout_height="@dimen/img_locutor_h"
+                    app:srcCompat="@drawable/jonas" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:fontFamily="@font/insanibu"
+                    app:fontFamily="@font/insanibu"
+                    android:text="JONAS"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/locutor_nome_txtsize" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_locutor_roliber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btn_locutor_jonas"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/spacing_locutores2"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/roliber_img"
+                    android:layout_width="@dimen/img_locutor_w"
+                    android:layout_height="@dimen/img_locutor_h"
+                    app:srcCompat="@drawable/roliber" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/insanibu"
+                    app:fontFamily="@font/insanibu"
+                    android:text="ROLIBER"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/locutor_nome_txtsize" />
+            </LinearLayout>
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

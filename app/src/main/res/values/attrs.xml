@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="IntroductionView">
+        <attr name="introRaw" format="reference" />
+        <attr name="introUri" format="string" />
+        <attr name="introUriAsset" format="string" />
+        <attr name="introPreview" format="reference" />
+        <attr name="introAutoStart" format="boolean" />
+        <attr name="introAudio" format="boolean" />
+        <attr name="introRepeatMode" format="enum">
+            <enum name="none" value="0" />
+            <enum name="one" value="1" />
+            <enum name="all" value="2" />
+        </attr>
+        <attr name="introMeasureBasedOnAspectRatio" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="SeekArc">
+        <attr name="arcWidth" format="dimension" />
+        <attr name="startAngle" format="integer" />
+        <attr name="sweepAngle" format="integer" />
+        <attr name="arcColor" format="color" />
+        <attr name="progress" format="float" />
+        <attr name="maxProgress" format="float" />
+
+        <attr name="progressColor" format="color" />
+        <attr name="thumbColor" format="color" />
+        <attr name="thumbRadius" format="dimension" />
+        <attr name="thumbSizeFactor" format="float" />
+        <attr name="roundCorner" format="boolean" />
+
+        <attr name="seekDirection" format="enum">
+            <enum name="clockwise" value="0" />
+            <enum name="antiClockwise" value="1" />
+        </attr>
+
+        <attr name="seekArcMode" format="enum">
+            <enum name="full" value="0" />
+            <enum name="semi_top" value="1" />
+            <enum name="semi_bottom" value="2" />
+            <enum name="semi_left" value="3" />
+            <enum name="semi_right" value="4" />
+        </attr>
+
+        <attr name="fitToRect" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="ConnectingRipple">
+        <attr name="ripple_color" format="color" />
+        <attr name="enable_single_ripple" format="boolean" />
+        <attr name="ripple_duration" format="integer" />
+        <attr name="enable_color_transition" format="boolean" />
+        <attr name="enable_random_position" format="boolean" />
+        <attr name="enable_random_color" format="boolean" />
+        <attr name="enable_stroke_style" format="boolean" />
+        <attr name="ripple_from_color" format="color" />
+        <attr name="ripple_to_color" format="color" />
+        <attr name="ripple_stroke_width" format="dimension" />
+        <attr name="ripple_maximum_radius" format="dimension" />
+        <attr name="ripple_count" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="SwitchView">
+        <!-- Cores do Background -->
+        <attr name="backgroundColor" format="color" />
+        <attr name="backgroundColorOn" format="color" />
+
+        <!-- Gradiente do Background -->
+        <attr name="backgroundUseGradient" format="boolean" />
+        <attr name="backgroundGradientStartOff" format="color" />
+        <attr name="backgroundGradientCenterOff" format="color" />
+        <attr name="backgroundGradientEndOff" format="color" />
+        <attr name="backgroundGradientStartOn" format="color" />
+        <attr name="backgroundGradientCenterOn" format="color" />
+        <attr name="backgroundGradientEndOn" format="color" />
+        <attr name="backgroundGradientAngle" format="float" />
+
+        <!-- Cores do Thumb -->
+        <attr name="thumbColorOff" format="color" />
+        <attr name="thumbColorOn" format="color" />
+        <attr name="thumbDisabledColor" format="color" />
+
+        <!-- Gradiente do Thumb -->
+        <attr name="thumbUseGradient" format="boolean" />
+        <attr name="thumbGradientStartOff" format="color" />
+        <attr name="thumbGradientEndOff" format="color" />
+        <attr name="thumbGradientStartOn" format="color" />
+        <attr name="thumbGradientEndOn" format="color" />
+        <attr name="thumbGradientAngle" format="float" />
+
+        <!-- Corner Radius -->
+        <attr name="backgroundCornerRadius" format="dimension" />
+        <attr name="thumbCornerRadius" format="dimension" />
+
+        <!-- Dimensões -->
+        <attr name="thumbSize" format="dimension" />
+        <attr name="thumbWidth" format="dimension" />
+        <attr name="thumbHeight" format="dimension" />
+        <attr name="thumbInset" format="dimension" />
+        <attr name="switchWidth" format="dimension" />
+        <attr name="switchHeight" format="dimension" />
+
+        <!-- Borda do Thumb -->
+        <attr name="thumbBorderWidth" format="dimension" />
+        <attr name="thumbBorderColor" format="color" />
+        <attr name="thumbBorderColorOn" format="color" />
+
+        <!-- Ícones/Imagens do Thumb -->
+        <attr name="thumbIconOff" format="reference" />
+        <attr name="thumbIconOn" format="reference" />
+        <attr name="thumbIconTint" format="color" />
+        <attr name="thumbIconTintOn" format="color" />
+        <attr name="thumbIconSize" format="dimension" />
+
+        <!-- Animação -->
+        <attr name="colorAnimationDuration" format="integer" />
+
+        <!-- Antigos (manter compatibilidade) -->
+        <attr name="tintColor" format="color" />
+        <attr name="outerStrokeWidth" format="dimension" />
+        <attr name="shadowSpace" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="RevealWaveSlider">
+        <!-- Valor do slider (0.0 a 1.0) -->
+        <attr name="sliderValue" format="float" />
+
+        <!-- Dimensões -->
+        <attr name="trackHeight" format="dimension" />
+        <attr name="cornerRadius" format="dimension" />
+        <attr name="knobSize" format="dimension" />
+        <attr name="waveHeight" format="dimension" />
+
+        <!-- Propriedades da onda -->
+        <attr name="amplitude" format="float" />
+        <attr name="wavelength" format="dimension" />
+        <attr name="waveGap" format="dimension" />
+
+        <!-- Cores Sólidas -->
+        <attr name="trackColor" format="color" />
+        <attr name="fillColor" format="color" />
+        <attr name="knobColor" format="color" />
+        <attr name="waveColor" format="color" />
+
+        <!-- Borda da Thumb -->
+        <attr name="knobBorderWidth" format="dimension" />
+        <attr name="knobBorderColor" format="color" />
+
+        <!-- Gradientes - Track -->
+        <attr name="trackUseGradient" format="boolean" />
+        <attr name="trackGradientStart" format="color" />
+        <attr name="trackGradientEnd" format="color" />
+        <attr name="trackGradientAngle" format="float" />
+
+        <!-- Gradientes - Fill -->
+        <attr name="fillUseGradient" format="boolean" />
+        <attr name="fillGradientStart" format="color" />
+        <attr name="fillGradientEnd" format="color" />
+        <attr name="fillGradientAngle" format="float" />
+
+        <!-- Gradientes - Wave -->
+        <attr name="waveUseGradient" format="boolean" />
+        <attr name="waveGradientStart" format="color" />
+        <attr name="waveGradientEnd" format="color" />
+        <attr name="waveGradientAngle" format="float" />
+
+        <!-- Gradientes - Knob -->
+        <attr name="knobUseGradient" format="boolean" />
+        <attr name="knobGradientStart" format="color" />
+        <attr name="knobGradientEnd" format="color" />
+        <attr name="knobGradientAngle" format="float" />
+
+        <!-- Animação -->
+        <attr name="animationEnabled" format="boolean" />
+        <attr name="animationSpeed" format="float" />
+
+        <!-- Flags -->
+        <attr name="showsKnob" format="boolean" />
+        <attr name="waveEnabled" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="SearchableSpinner">
+        <attr name="hintText" format="string" />
+        <!-- Seta do Spinner -->
+        <attr name="spinnerArrowDrawable" format="reference" />
+        <attr name="spinnerArrowWidth" format="dimension" />
+        <attr name="spinnerArrowHeight" format="dimension" />
+        <attr name="spinnerArrowPadding" format="dimension" />
+        <attr name="spinnerArrowTint" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="GradientTextView">
+        <attr name="gradientStartColor" format="color" />
+        <attr name="gradientEndColor" format="color" />
+        <attr name="gradientMiddleColor" format="color" />
+        <attr name="gradientAngle" format="float" />
+        <attr name="gradientType" format="enum">
+            <enum name="linear" value="0" />
+            <enum name="radial" value="1" />
+            <enum name="sweep" value="2" />
+        </attr>
+        <attr name="gradientEnabled" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="RainbowProgressBar">
+        <attr name="progress_current" format="integer"/>
+        <attr name="progress_max" format="integer"/>
+
+        <attr name="progress_start_color" format="color"/>
+        <attr name="progress_center_color" format="color"/>
+        <attr name="progress_end_color" format="color"/>
+        <attr name="progress_unreached_color" format="color"/>
+
+        <attr name="progress_height" format="dimension"/>
+        <attr name="progress_radius" format="dimension"/>
+
+        <attr name="progress_type" format="enum">
+            <enum name="circle" value="0"/>
+            <enum name="line" value="1"/>
+            <enum name="rainbow" value="2"/>
+        </attr>
+        
+        <attr name="progress_indeterminate" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="MirroredEqualizerView">
+        <attr name="eqActive" format="boolean" />
+        <attr name="eqBars" format="integer" />
+        <attr name="eqSpeed" format="float" />
+        <attr name="eqAmp" format="float" />
+        <attr name="eqTopColor" format="color" />
+        <attr name="eqBottomColor" format="color" />
+        <attr name="eqOrientation" format="enum">
+            <enum name="columns" value="0" />
+            <enum name="rows" value="1" />
+        </attr>
+        <attr name="eqMirror" format="boolean" />
+        <attr name="eqMirrorAxis" format="enum">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+        <attr name="eqMirrorSpacing" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="ShimmerRecyclerView">
+        <attr name="shimmer_recycler_clip_to_children" format="boolean" />
+        <attr name="shimmer_recycler_colored" format="boolean" />
+        <attr name="shimmer_recycler_base_color" format="color" />
+        <attr name="shimmer_recycler_highlight_color" format="color" />
+        <attr name="shimmer_recycler_base_alpha" format="float" />
+        <attr name="shimmer_recycler_highlight_alpha" format="float" />
+        <attr name="shimmer_recycler_auto_start" format="boolean" />
+        <attr name="shimmer_recycler_duration" format="integer" />
+        <attr name="shimmer_recycler_repeat_count" format="integer" />
+        <attr name="shimmer_recycler_repeat_delay" format="integer" />
+        <attr name="shimmer_recycler_repeat_mode" format="enum">
+            <enum name="restart" value="1" />
+            <enum name="reverse" value="2" />
+        </attr>
+        <attr name="shimmer_recycler_direction" format="enum">
+            <enum name="left_to_right" value="0" />
+            <enum name="top_to_bottom" value="1" />
+            <enum name="right_to_left" value="2" />
+            <enum name="bottom_to_top" value="3" />
+        </attr>
+        <attr name="shimmer_recycler_dropoff" format="float" />
+        <attr name="shimmer_recycler_intensity" format="float" />
+        <attr name="shimmer_recycler_shape" format="enum">
+            <enum name="linear" value="0" />
+            <enum name="radial" value="1" />
+        </attr>
+        <attr name="shimmer_recycler_tilt" format="float" />
+        <attr name="shimmer_recycler_fixed_width" format="dimension" />
+        <attr name="shimmer_recycler_fixed_height" format="dimension" />
+        <attr name="shimmer_recycler_width_ratio" format="float" />
+        <attr name="shimmer_recycler_height_ratio" format="float" />
+
+        <attr name="shimmer_recycler_item_count" format="integer" />
+        <attr name="shimmer_recycler_layout" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="ImageMask">
+        <attr name="maskSrc" format="reference" />
+        <attr name="srcImage" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="CircularVolumeSeekBar">
+        <attr name="cv_max" format="integer" />
+        <attr name="cv_progress" format="integer" />
+        <attr name="cv_trackColor" format="color" />
+        <attr name="cv_progressColor" format="color" />
+        <attr name="cv_thumbColor" format="color" />
+        <attr name="cv_strokeWidth" format="dimension" />
+        <attr name="cv_thumbRadius" format="dimension" />
+    </declare-styleable>
+
+</resources>

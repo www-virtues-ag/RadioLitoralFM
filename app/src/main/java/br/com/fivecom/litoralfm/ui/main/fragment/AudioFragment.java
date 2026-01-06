@@ -1,0 +1,944 @@
+package br.com.fivecom.litoralfm.ui.main.fragment;
+
+import static br.com.fivecom.litoralfm.utils.constants.Constants.data;
+
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.AudioManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.media3.common.util.UnstableApi;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+
+import java.util.Calendar;
+import java.util.List;
+
+import br.com.fivecom.litoralfm.R;
+import br.com.fivecom.litoralfm.ui.choose.ChooseFragment;
+import br.com.fivecom.litoralfm.ui.main.MainActivity;
+import br.com.fivecom.litoralfm.ui.main.MediaActivity;
+import br.com.fivecom.litoralfm.ui.main.MediaStateListener;
+import br.com.fivecom.litoralfm.ui.views.CircularVolumeSeekBar;
+import br.com.fivecom.litoralfm.models.scheduler.ProgramaAPI;
+import br.com.fivecom.litoralfm.services.ProgramacaoAPIService;
+import br.com.fivecom.litoralfm.utils.constants.Constants;
+import br.com.fivecom.litoralfm.utils.constants.Extras;
+import br.com.fivecom.litoralfm.utils.core.Intents;
+import br.com.fivecom.litoralfm.utils.requests.RequestListener;
+import br.com.fivecom.litoralfm.utils.requests.RequestManager;
+
+@UnstableApi
+public class AudioFragment extends Fragment implements View.OnClickListener, MediaStateListener {
+
+    private static final String TAG = "AudioFragment";
+    private static final long METADATA_UPDATE_INTERVAL = 10000;
+    private static final String ARG_RADIO_ID = "arg_radio_id";
+    private static final String PREFS_NAME = "app_prefs";
+    private static final String KEY_RADIO_ID = "selected_radio_id";
+
+    // ID da rádio usada neste fragmento (vem da ChooseFragment ou default)
+    private int selectedRadioId = 10224; // SUL por padrão
+    private int lastSelectedRadioId = -1; // Para detectar mudanças
+    private ImageView btPlay;
+    private ImageView btBack;
+    private ImageView btMenu;
+    private ImageView btHome;
+    private ImageView btNotif;
+    private ImageView coverAlbum;
+    private TextView nameProgram;
+    private TextView nameLocutor;
+    private TextView musicName;
+    private CircularVolumeSeekBar volumeSeekBar;
+    private CardView coverPlaceholder;
+    private ImageView btnNav1, btnNav2, btnNav3, btnNav4, btnNav5;
+    private ProgressBar progressBar;
+    private WebView webView;
+
+    private AudioManager audioManager;
+    private boolean isPlaying = false;
+    private RequestManager requestManager;
+    private ProgramacaoAPIService programacaoAPIService;
+    private Handler metadataHandler;
+    private Runnable metadataRunnable;
+    private String currentSong = "";
+    private String currentProgram = "Rádio Litoral";
+    private String currentHost = "Ao Vivo";
+    private String currentAlbumArtUrl = "";
+    private MediaControllerCompat controller;
+
+    // ======================= VOLUME SYNC (ROBUSTO) ======================= //
+    private final Handler volumeHandler = new Handler(Looper.getMainLooper());
+    private Runnable volumeRunnable;
+    private boolean isUpdatingFromSystem = false;
+    private int lastSystemVolume = -1;
+    private int lastSystemMaxVolume = -1;
+
+    // ======================= FACTORY ======================= //
+
+    public static AudioFragment newInstance(int radioId) {
+        AudioFragment fragment = new AudioFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_RADIO_ID, radioId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    // ======================= CICLO DE VIDA ======================= //
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            selectedRadioId = getArguments().getInt(ARG_RADIO_ID, selectedRadioId);
+        }
+
+        if (getActivity() != null && getActivity().getIntent() != null) {
+            int fromIntent = getActivity().getIntent().getIntExtra(Extras.ID.name(), selectedRadioId);
+            selectedRadioId = fromIntent;
+        }
+
+        // Lê do SharedPreferences para pegar a última seleção do usuário
+        selectedRadioId = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .getInt(KEY_RADIO_ID, selectedRadioId);
+
+        // Inicializa lastSelectedRadioId
+        lastSelectedRadioId = selectedRadioId;
+
+        // Atualiza o índice global Constants.ID baseado no selectedRadioId
+        updateConstantsIdFromRadioId();
+
+        Log.d(TAG, "🎯 selectedRadioId = " + selectedRadioId + ", Constants.ID = " + Constants.ID);
+    }
+
+    /**
+     * Atualiza Constants.ID (índice do array) baseado no selectedRadioId
+     */
+    private void updateConstantsIdFromRadioId() {
+        if (data == null || data.radios == null || data.radios.isEmpty()) {
+            Log.w(TAG, "⚠️ data.radios não disponível para atualizar Constants.ID");
+            Constants.ID = 0; // Default para primeira rádio
+            return;
+        }
+
+        // Procura o índice da rádio no array baseado no ID
+        int index = findRadioIndexById(selectedRadioId);
+        if (index >= 0) {
+            Constants.ID = index;
+            Log.d(TAG, "✅ Constants.ID atualizado para índice: " + index);
+        } else {
+            Log.w(TAG, "⚠️ Rádio com ID " + selectedRadioId + " não encontrada, usando índice 0");
+            Constants.ID = 0;
+        }
+    }
+
+    /**
+     * Encontra o índice da rádio no array data.radios baseado no ID
+     * @param radioId O ID da rádio (ex: 10224)
+     * @return O índice no array, ou -1 se não encontrado
+     */
+    private int findRadioIndexById(int radioId) {
+        if (data == null || data.radios == null) return -1;
+
+        String radioIdStr = String.valueOf(radioId);
+        for (int i = 0; i < data.radios.size(); i++) {
+            if (data.radios.get(i).id != null && data.radios.get(i).id.equals(radioIdStr)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_audio, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        initializeViews(view);
+        setupAudioManager();
+        setupVolumeSeekBar();
+        setupClickListeners();
+        setupWebView();
+        startMetadataUpdates();
+        attachMediaController();
+
+        // Registra como listener da MediaActivity para receber callbacks de metadados/estado
+        if (getActivity() instanceof MediaActivity) {
+            ((MediaActivity) getActivity()).addMediaStateListener(this);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        attachMediaController();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        attachMediaController();
+
+        // Atualizar volume inicial + iniciar sync contínuo
+        updateVolumeFromSystem();
+        startVolumeSync();
+
+        // Verifica se o usuário trocou de rádio no ChooseFragment
+        int savedRadioId = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .getInt(KEY_RADIO_ID, selectedRadioId);
+
+        if (savedRadioId != lastSelectedRadioId && lastSelectedRadioId != -1) {
+            Log.d(TAG, "🔄 Rádio mudou de " + lastSelectedRadioId + " para " + savedRadioId);
+
+            selectedRadioId = savedRadioId;
+            updateConstantsIdFromRadioId();
+
+            // Força o MediaService a trocar de rádio
+            switchRadioStream();
+
+            lastSelectedRadioId = savedRadioId;
+        } else if (lastSelectedRadioId == -1) {
+            lastSelectedRadioId = savedRadioId;
+        }
+    }
+
+    @Override
+    public void onStop() {
+        stopVolumeSync();
+        detachMediaController();
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        // Remove o listener da MediaActivity
+        if (getActivity() instanceof MediaActivity) {
+            ((MediaActivity) getActivity()).removeMediaStateListener(this);
+        }
+
+        if (metadataHandler != null && metadataRunnable != null) {
+            metadataHandler.removeCallbacks(metadataRunnable);
+        }
+
+        stopVolumeSync();
+
+        btPlay = null;
+        btBack = null;
+        btMenu = null;
+        btHome = null;
+        btNotif = null;
+        coverAlbum = null;
+        nameProgram = null;
+        nameLocutor = null;
+        musicName = null;
+        volumeSeekBar = null;
+        progressBar = null;
+        webView = null;
+
+        super.onDestroyView();
+    }
+
+    // ======================= MEDIA CALLBACKS ======================= //
+
+    @Override
+    public void onPlaybackStateChanged(PlaybackStateCompat state) {
+        if (state == null) return;
+        requireActivity().runOnUiThread(() -> syncPlaybackState(state));
+    }
+
+    @Override
+    public void onMetadataChanged(MediaMetadataCompat metadata) {
+        if (metadata == null) return;
+
+        requireActivity().runOnUiThread(() -> {
+            String title = metadata.getString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE);
+            String artist = metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
+
+            // Pega a URL da capa do álbum
+            String albumArtUrl = metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI);
+
+            // Atualiza a música
+            if (title != null && !title.isEmpty()) {
+                currentSong = title;
+                if (artist != null && !artist.isEmpty()) {
+                    currentSong = artist + " - " + title;
+                }
+                updateSongInfo();
+            }
+
+            // Atualiza a capa do álbum
+            if (albumArtUrl != null && !albumArtUrl.isEmpty()) {
+                currentAlbumArtUrl = albumArtUrl;
+                updateAlbumArt();
+            }
+
+            Log.d(TAG, "🎵 Metadados atualizados: " + currentSong + " | Capa: " + albumArtUrl);
+        });
+    }
+
+    private void attachMediaController() {
+        try {
+            controller = MediaControllerCompat.getMediaController(requireActivity());
+            if (controller != null) {
+                syncPlaybackState(controller.getPlaybackState());
+
+                MediaMetadataCompat metadata = controller.getMetadata();
+                if (metadata != null) {
+                    onMetadataChanged(metadata);
+                }
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    private void detachMediaController() {
+        controller = null;
+    }
+
+    private void syncPlaybackState(@Nullable PlaybackStateCompat state) {
+        if (state == null) return;
+
+        int s = state.getState();
+        boolean nowPlaying =
+                (s == PlaybackStateCompat.STATE_PLAYING ||
+                        s == PlaybackStateCompat.STATE_BUFFERING);
+
+        isPlaying = nowPlaying;
+
+        if (btPlay != null) {
+            btPlay.setImageResource(
+                    nowPlaying ? R.drawable.btn_pause_radio : R.drawable.btn_play_radio
+            );
+        }
+
+        if (progressBar != null) {
+            if (s == PlaybackStateCompat.STATE_BUFFERING) {
+                progressBar.setVisibility(View.VISIBLE);
+            } else {
+                progressBar.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    // ======================= INIT ======================= //
+
+    private void initializeViews(View view) {
+        btPlay = view.findViewById(R.id.bt_play);
+
+        btBack = view.findViewById(R.id.bt_back);
+        btMenu = view.findViewById(R.id.bt_menu);
+        btHome = view.findViewById(R.id.bt_home);
+        btNotif = view.findViewById(R.id.bt_notif);
+
+        coverAlbum = view.findViewById(R.id.cover_album);
+        coverPlaceholder = view.findViewById(R.id.cover_placeholder);
+
+        nameProgram = view.findViewById(R.id.name_program);
+        nameLocutor = view.findViewById(R.id.name_locutor);
+        musicName = view.findViewById(R.id.music_name);
+
+        volumeSeekBar = view.findViewById(R.id.volumeSeekBar);
+
+        progressBar = view.findViewById(R.id.progress_bar);
+
+        btnNav1 = view.findViewById(R.id.bt_promotion);
+        btnNav2 = view.findViewById(R.id.bt_news);
+        btnNav3 = view.findViewById(R.id.bt_radio);
+        btnNav4 = view.findViewById(R.id.bt_program);
+        btnNav5 = view.findViewById(R.id.bt_wpp);
+
+        webView = view.findViewById(R.id.webView);
+
+        requestManager = new RequestManager();
+        programacaoAPIService = new ProgramacaoAPIService();
+        programacaoAPIService.setCallback(new ProgramacaoAPIService.ProgramacaoAPICallback() {
+            @Override
+            public void onProgramasLoaded(List<ProgramaAPI> programas) {
+                if (getActivity() == null) return;
+                requireActivity().runOnUiThread(() -> {
+                    encontrarProgramaAtual(programas);
+                });
+            }
+
+            @Override
+            public void onLoadingChanged(boolean isLoading) {
+                // Pode ser usado para mostrar indicador de carregamento se necessário
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Log.e(TAG, "Erro ao buscar programação: " + errorMessage);
+                if (getActivity() == null) return;
+                requireActivity().runOnUiThread(() -> {
+                    currentProgram = "Rádio Litoral";
+                    currentHost = "Ao Vivo";
+                    updateProgramInfo();
+                });
+            }
+        });
+        metadataHandler = new Handler(Looper.getMainLooper());
+    }
+
+    private void setupAudioManager() {
+        audioManager = (AudioManager) requireContext().getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager == null || volumeSeekBar == null) return;
+
+        // Inicializa o volume do widget com o volume real do sistema
+        updateVolumeFromSystem();
+    }
+
+    private void setupVolumeSeekBar() {
+        if (volumeSeekBar == null) return;
+
+        volumeSeekBar.setOnVolumeChangedListener((volume, fromUser) -> {
+            if (!fromUser) return;
+            if (audioManager == null) return;
+            if (isUpdatingFromSystem) return;
+
+            int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+            int targetVolume = Math.round((volume / 100f) * maxVolume);
+
+            targetVolume = Math.max(0, Math.min(targetVolume, maxVolume));
+
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, targetVolume, 0);
+
+            // Atualiza cache pra evitar "piscada" no polling
+            lastSystemVolume = targetVolume;
+            lastSystemMaxVolume = maxVolume;
+
+            Log.d(TAG, "🔊 Volume alterado pelo usuário: " + volume + "% (" + targetVolume + "/" + maxVolume + ")");
+        });
+    }
+
+    private void updateVolumeFromSystem() {
+        if (audioManager == null || volumeSeekBar == null) return;
+
+        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+
+        // Só atualiza se houve mudança real (evita trabalho desnecessário e loops)
+        if (currentVolume == lastSystemVolume && maxVolume == lastSystemMaxVolume) return;
+
+        lastSystemVolume = currentVolume;
+        lastSystemMaxVolume = maxVolume;
+
+        int volumePercent = Math.round((currentVolume / (float) maxVolume) * 100f);
+
+        isUpdatingFromSystem = true;
+        // Importante: este método deve NÃO disparar callback como fromUser
+        volumeSeekBar.setVolumeSilent(volumePercent);
+        isUpdatingFromSystem = false;
+
+        Log.d(TAG, "🔊 Volume do sistema: " + volumePercent + "% (" + currentVolume + "/" + maxVolume + ")");
+    }
+
+    private void startVolumeSync() {
+        stopVolumeSync(); // evita duplicar
+
+        volumeRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateVolumeFromSystem();
+                volumeHandler.postDelayed(this, 250); // responsivo e leve
+            }
+        };
+
+        volumeHandler.post(volumeRunnable);
+        Log.d(TAG, "✅ VolumeSync iniciado");
+    }
+
+    private void stopVolumeSync() {
+        if (volumeRunnable != null) {
+            volumeHandler.removeCallbacks(volumeRunnable);
+            volumeRunnable = null;
+            Log.d(TAG, "✅ VolumeSync parado");
+        }
+    }
+
+    private void setupClickListeners() {
+        if (btPlay != null) btPlay.setOnClickListener(this);
+        if (btBack != null) btBack.setOnClickListener(this);
+        if (btMenu != null) btMenu.setOnClickListener(this);
+        if (btHome != null) btHome.setOnClickListener(this);
+        if (btNotif != null) btNotif.setOnClickListener(this);
+
+        if (btnNav1 != null) btnNav1.setOnClickListener(this);
+        if (btnNav2 != null) btnNav2.setOnClickListener(this);
+        if (btnNav3 != null) btnNav3.setOnClickListener(this);
+        if (btnNav4 != null) btnNav4.setOnClickListener(this);
+        if (btnNav5 != null) btnNav5.setOnClickListener(this);
+    }
+
+    /**
+     * Configura a WebView do banner
+     */
+    private void setupWebView() {
+        if (webView == null) return;
+
+        webView.setBackgroundColor(0x00000000);
+        webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        settings.setDomStorageEnabled(true);
+
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (getContext() != null && isAdded()) {
+                    Intents.website_internal(getContext(), url);
+                }
+                return true;
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                if (view != null && isAdded()) {
+                    view.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                if (view != null && isAdded()) {
+                    view.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        // Carrega a URL do banner
+        if (data != null && data.radios != null && !data.radios.isEmpty() && Constants.ID >= 0 && Constants.ID < data.radios.size()) {
+            String pubUrl = String.format(
+                    Intents.decode(getString(R.string.pub)),
+                    data.radios.get(Constants.ID).id,
+                    "Android " + Build.VERSION.RELEASE,
+                    Build.MANUFACTURER + " - " + Build.MODEL
+            );
+            webView.loadUrl(pubUrl);
+            Log.d(TAG, "✅ WebView carregando URL: " + pubUrl);
+        } else {
+            Log.w(TAG, "⚠️ Dados da rádio não disponíveis para carregar o banner");
+            webView.setVisibility(View.GONE);
+        }
+    }
+
+    // ======================= CLICK ======================= //
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+
+        if (id == R.id.bt_play) {
+            togglePlayPause();
+        } else if (id == R.id.bt_back) {
+            // Navega para o MainFragment
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.MAIN);
+            }
+        } else if (id == R.id.bt_menu) {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).openMenu();
+            }
+        } else if (id == R.id.bt_home) {
+            // Navega para o MainFragment
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.MAIN);
+            }
+        } else if (id == R.id.bt_notif) {
+            navigateToNotfProgram();
+        } else if (id == R.id.bt_promotion) {
+            navigateToPromotion();
+        } else if (id == R.id.bt_news) {
+            navigateToNews();
+        } else if (id == R.id.bt_radio) {
+            // Já está na tela de rádio
+        } else if (id == R.id.bt_program) {
+            navigateToSchedule();
+        } else if (id == R.id.bt_wpp) {
+            openWhatsApp();
+        }
+    }
+
+    private void navigateToFragment(Fragment fragment) {
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.frameLayout, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void navigateToNotfProgram() {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.NOTF_PROGRAM);
+        }
+    }
+
+    private void navigateToPromotion() {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.PROMOTION);
+        }
+    }
+
+    private void navigateToSchedule() {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.SCHEDULE);
+        }
+    }
+
+    private void navigateToNews() {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.NEWS);
+        }
+    }
+
+    private void openWhatsApp() {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(android.net.Uri.parse("https://wa.me/5527999999999"));
+            intent.setPackage("com.whatsapp");
+            startActivity(intent);
+        } catch (android.content.ActivityNotFoundException e) {
+            // Se o WhatsApp não estiver instalado, tenta abrir no navegador
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(android.net.Uri.parse("https://wa.me/5527999999999"));
+                startActivity(intent);
+            } catch (Exception ex) {
+                // Ignora
+            }
+        }
+    }
+
+    private void togglePlayPause() {
+        if (getActivity() instanceof MediaActivity) {
+            ((MediaActivity) requireActivity()).onClick(btPlay);
+            return;
+        }
+
+        if (controller != null &&
+                controller.getPlaybackState() != null &&
+                controller.getPlaybackState().getState() == PlaybackStateCompat.STATE_PLAYING) {
+            controller.getTransportControls().pause();
+        } else if (controller != null) {
+            controller.getTransportControls().play();
+        }
+    }
+
+    private void switchRadioStream() {
+        Log.d(TAG, "🔄 Iniciando troca de stream para rádio ID: " + selectedRadioId + " (índice: " + Constants.ID + ")");
+
+        if (controller != null) {
+            controller.getTransportControls().stop();
+        }
+
+        currentSong = "";
+        currentProgram = "Rádio Litoral";
+        currentHost = "Ao Vivo";
+        currentAlbumArtUrl = "";
+
+        updateProgramInfo();
+        updateSongInfo();
+        updateAlbumArt();
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            // Inicia o novo stream
+            if (controller != null) {
+                Log.d(TAG, "▶️ Iniciando novo stream...");
+                controller.getTransportControls().play();
+            }
+
+            // Aguarda mais 1s para buscar os metadados da nova rádio
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                fetchCurrentProgram();
+                Log.d(TAG, "✅ Troca de stream concluída para rádio ID: " + selectedRadioId);
+            }, 1000);
+        }, 800);
+    }
+
+    // ======================= METADADOS ======================= //
+
+    private void startMetadataUpdates() {
+        updateMetadata("Rádio Litoral", "Ao Vivo", "");
+
+        metadataRunnable = new Runnable() {
+            @Override
+            public void run() {
+                fetchCurrentProgram();
+                fetchCurrentSong();
+                metadataHandler.postDelayed(this, METADATA_UPDATE_INTERVAL);
+            }
+        };
+        metadataHandler.post(metadataRunnable);
+    }
+
+    private void fetchCurrentProgram() {
+        if (programacaoAPIService == null || data == null || data.radios == null) return;
+
+        try {
+            // Usa Constants.ID como índice do array
+            if (Constants.ID < 0 || Constants.ID >= data.radios.size()) {
+                Log.w(TAG, "⚠️ Índice Constants.ID inválido: " + Constants.ID);
+                return;
+            }
+
+            // Pega o ID da rádio (String) para passar na API
+            String radioIdForApi = data.radios.get(Constants.ID).id;
+
+            Log.d(TAG, "Consultando programa atual - Radio ID: " + radioIdForApi);
+
+            // Busca todos os programas (sem filtro de dia) para encontrar o programa atual
+            programacaoAPIService.fetchProgramacao(radioIdForApi, "");
+        } catch (Exception e) {
+            Log.e(TAG, "Erro ao montar requisição do programa atual", e);
+            currentProgram = "Rádio Litoral";
+            currentHost = "Ao Vivo";
+            updateProgramInfo();
+        }
+    }
+
+    /**
+     * Encontra o programa atual baseado no horário e dia da semana
+     */
+    private void encontrarProgramaAtual(List<ProgramaAPI> programas) {
+        if (programas == null || programas.isEmpty()) {
+            currentProgram = "Rádio Litoral";
+            currentHost = "Ao Vivo";
+            updateProgramInfo();
+            Log.d(TAG, "⚠️ Nenhum programa encontrado, usando placeholders");
+            return;
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        int diaSemanaAtual = calendar.get(Calendar.DAY_OF_WEEK);
+        int horaAtual = calendar.get(Calendar.HOUR_OF_DAY);
+        int minutoAtual = calendar.get(Calendar.MINUTE);
+        int minutosAtuais = horaAtual * 60 + minutoAtual;
+
+        ProgramaAPI programaAtual = null;
+
+        // Converte Calendar.DAY_OF_WEEK para o formato da API (1=Domingo, 2=Segunda, etc.)
+        // A API usa: 1=Domingo, 2=Segunda, 3=Terça, 4=Quarta, 5=Quinta, 6=Sexta, 7=Sábado
+        String diaSemanaAPI = String.valueOf(diaSemanaAtual);
+
+        for (ProgramaAPI programa : programas) {
+            // Verifica se o programa é do dia atual
+            if (programa.getNrDiaSemana() == null || !programa.getNrDiaSemana().equals(diaSemanaAPI)) {
+                continue;
+            }
+
+            // Parse do horário de início
+            String hrInicio = programa.getHrInicio();
+            String hrFinal = programa.getHrFinal();
+
+            if (hrInicio == null || hrFinal == null) {
+                continue;
+            }
+
+            try {
+                // Formato esperado: "HH:mm" ou "HHmm"
+                int horaInicio = 0;
+                int minutoInicio = 0;
+                int horaFinal = 0;
+                int minutoFinal = 0;
+
+                // Parse do horário de início
+                if (hrInicio.contains(":")) {
+                    String[] parts = hrInicio.split(":");
+                    horaInicio = Integer.parseInt(parts[0]);
+                    minutoInicio = parts.length > 1 ? Integer.parseInt(parts[1]) : 0;
+                } else if (hrInicio.length() >= 2) {
+                    horaInicio = Integer.parseInt(hrInicio.substring(0, Math.min(2, hrInicio.length())));
+                    if (hrInicio.length() > 2) {
+                        minutoInicio = Integer.parseInt(hrInicio.substring(2));
+                    }
+                }
+
+                // Parse do horário final
+                if (hrFinal.contains(":")) {
+                    String[] parts = hrFinal.split(":");
+                    horaFinal = Integer.parseInt(parts[0]);
+                    minutoFinal = parts.length > 1 ? Integer.parseInt(parts[1]) : 0;
+                } else if (hrFinal.length() >= 2) {
+                    horaFinal = Integer.parseInt(hrFinal.substring(0, Math.min(2, hrFinal.length())));
+                    if (hrFinal.length() > 2) {
+                        minutoFinal = Integer.parseInt(hrFinal.substring(2));
+                    }
+                }
+
+                int minutosInicio = horaInicio * 60 + minutoInicio;
+                int minutosFinal = horaFinal * 60 + minutoFinal;
+
+                // Verifica se o horário atual está dentro do intervalo do programa
+                // Se o programa termina no dia seguinte (ex: 23:00 - 01:00), ajusta
+                if (minutosFinal < minutosInicio) {
+                    // Programa que cruza a meia-noite
+                    if (minutosAtuais >= minutosInicio || minutosAtuais < minutosFinal) {
+                        programaAtual = programa;
+                        break;
+                    }
+                } else {
+                    // Programa normal no mesmo dia
+                    if (minutosAtuais >= minutosInicio && minutosAtuais < minutosFinal) {
+                        programaAtual = programa;
+                        break;
+                    }
+                }
+            } catch (NumberFormatException e) {
+                Log.w(TAG, "Erro ao parsear horário: " + hrInicio + " - " + hrFinal, e);
+                continue;
+            }
+        }
+
+        // Se não encontrou programa, usa o primeiro do dia ou placeholders
+        if (programaAtual == null) {
+            // Tenta pegar o primeiro programa do dia
+            for (ProgramaAPI programa : programas) {
+                if (programa.getNrDiaSemana() != null && programa.getNrDiaSemana().equals(diaSemanaAPI)) {
+                    programaAtual = programa;
+                    break;
+                }
+            }
+        }
+
+        if (programaAtual != null) {
+            currentProgram = (programaAtual.getTitle() != null && !programaAtual.getTitle().isEmpty())
+                    ? programaAtual.getTitle()
+                    : "Rádio Litoral";
+
+            currentHost = (programaAtual.getNmLocutor() != null && !programaAtual.getNmLocutor().isEmpty())
+                    ? programaAtual.getNmLocutor()
+                    : "Ao Vivo";
+
+            Log.d(TAG, "✅ Programa atual: " + currentProgram +
+                    " com " + currentHost +
+                    " (" + programaAtual.getHrInicio() +
+                    " até " + programaAtual.getHrFinal() + ")");
+        } else {
+            currentProgram = "Rádio Litoral";
+            currentHost = "Ao Vivo";
+            Log.d(TAG, "⚠️ Nenhum programa no ar, usando placeholders");
+        }
+
+        updateProgramInfo();
+    }
+
+    private void fetchCurrentSong() {
+        if (controller != null && controller.getMetadata() != null) {
+            String artist = controller.getMetadata().getString("artist");
+            String title = controller.getMetadata().getString("title");
+
+            if (artist != null && title != null &&
+                    !artist.isEmpty() && !title.isEmpty()) {
+                currentSong = artist + " - " + title;
+            } else if (title != null && !title.isEmpty()) {
+                currentSong = title;
+            } else {
+                currentSong = "";
+            }
+
+            updateSongInfo();
+        }
+    }
+
+    private void updateMetadata(String program, String host, String song) {
+        currentProgram = program;
+        currentHost = host;
+        currentSong = song;
+
+        updateProgramInfo();
+        updateSongInfo();
+    }
+
+    private void updateProgramInfo() {
+        if (nameProgram != null) {
+            nameProgram.setText(
+                    currentProgram != null && !currentProgram.isEmpty()
+                            ? currentProgram
+                            : "Rádio Litoral"
+            );
+        }
+
+        if (nameLocutor != null) {
+            nameLocutor.setText(
+                    currentHost != null && !currentHost.isEmpty()
+                            ? currentHost
+                            : "Ao Vivo"
+            );
+        }
+
+        Log.d(TAG, "📻 Programa atualizado: " + currentProgram + " - " + currentHost);
+    }
+
+    private void updateSongInfo() {
+        if (musicName != null) {
+            musicName.setText(
+                    currentSong != null && !currentSong.isEmpty()
+                            ? currentSong
+                            : ""
+            );
+        }
+
+        Log.d(TAG, "🎵 Música atualizada: " + currentSong);
+    }
+
+    private void updateAlbumArt() {
+        if (coverAlbum == null || getContext() == null) return;
+
+        if (currentAlbumArtUrl != null && !currentAlbumArtUrl.isEmpty()) {
+            Log.d(TAG, "🖼️ Carregando capa do álbum: " + currentAlbumArtUrl);
+
+            RequestOptions options = new RequestOptions()
+                    .placeholder(R.drawable.ic_launcher)
+                    .error(R.drawable.ic_launcher)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .centerCrop();
+
+            Glide.with(requireContext())
+                    .load(currentAlbumArtUrl)
+                    .apply(options)
+                    .into(coverAlbum);
+        } else {
+            Log.d(TAG, "🖼️ Sem capa disponível, usando placeholder ic_launcher");
+            Glide.with(requireContext())
+                    .load(R.drawable.ic_launcher)
+                    .into(coverAlbum);
+        }
+    }
+}

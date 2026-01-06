@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/_110sdp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/_10sdp"
+    android:layout_marginEnd="@dimen/_5sdp"
+    android:layout_marginTop="@dimen/_8sdp"
+    android:layout_marginBottom="@dimen/_5sdp"
+    android:elevation="0dp"
+    app:cardElevation="0dp"
+    app:cardMaxElevation="0dp"
+    app:cardUseCompatPadding="false"
+    app:cardCornerRadius="@dimen/_10sdp"
+    app:cardBackgroundColor="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_75sdp"
+            android:elevation="0dp"
+            app:cardElevation="0dp"
+            app:cardMaxElevation="0dp"
+            app:cardUseCompatPadding="false"
+            app:cardCornerRadius="@dimen/_20sdp"
+            app:cardBackgroundColor="@android:color/transparent"
+            android:clipToOutline="true">
+
+            <ImageView
+                android:id="@+id/img_agenda"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/live" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/txt_titulo_agenda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:text="TÍTULO DA AGENDA"
+            android:textSize="@dimen/_8sdp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:textColor="#531414"
+            android:fontFamily="@font/montserrat_extrabold"
+            app:fontFamily="@font/montserrat_extrabold"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/txt_desc_agenda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:text="DESCRIÇÃO DE AGENDA"
+            android:textSize="@dimen/_6sdp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/montserrat_semibold"
+            app:fontFamily="@font/montserrat_semibold"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

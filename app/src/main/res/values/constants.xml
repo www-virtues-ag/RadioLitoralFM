@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Rádio Litoral FM</string>
+    <string name="app_name2" translatable="false">Rádio Litoral</string>
+
+    <string name="site_host" translatable="false">appradio.pro</string>
+    <string name="string_removal3" translatable="false">APPRADIO.PRO</string>
+    <string name="dmca" translatable="false">DMCA</string>
+
+    <string name="string_fullscreen" translatable="false">Fullscreeen</string>
+    <string name="string_volume" translatable="false">Volume</string>
+
+    <string name="menu_cast" translatable="false">Chromecast</string>
+
+    <string name="nav_bluetooth" translatable="false">Bluetooth</string>
+    <string name="nav_chat" translatable="false">Chat</string>
+    <string name="nav_video" translatable="false">Video</string>
+    <string name="nav_podium" translatable="false">Podium</string>
+
+    <string name="string_copyright" translatable="false">Copyright</string>
+    <string name="string_all_reserved">All Rights Reserved</string>
+
+    <string name="site" translatable="false">Site</string>
+    <string name="facebook" translatable="false">Facebook</string>
+    <string name="instagram" translatable="false">Instagram</string>
+    <string name="linkedin" translatable="false">LinkedIn</string>
+    <string name="skype" translatable="false">Skype</string>
+    <string name="youtube" translatable="false">Youtube</string>
+    <string name="x" translatable="false">X</string>
+    <string name="tiktok" translatable="false">Tiktok</string>
+    <string name="twitter" translatable="false">Twitter</string>
+    <string name="soundcloud" translatable="false">Soundcloud</string>
+    <string name="whatsapp" translatable="false">Whatsapp</string>
+    <string name="vimeo" translatable="false">Vimeo</string>
+    <string name="tunein" translatable="false">Tunein</string>
+    <string name="snapchat" translatable="false">Snapchat</string>
+    <string name="twitch" translatable="false">Twitch</string>
+</resources>

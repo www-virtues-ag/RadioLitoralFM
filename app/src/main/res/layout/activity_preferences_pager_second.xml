@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <!-- Backgrounds decorativos -->
+    <ImageView
+        android:id="@+id/BgUp"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_260sdp"
+        android:layout_gravity="top|end"
+        android:adjustViewBounds="true"
+        android:contentDescription="Background superior"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/bg_radio_cima" />
+
+    <ImageView
+        android:id="@+id/BgDown"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_260sdp"
+        android:layout_gravity="bottom|start"
+        android:adjustViewBounds="true"
+        android:contentDescription="Background inferior"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/bg_radio_baixo" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="10">
+
+        <RelativeLayout
+            android:id="@+id/rlHeader"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="@dimen/_16sdp"
+            android:paddingTop="@dimen/_12sdp">
+
+            <ImageView
+                android:id="@+id/btn_voltar"
+                android:layout_width="@dimen/_45sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="@android:color/transparent"
+                android:contentDescription="Voltar"
+                app:srcCompat="@drawable/btn_voltar_radio" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/llTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/_24sdp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.05"
+                android:text="SUAS"
+                android:textColor="#EC1D23"
+                android:textSize="@dimen/_28sdp"
+                android:textStyle="bold"
+                app:fontFamily="@font/insanibu"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_minus4sdp"
+                android:letterSpacing="0.05"
+                android:text="PREFERÊNCIAS"
+                android:textColor="#EC1D23"
+                android:textSize="@dimen/_28sdp"
+                android:textStyle="bold"
+                app:fontFamily="@font/insanibu" />
+
+            <View
+                android:layout_width="@dimen/_55sdp"
+                android:layout_height="@dimen/_4sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:background="@drawable/red_line" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llSubtitulo"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/_32sdp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lineSpacingExtra="@dimen/_2sdp"
+                android:text="PARA MELHOR ATENDER A SEU GOSTO, POR FAVOR ESCOLHA NO MÍNIMO 3 OPÇÕES DE CATEGORIAS PREFERIDAS."
+                android:textColor="#3D3D3D"
+                android:textSize="@dimen/_9sdp"
+                android:textStyle="bold"
+                app:fontFamily="@font/montserrat_bold" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5.5">
+
+            <LinearLayout
+                android:id="@+id/llCategorias"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_24sdp"
+                android:paddingVertical="@dimen/_12sdp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <RelativeLayout
+                        android:id="@+id/vl_seven"
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_32sdp"
+                        android:background="@drawable/circle_preference"
+                        android:onClick="onClick"
+
+                        android:focusable="true">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="Cultura"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/_13sdp"
+                            android:textStyle="bold"
+                            app:fontFamily="@font/montserrat_semibold" />
+
+                        <ImageView
+                            android:id="@+id/check_c7"
+                            android:layout_width="@dimen/_28sdp"
+                            android:layout_height="@dimen/_28sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="@dimen/_minus3sdp"
+                            android:layout_marginTop="@dimen/_minus3sdp"
+                            android:contentDescription="Selecionado"
+                            android:fontFamily="@font/montserrat_semibold"
+                            app:srcCompat="@drawable/ic_check_selected"
+                            android:visibility="gone"
+                            app:fontFamily="@font/montserrat_semibold" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/vl_eigth"
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/_32sdp"
+                        android:background="@drawable/circle_preference"
+                        android:onClick="onClick"
+
+                        android:focusable="true">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="Estrangeiro"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/_10sdp"
+                            android:textStyle="bold"
+                            app:fontFamily="@font/montserrat_semibold" />
+
+                        <ImageView
+                            android:id="@+id/check_c8"
+                            android:layout_width="@dimen/_28sdp"
+                            android:layout_height="@dimen/_28sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="@dimen/_minus3sdp"
+                            android:layout_marginTop="@dimen/_minus3sdp"
+                            android:contentDescription="Selecionado"
+                            app:srcCompat="@drawable/ic_check_selected"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <RelativeLayout
+                        android:id="@+id/vl_nine"
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_32sdp"
+                        android:background="@drawable/circle_preference"
+                        android:onClick="onClick"
+
+                        android:focusable="true">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="Eventos"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/_13sdp"
+                            android:textStyle="bold"
+                            app:fontFamily="@font/montserrat_semibold" />
+
+                        <ImageView
+                            android:id="@+id/check_c9"
+                            android:layout_width="@dimen/_28sdp"
+                            android:layout_height="@dimen/_28sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="@dimen/_minus3sdp"
+                            android:layout_marginTop="@dimen/_minus3sdp"
+                            android:contentDescription="Selecionado"
+                            app:srcCompat="@drawable/ic_check_selected"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/vl_ten"
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/_32sdp"
+                        android:background="@drawable/circle_preference"
+                        android:onClick="onClick"
+
+                        android:focusable="true">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="Municipio"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/_13sdp"
+                            android:textStyle="bold"
+                            app:fontFamily="@font/montserrat_semibold" />
+
+                        <ImageView
+                            android:id="@+id/check_c10"
+                            android:layout_width="@dimen/_28sdp"
+                            android:layout_height="@dimen/_28sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="@dimen/_minus3sdp"
+                            android:layout_marginTop="@dimen/_minus3sdp"
+                            android:contentDescription="Selecionado"
+                            app:srcCompat="@drawable/ic_check_selected"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <RelativeLayout
+                        android:id="@+id/vl_eleven"
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_32sdp"
+                        android:background="@drawable/circle_preference"
+                        android:onClick="onClick"
+
+                        android:focusable="true">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="Estado"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/_13sdp"
+                            android:textStyle="bold"
+                            app:fontFamily="@font/montserrat_semibold" />
+
+                        <ImageView
+                            android:id="@+id/check_c11"
+                            android:layout_width="@dimen/_30sdp"
+                            android:layout_height="@dimen/_28sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="@dimen/_minus3sdp"
+                            android:layout_marginTop="@dimen/_minus3sdp"
+                            android:contentDescription="Selecionado"
+                            app:srcCompat="@drawable/ic_check_selected"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/vl_twelve"
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/_32sdp"
+                        android:background="@drawable/circle_preference"
+                        android:onClick="onClick"
+
+                        android:focusable="true">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="Brasil"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/_13sdp"
+                            android:textStyle="bold"
+                            app:fontFamily="@font/montserrat_semibold" />
+
+                        <ImageView
+                            android:id="@+id/check_c12"
+                            android:layout_width="@dimen/_28sdp"
+                            android:layout_height="@dimen/_28sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="@dimen/_minus3sdp"
+                            android:layout_marginTop="@dimen/_minus3sdp"
+                            android:contentDescription="Selecionado"
+                            app:srcCompat="@drawable/ic_check_selected"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/btn_preferences_one"
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:onClick="onClick"
+
+                android:contentDescription="Seta esquerda"
+                android:focusable="true"
+                app:srcCompat="@drawable/img_polygon_start" />
+
+            <ImageView
+                android:id="@+id/btn_preferences_third"
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:onClick="onClick"
+
+                android:contentDescription="Seta direita"
+                android:focusable="true"
+                app:srcCompat="@drawable/img_polygon_en" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/llBotaoPronto"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.2"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/btn_ready"
+                android:layout_width="@dimen/_70sdp"
+                android:onClick="onClick"
+
+                android:focusable="true"
+                android:layout_height="@dimen/_30sdp">
+
+                <TextView
+                    android:layout_width="@dimen/_70sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    android:gravity="center"
+                    app:fontFamily="@font/insanibu"
+                    android:text="PRONTO"
+                    android:textColor="@color/circle_preference"
+                    android:textSize="@dimen/_14sdp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="@dimen/_54sdp"
+                    android:layout_height="@dimen/_1sdp"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="@dimen/_9sdp"
+                    android:background="@drawable/red_line"
+                    android:fontFamily="font/insanibu"
+                    app:fontFamily="font/insanibu" />
+
+
+            </FrameLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</FrameLayout>

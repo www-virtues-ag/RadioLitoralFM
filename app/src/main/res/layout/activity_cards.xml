@@ -1,0 +1,138 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/_240sdp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginBottom="@dimen/_16sdp"
+    android:background="@android:color/transparent"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardElevation="0dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:id="@+id/content_container"
+            android:layout_width="@dimen/_240sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/bg_linear_border"
+            android:minHeight="@dimen/_250sdp"
+            android:orientation="vertical"
+            android:padding="@dimen/_12sdp"
+            android:paddingBottom="@dimen/_20sdp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_8sdp"
+                android:gravity="end|center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/_12sdp"
+                    android:layout_height="@dimen/_12sdp"
+                    android:layout_marginEnd="@dimen/_5sdp"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/btn_prog_barra_off" />
+
+                <TextView
+                    android:id="@+id/txt_data_hora"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
+                    app:fontFamily="@font/montserrat_medium"
+                    android:text="14h 19/12"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_9sdp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvTitulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_extrabold"
+                app:fontFamily="@font/montserrat_extrabold"
+                android:text="title"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:textAlignment="center"
+                android:textColor="#531414"
+                android:textSize="@dimen/_10sdp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivNoticia"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_100sdp"
+                android:layout_marginBottom="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@drawable/rounded_image"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/live"
+                app:shapeAppearanceOverlay="@style/RoundedImageView"
+                app:strokeWidth="0dp" />
+
+            <TextView
+                android:id="@+id/txt_descricao_noticia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/montserrat_medium"
+                app:fontFamily="@font/montserrat_medium"
+                android:text="summary"
+                android:textColor="#000000"
+                android:textSize="@dimen/_12sdp" />
+
+            <ImageView
+                android:id="@+id/btnVerMais"
+                android:layout_width="@dimen/_85sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_gravity="end"
+                android:background="@drawable/btn_ver_noticia"
+                android:contentDescription="@null"
+                android:fontFamily="@font/montserrat_medium"
+                android:textAllCaps="false" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/bg_category_news"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_gravity="start|top"
+            android:layout_marginStart="@dimen/_1sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:background="@null"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:elevation="@dimen/_10sdp"
+            android:translationY="@dimen/_minus20sdp">
+
+            <ImageView
+                android:id="@+id/bg_category_news_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/forma_categoria" />
+
+            <TextView
+                android:id="@+id/txt_categoria_badge"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:elevation="12dp"
+                android:fontFamily="@font/montserrat_medium"
+                app:fontFamily="@font/montserrat_medium"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:paddingStart="@dimen/_8sdp"
+                android:paddingEnd="@dimen/_8sdp"
+                android:text="educação"
+                android:textColor="#740C0F"
+                android:textSize="@dimen/_12sdp"
+                android:textStyle="bold" />
+        </FrameLayout>
+    </FrameLayout>
+</androidx.cardview.widget.CardView>

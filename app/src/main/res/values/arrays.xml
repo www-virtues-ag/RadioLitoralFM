@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="colors_player">
+        <item>@color/white</item>
+        <item>@color/red</item>
+        <item>@color/yellow</item>
+        <item>@color/green</item>
+        <item>@color/gray</item>
+    </array>
+
+    <string-array name="horoscope_signs">
+        <item>Aries</item>
+        <item>Taurus</item>
+        <item>Gemini</item>
+        <item>Cancer</item>
+        <item>Leo</item>
+        <item>Virgo</item>
+        <item>Libra</item>
+        <item>Scorpio</item>
+        <item>Sagittarius</item>
+        <item>Capricorn</item>
+        <item>Aquarius</item>
+        <item>Pisces</item>
+    </string-array>
+
+    <string-array name="horoscope_signs2">
+        <item>aries</item>
+        <item>touro</item>
+        <item>gemeos</item>
+        <item>cancer</item>
+        <item>leao</item>
+        <item>virgem</item>
+        <item>libra</item>
+        <item>escorpiao</item>
+        <item>sagitario</item>
+        <item>capricornio</item>
+        <item>aquario</item>
+        <item>peixes</item>
+    </string-array>
+</resources>
