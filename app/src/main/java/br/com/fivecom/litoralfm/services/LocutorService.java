@@ -23,11 +23,8 @@ import okhttp3.Response;
  */
 public class LocutorService {
     private static final String TAG = "LocutorService";
-
-    private final String radioId;
     private final String version;
     private final String serverURL;
-
     private final OkHttpClient client;
     private final Gson gson;
     private final ExecutorService executor;
@@ -38,6 +35,7 @@ public class LocutorService {
      */
     public interface LocutorCallback {
         void onSuccess(List<Locutor> locutores);
+
         void onError(String errorMessage);
     }
 
@@ -45,14 +43,13 @@ public class LocutorService {
      * Construtor padrão com configurações da rádio
      */
     public LocutorService() {
-        this("10223", "12.1", "https://devapi.virtueslab.app");
+        this("12.1", "https://devapi.virtueslab.app");
     }
 
     /**
      * Construtor com parâmetros customizados
      */
-    public LocutorService(String radioId, String version, String serverURL) {
-        this.radioId = radioId;
+    public LocutorService(String version, String serverURL) {
         this.version = version;
         this.serverURL = serverURL;
 
@@ -65,7 +62,7 @@ public class LocutorService {
     /**
      * Busca os locutores da API
      */
-    public void fetchLocutores(final LocutorCallback callback) {
+    public void fetchLocutores(String radioId, final LocutorCallback callback) {
         // Construir URL
         String url = serverURL + "/" + version + "/locutores.php?objeto=" + radioId;
 
@@ -131,16 +128,14 @@ public class LocutorService {
                                 locutorData.getDescricao(),
                                 locutorData.getFacebook(),
                                 locutorData.getInstagram(),
-                                locutorData.getWhatsapp()
-                        );
+                                locutorData.getWhatsapp());
 
                         locutores.add(locutor);
 
                         Log.d(TAG, "   " + (i + 1) + ". " + locutor.getNome());
-                        Log.d(TAG, "      - Foto: " + locutor.getFotoUrl());
-                        Log.d(TAG, "      - Instagram: " + locutor.getInstagramUrl());
-                        Log.d(TAG, "      - Facebook: " + locutor.getFacebookUrl());
-                        Log.d(TAG, "      - WhatsApp: " + locutor.getWhatsappUrl());
+                        Log.d(TAG, "      - ID: " + locutor.getId());
+                        Log.d(TAG, "      - Foto Raw: '" + locutorData.getFoto() + "'");
+                        Log.d(TAG, "      - Foto URL: '" + locutor.getFotoUrl() + "'");
                         Log.d(TAG, "      - Descrição: " +
                                 (locutor.getDescricao() != null ? "✅ Presente" : "❌ Ausente"));
                     }
@@ -181,4 +176,3 @@ public class LocutorService {
         executor.shutdown();
     }
 }
-

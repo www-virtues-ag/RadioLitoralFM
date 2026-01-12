@@ -1,8 +1,6 @@
 package br.com.fivecom.litoralfm.ui.agenda;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +24,13 @@ import java.util.List;
 import br.com.fivecom.litoralfm.R;
 import br.com.fivecom.litoralfm.models.agenda.AgendaItem;
 import br.com.fivecom.litoralfm.services.AgendaService;
+import br.com.fivecom.litoralfm.utils.ServiceManager;
 import br.com.fivecom.litoralfm.ui.main.MainActivity;
+import br.com.fivecom.litoralfm.utils.core.Intents;
+import br.com.fivecom.litoralfm.utils.constants.Constants;
+import br.com.fivecom.litoralfm.models.Data;
+
+import static br.com.fivecom.litoralfm.utils.constants.Constants.data;
 
 /**
  * Fragment for displaying agenda/events
@@ -37,6 +41,7 @@ public class AgendaFragment extends Fragment implements AgendaService.AgendaCall
     // Views
     private RecyclerView recyclerAgenda;
     private TextView txtEmptyAgenda;
+    private TextView txtEmptyAgenda2;
 
     // Buttons
     private ImageView btnVoltar;
@@ -44,12 +49,12 @@ public class AgendaFragment extends Fragment implements AgendaService.AgendaCall
     private ImageView btnNotificacoes;
     private ImageView btnMenu;
     
-    // Navbar buttons
-    private ImageView btPromotion;
-    private ImageView btnNews;
-    private ImageView btnRadio;
-    private ImageView btProgram;
-    private ImageView btWhatsapp;
+    // Navbar buttons (agora são LinearLayout no include)
+    private View btPromotion;
+    private View btnNews;
+    private View btnRadio;
+    private View btProgram;
+    private View btWhatsapp;
 
     // Service and Data
     private AgendaService agendaService;
@@ -60,7 +65,8 @@ public class AgendaFragment extends Fragment implements AgendaService.AgendaCall
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        agendaService = new AgendaService();
+        // Usa ServiceManager para compartilhar instância
+        agendaService = ServiceManager.getAgendaService();
     }
 
     @Nullable
@@ -95,8 +101,8 @@ public class AgendaFragment extends Fragment implements AgendaService.AgendaCall
         
         // Navbar buttons
         btPromotion = view.findViewById(R.id.bt_promotion);
-        btnNews = view.findViewById(R.id.btn_news);
-        btnRadio = view.findViewById(R.id.btn_radio);
+        btnNews = view.findViewById(R.id.bt_news);
+        btnRadio = view.findViewById(R.id.bt_radio);
         btProgram = view.findViewById(R.id.bt_program);
         btWhatsapp = view.findViewById(R.id.bt_whatsapp);
 
@@ -109,8 +115,9 @@ public class AgendaFragment extends Fragment implements AgendaService.AgendaCall
         // Set click listener
         adapter.setOnAgendaItemClickListener(this::openAgendaDetail);
 
-        // TextView para mensagem de lista vazia
+        // TextViews para mensagem de lista vazia
         txtEmptyAgenda = view.findViewById(R.id.txt_empty_agenda);
+        txtEmptyAgenda2 = view.findViewById(R.id.txt_empty_agenda2);
     }
 
     @OptIn(markerClass = UnstableApi.class)
@@ -174,9 +181,12 @@ public class AgendaFragment extends Fragment implements AgendaService.AgendaCall
             recyclerAgenda.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
         }
         
-        // Mostrar/esconder mensagem de lista vazia
+        // Mostrar/esconder mensagens de lista vazia
         if (txtEmptyAgenda != null) {
             txtEmptyAgenda.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        }
+        if (txtEmptyAgenda2 != null) {
+            txtEmptyAgenda2.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         }
         
         // Esconder ProgressBar
@@ -198,9 +208,14 @@ public class AgendaFragment extends Fragment implements AgendaService.AgendaCall
     }
 
     private void navigateBack() {
-        // Navega para o MainFragment
+        // Usa handleBackPress para navegação correta com back stack
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.MAIN);
+            ((MainActivity) getActivity()).handleBackPress();
+            return;
+        }
+        // Fallback caso não seja MainActivity
+        if (getActivity() != null) {
+            getActivity().onBackPressed();
         }
     }
 
@@ -250,21 +265,19 @@ public class AgendaFragment extends Fragment implements AgendaService.AgendaCall
     }
 
     private void openWhatsApp() {
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("https://wa.me/5527999999999"));
-            intent.setPackage("com.whatsapp");
-            startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            // Se o WhatsApp não estiver instalado, tenta abrir no navegador
-            try {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://wa.me/5527999999999"));
-                startActivity(intent);
-            } catch (Exception ex) {
-                if (isAdded() && getContext() != null) {
-                    Toast.makeText(getContext(), "Erro ao abrir WhatsApp", Toast.LENGTH_SHORT).show();
-                }
+        if (data == null || data.radios == null || Constants.ID < 0 || Constants.ID >= data.radios.size()) {
+            if (isAdded() && getContext() != null) {
+                Toast.makeText(getContext(), "Dados da rádio não disponíveis", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+
+        Data.Radios radio = data.radios.get(Constants.ID);
+        if (radio.whatsapp != null && !radio.whatsapp.isEmpty()) {
+            Intents.app(requireContext(), Intents.Social.WHATSAPP, radio.whatsapp);
+        } else {
+            if (isAdded() && getContext() != null) {
+                Toast.makeText(getContext(), "WhatsApp não configurado", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -282,11 +295,7 @@ public class AgendaFragment extends Fragment implements AgendaService.AgendaCall
     @Override
     public void onError(String error) {
         showLoading(false);
-        // Show error message
-        if (isAdded() && getContext() != null) {
-            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
-        }
-        // Show empty state on error
+        // Show empty state on error (sem toast)
         updateUI();
     }
 }

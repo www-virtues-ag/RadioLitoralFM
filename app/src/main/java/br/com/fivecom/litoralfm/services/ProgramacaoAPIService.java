@@ -8,7 +8,9 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -39,6 +41,50 @@ public class ProgramacaoAPIService {
     private boolean isLoading;
     private String errorMessage;
     private ProgramacaoAPICallback callback;
+
+    // Cache de programação
+    private static class ProgramacaoCache {
+        private static class CacheEntry {
+            List<ProgramaAPI> programas;
+            long timestamp;
+            
+            CacheEntry(List<ProgramaAPI> programas, long timestamp) {
+                this.programas = programas;
+                this.timestamp = timestamp;
+            }
+        }
+        
+        private static final Map<String, CacheEntry> cache = new HashMap<>();
+        private static final long CACHE_DURATION_MS = 5 * 60 * 1000; // 5 minutos
+        
+        public static List<ProgramaAPI> get(String radioId, String dia) {
+            String key = radioId + "_" + (dia != null && !dia.isEmpty() ? dia : "all");
+            CacheEntry entry = cache.get(key);
+            if (entry != null && (System.currentTimeMillis() - entry.timestamp) < CACHE_DURATION_MS) {
+                Log.d(TAG, "💾 Cache hit para: " + key);
+                return new ArrayList<>(entry.programas); // Retorna cópia
+            }
+            Log.d(TAG, "❌ Cache miss para: " + key);
+            return null;
+        }
+        
+        public static void put(String radioId, String dia, List<ProgramaAPI> programas) {
+            String key = radioId + "_" + (dia != null && !dia.isEmpty() ? dia : "all");
+            cache.put(key, new CacheEntry(new ArrayList<>(programas), System.currentTimeMillis()));
+            Log.d(TAG, "💾 Cache atualizado para: " + key + " (" + programas.size() + " programas)");
+        }
+        
+        public static void clear(String radioId) {
+            // Remove todas as entradas para uma rádio específica
+            cache.entrySet().removeIf(entry -> entry.getKey().startsWith(radioId + "_"));
+            Log.d(TAG, "🗑️ Cache limpo para rádio: " + radioId);
+        }
+        
+        public static void clearAll() {
+            cache.clear();
+            Log.d(TAG, "🗑️ Todo o cache foi limpo");
+        }
+    }
 
     public interface ProgramacaoAPICallback {
         void onProgramasLoaded(List<ProgramaAPI> programas);
@@ -92,6 +138,19 @@ public class ProgramacaoAPIService {
         }
 
         HttpUrl url = urlBuilder.build();
+        
+        // Verifica cache antes de fazer request
+        List<ProgramaAPI> cached = ProgramacaoCache.get(radioId, dia);
+        if (cached != null && !cached.isEmpty()) {
+            Log.d(TAG, "✅ Retornando programação do cache");
+            programas = cached;
+            errorMessage = null;
+            
+            if (callback != null) {
+                callback.onProgramasLoaded(programas);
+            }
+            return;
+        }
         
         Log.d(TAG, "🔄 Buscando programação da URL: " + url.toString());
 
@@ -170,11 +229,17 @@ public class ProgramacaoAPIService {
                             programas = apiResponse.getProgramas();
                             errorMessage = null;
                             Log.d(TAG, "✅ " + programas.size() + " programas carregados");
+                            
+                            // Salva no cache
+                            ProgramacaoCache.put(radioId, dia, programas);
                         } else {
                             // Se a chave "programas" não foi encontrada, assume que não há programação
                             programas = new ArrayList<>();
                             errorMessage = null;
                             Log.i(TAG, "ℹ️ Chave 'programas' não encontrada - não há programação");
+                            
+                            // Salva lista vazia no cache também (evita requests repetidos)
+                            ProgramacaoCache.put(radioId, dia, programas);
                         }
                         
                         if (callback != null) {

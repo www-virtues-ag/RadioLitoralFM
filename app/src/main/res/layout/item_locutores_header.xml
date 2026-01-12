@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="@dimen/_20sdp">
+
+            <ImageView
+                android:id="@+id/btn_voltar"
+                android:layout_width="@dimen/btn_voltar_w"
+                android:layout_height="@dimen/btn_voltar_h"
+                android:layout_centerVertical="true"
+                app:srcCompat="@drawable/btn_voltar_radio_escuro" />
+
+            <ImageView
+                android:layout_width="@dimen/logo_w"
+                android:layout_height="@dimen/logo_h"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/logo_main" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/insanibu"
+            android:text="@string/locutores_title"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_20sdp"
+            app:fontFamily="@font/insanibu" />
+
+        <ImageView
+            android:layout_width="@dimen/linha_locutores"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            app:srcCompat="@drawable/traco" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

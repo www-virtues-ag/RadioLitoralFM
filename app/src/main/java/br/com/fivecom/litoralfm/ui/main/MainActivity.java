@@ -9,8 +9,15 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.window.OnBackInvokedDispatcher;
 
@@ -34,20 +41,25 @@ import br.com.fivecom.litoralfm.ui.bluetooth.BluetoothConnectionManager;
 import br.com.fivecom.litoralfm.ui.bluetooth.BluetoothDialogFragment;
 import br.com.fivecom.litoralfm.ui.agenda.AgendaFragment;
 import br.com.fivecom.litoralfm.ui.choose.ChooseFragment;
+import br.com.fivecom.litoralfm.ui.config.ConfigFragment;
 import br.com.fivecom.litoralfm.ui.contact.ContactActivity;
 import br.com.fivecom.litoralfm.ui.locutores.LocutoresActivity;
 import br.com.fivecom.litoralfm.ui.main.fragment.AudioFragment;
 import br.com.fivecom.litoralfm.ui.main.fragment.MainFragment;
+import br.com.fivecom.litoralfm.ui.main.fragment.RadioFragment;
 import br.com.fivecom.litoralfm.ui.main.fragment.ScheduleFragment;
 import br.com.fivecom.litoralfm.ui.notification.NotfProgramFragment;
 import br.com.fivecom.litoralfm.ui.notification.NotificationFragment;
 import br.com.fivecom.litoralfm.ui.promocao.PromocaoFragment;
 import br.com.fivecom.litoralfm.news.NewsFragment;
+import br.com.fivecom.litoralfm.ui.social.SocialFeedFragment;
+import br.com.fivecom.litoralfm.models.social.Platform;
 import br.com.fivecom.litoralfm.utils.constants.Constants;
 import br.com.fivecom.litoralfm.utils.constants.Extras;
 import br.com.fivecom.litoralfm.utils.core.Intents;
 import br.com.fivecom.litoralfm.utils.core.Update;
 import br.com.fivecom.litoralfm.utils.dialog.NextVersionDialog;
+import br.com.fivecom.litoralfm.utils.RadioInfoCache;
 
 import static br.com.fivecom.litoralfm.utils.constants.Constants.data;
 
@@ -59,19 +71,27 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
     public enum FRAGMENT {
         MAIN,
         AUDIO,
+        RADIO,
         CHOOSE,
         NOTIFICATION,
         AGENDA,
         PROMOTION,
         SCHEDULE,
         NOTF_PROGRAM,
-        NEWS
+        NEWS,
+        CONFIG,
+        SOCIAL_FEED
     }
 
     private FRAGMENT mFrag = FRAGMENT.MAIN;
     private FragmentManager fragmentManager;
     private Toast toast;
     private Chromecast mChromecast;
+    private boolean isMenuOpen = false;
+
+    // SharedVideoManager para gerenciar WebView única
+    private br.com.fivecom.litoralfm.video.SharedVideoManager videoManager;
+    private android.widget.FrameLayout backgroundVideoContainer;
 
     public static final int REQUEST_BLUETOOTH_PERMISSIONS = 1;
 
@@ -84,8 +104,7 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
         super.onCreate(savedInstanceState);
 
         getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        );
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         EdgeToEdge.enable(this);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -156,8 +175,7 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
         // Back customizado
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
-                    OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::onMyBackPressed
-            );
+                    OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::onMyBackPressed);
         } else {
             getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
                 @Override
@@ -172,6 +190,20 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
 
         // Configura o menu lateral
         setupMenu();
+
+        // Inicializa SharedVideoManager
+        initializeSharedVideoManager();
+
+        // Atualiza o estado inicial da NavBar após um pequeno delay para garantir que
+        // as views estão infladas
+        binding.getRoot().post(() -> updateNavBarState(mFrag));
+
+    }
+
+    @Override
+    protected void onStop() {
+
+        super.onStop();
     }
 
     private Fragment getFragment(@NonNull FRAGMENT fragment) {
@@ -180,6 +212,8 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
                 return new MainFragment();
             case AUDIO:
                 return new AudioFragment();
+            case RADIO:
+                return new RadioFragment();
             case CHOOSE:
                 return new ChooseFragment();
             case NOTIFICATION:
@@ -194,53 +228,254 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
                 return new NotfProgramFragment();
             case NEWS:
                 return new NewsFragment();
+            case CONFIG:
+                return new ConfigFragment();
             default:
                 return new MainFragment();
         }
     }
 
+    /**
+     * Notifica os fragments sobre mudança no estado de animação
+     */
+    public void notifyAnimationStateChanged(boolean enabled) {
+        // Notifica todos os fragments ativos para atualizar seus Lotties
+        Fragment currentFragment = fragmentManager.findFragmentById(binding.frameLayout.getId());
+        if (currentFragment != null && currentFragment.getView() != null) {
+            br.com.fivecom.litoralfm.utils.LottieHelper.setAnimationStateForLotties(
+                    currentFragment.getView(),
+                    this,
+                    R.id.lottie_main,
+                    R.id.lottie_audio1,
+                    R.id.lottie_audio2,
+                    R.id.lottie_radio1,
+                    R.id.lottie_radio2);
+        }
+    }
+
     public void navigateToFragment(FRAGMENT fragment) {
         Fragment targetFragment = getFragment(fragment);
+
+        // Se o fragment for null (caso especial como SOCIAL_FEED), não navega aqui
+        if (targetFragment == null) {
+            return;
+        }
+
         String tag = fragment.name();
+
+        // Controla o vídeo
+        // handleVideoOnNavigation(mFrag, fragment); // REMOVIDO: SharedVideoManager
+        // cuida disso
+
         mFrag = fragment;
+
+        try {
+            FragmentTransaction transaction = fragmentManager.beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .replace(binding.frameLayout.getId(), targetFragment, tag);
+
+            // Adiciona ao back stack apenas se não for MAIN (tela inicial)
+            // Isso permite que o botão voltar funcione corretamente
+            if (fragment != FRAGMENT.MAIN) {
+                transaction.addToBackStack(tag);
+            }
+
+            transaction.commitAllowingStateLoss();
+
+            // Atualiza o estado da NavBar após navegação (com delay para garantir que a
+            // view foi inflada)
+            binding.getRoot().post(() -> {
+                // Adiciona um pequeno delay adicional para garantir que o fragment foi
+                // totalmente criado
+                binding.getRoot().postDelayed(() -> updateNavBarState(fragment), 100);
+            });
+        } catch (Exception e) {
+            android.util.Log.e("MainActivity", "Erro ao navegar: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Navega para o SocialFeedFragment com a plataforma especificada
+     */
+    public void navigateToSocialFeed(Platform platform) {
+        // URL fixa para o feed de redes sociais
+        String apiUrl = "https://redessociais.ticketss.app/litoral-fm-vitoria.json";
+
+        // Cria o fragment com os parâmetros
+        SocialFeedFragment fragment = SocialFeedFragment.newInstance(apiUrl, platform);
+        mFrag = FRAGMENT.SOCIAL_FEED;
 
         try {
             fragmentManager.beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .replace(binding.frameLayout.getId(), targetFragment, tag)
+                    .replace(binding.frameLayout.getId(), fragment, FRAGMENT.SOCIAL_FEED.name())
+                    .addToBackStack(FRAGMENT.SOCIAL_FEED.name()) // Adiciona ao back stack
                     .commitAllowingStateLoss();
+
+            // Atualiza NavBar
+            binding.getRoot().post(() -> {
+                binding.getRoot().postDelayed(() -> updateNavBarState(FRAGMENT.SOCIAL_FEED), 100);
+            });
         } catch (Exception e) {
-            android.util.Log.e("MainActivity", "Erro ao navegar: " + e.getMessage());
+            android.util.Log.e("MainActivity", "Erro ao navegar para SocialFeed: " + e.getMessage());
+            Toast.makeText(this, "Erro ao abrir feed social", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Atualiza o estado visual da NavBar baseado no fragment atual
+     * Troca a imagem do ImageView para versão selecionada e o texto para branco
+     */
+    public void updateNavBarState(FRAGMENT currentFragment) {
+        // Busca a view do include da NavBar
+        // Como o include está em cada fragment, precisamos buscar no fragment atual
+        View navBarView = null;
+
+        // Tenta buscar no fragment atual
+        Fragment currentFragmentInstance = fragmentManager.findFragmentById(binding.frameLayout.getId());
+        if (currentFragmentInstance != null && currentFragmentInstance.getView() != null) {
+            navBarView = currentFragmentInstance.getView().findViewById(R.id.rlNavBar);
+        }
+
+        if (navBarView == null) {
+            android.util.Log.w("MainActivity", "NavBar não encontrada para atualização");
+            return;
+        }
+
+        // Busca os ImageViews e TextViews da NavBar
+        ImageView imgPromotion = navBarView.findViewById(R.id.img_promotion);
+        ImageView imgNews = navBarView.findViewById(R.id.img_news);
+        ImageView imgRadio = navBarView.findViewById(R.id.img_radio);
+        ImageView imgProgram = navBarView.findViewById(R.id.img_program);
+
+        TextView txtPromotion = navBarView.findViewById(R.id.txt_promotion);
+        TextView txtNews = navBarView.findViewById(R.id.txt_news);
+        TextView txtRadio = navBarView.findViewById(R.id.txt_radio);
+        TextView txtProgram = navBarView.findViewById(R.id.txt_program);
+
+        // Reseta todos para estado não selecionado
+        if (imgPromotion != null) {
+            imgPromotion.setImageResource(R.drawable.btn_promo_barra_off);
+        }
+        if (imgNews != null) {
+            imgNews.setImageResource(R.drawable.btn_noticia_barra_off);
+        }
+        if (imgRadio != null) {
+            imgRadio.setImageResource(R.drawable.btn_ao_vivo_barra_off);
+        }
+        if (imgProgram != null) {
+            imgProgram.setImageResource(R.drawable.btn_prog_barra_off);
+        }
+
+        if (txtPromotion != null) {
+            txtPromotion.setTextColor(getResources().getColor(R.color.vermelho_letter));
+        }
+        if (txtNews != null) {
+            txtNews.setTextColor(getResources().getColor(R.color.vermelho_letter));
+        }
+        if (txtRadio != null) {
+            txtRadio.setTextColor(getResources().getColor(R.color.vermelho_letter));
+        }
+        if (txtProgram != null) {
+            txtProgram.setTextColor(getResources().getColor(R.color.vermelho_letter));
+        }
+
+        // Define o estado selecionado baseado no fragment atual
+        switch (currentFragment) {
+            case PROMOTION:
+                if (imgPromotion != null) {
+                    imgPromotion.setImageResource(R.drawable.btn_promo_barra_on);
+                }
+                if (txtPromotion != null) {
+                    txtPromotion.setTextColor(getResources().getColor(android.R.color.white));
+                }
+                break;
+            case NEWS:
+                if (imgNews != null) {
+                    imgNews.setImageResource(R.drawable.btn_noticia_barra_on);
+                }
+                if (txtNews != null) {
+                    txtNews.setTextColor(getResources().getColor(android.R.color.white));
+                }
+                break;
+            case RADIO:
+            case AUDIO:
+                // RADIO e AUDIO usam o mesmo botão (ao vivo)
+                if (imgRadio != null) {
+                    imgRadio.setImageResource(R.drawable.btn_ao_vivo_barra_on);
+                }
+                if (txtRadio != null) {
+                    txtRadio.setTextColor(getResources().getColor(android.R.color.white));
+                }
+                break;
+            case SCHEDULE:
+                // SCHEDULE usa o botão de programas
+                if (imgProgram != null) {
+                    imgProgram.setImageResource(R.drawable.btn_prog_barra_on);
+                }
+                if (txtProgram != null) {
+                    txtProgram.setTextColor(getResources().getColor(android.R.color.white));
+                }
+                break;
+            case MAIN:
+            default:
+                // MAIN não tem botão correspondente na NavBar, mantém todos desmarcados
+                break;
         }
     }
 
     @Override
     protected void onResume() {
         try {
-            if (mChromecast != null) mChromecast.onResume();
+            if (mChromecast != null)
+                mChromecast.onResume();
         } catch (Exception e) {
             // Ignora
         }
+
+        if (videoManager != null) {
+            videoManager.onResume();
+        }
+
         super.onResume();
     }
 
     @Override
     protected void onPause() {
         try {
-            if (mChromecast != null) mChromecast.onPause();
+            if (mChromecast != null)
+                mChromecast.onPause();
         } catch (Exception e) {
             // Ignora
         }
+
+        // NÃO pausa o vídeo aqui - deixa o SharedVideoManager gerenciar
+        // O vídeo deve continuar tocando em background quando navega entre fragments
+        // Apenas pausa se a Activity realmente sair de foco (ex: app vai para background)
+        // O SharedVideoManager já gerencia o estado do vídeo através dos fragments
+        // if (videoManager != null && !isChangingConfigurations()) {
+        //     videoManager.onPause();
+        // }
+
         super.onPause();
     }
 
     @Override
     public void onDestroy() {
         try {
-            if (mChromecast != null) mChromecast.onClose();
+            if (mChromecast != null)
+                mChromecast.onClose();
         } catch (Exception e) {
             // Ignora
         }
+
+        // Destrói o SharedVideoManager se necessário (geralmente não, é singleton
+        // application scoped)
+        // Mas se quisermos limpar referências da activity:
+        // if (videoManager != null) {
+        // videoManager.release();
+        // }
+
         super.onDestroy();
     }
 
@@ -252,21 +487,52 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
 
     private void onMyBackPressed() {
         // Fecha o menu se estiver aberto
-        if (binding != null && binding.menuDrawerContainer != null 
-                && binding.menuDrawerContainer.getVisibility() == View.VISIBLE) {
+        if (isMenuOpen) {
             closeMenu();
             return;
         }
 
+        // Se há back stack, volta para o fragment anterior
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
+
+            // Atualiza o fragment atual após popBackStack
+            // Usa post para garantir que o fragment foi restaurado
+            binding.getRoot().post(() -> {
+                Fragment currentFragment = fragmentManager.findFragmentById(binding.frameLayout.getId());
+                if (currentFragment != null && currentFragment.getTag() != null) {
+                    try {
+                        String tag = currentFragment.getTag();
+                        mFrag = FRAGMENT.valueOf(tag);
+                        updateNavBarState(mFrag);
+                    } catch (IllegalArgumentException e) {
+                        // Se não conseguir encontrar o enum, assume MAIN
+                        mFrag = FRAGMENT.MAIN;
+                        updateNavBarState(mFrag);
+                    }
+                }
+            });
             return;
         }
 
-        // Linha removida:
-        // if (isBackground()) return;
+        // Se não há back stack, verifica se já está no MAIN
+        // Se não estiver, navega para MAIN ao invés de fechar o app
+        if (mFrag != FRAGMENT.MAIN) {
+            navigateToFragment(FRAGMENT.MAIN);
+            return;
+        }
 
-        MainActivity.super.onBackPressed();
+        // Se já está no MAIN e não há back stack, não faz nada
+        // O app permanece aberto na tela principal
+        // Não fecha o app para manter o usuário na aplicação
+    }
+
+    /**
+     * Método público para ser chamado pelos fragments quando o bt_back é clicado
+     * Centraliza a lógica de navegação para trás
+     */
+    public void handleBackPress() {
+        onMyBackPressed();
     }
 
     // ====================== BLUETOOTH =========================== //
@@ -285,25 +551,22 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
     }
 
     public void requestBluetoothPermissions() {
-        String[] permissions = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) ?
-                new String[]{
-                        Manifest.permission.BLUETOOTH_SCAN,
-                        Manifest.permission.BLUETOOTH_CONNECT
-                } :
-                new String[]{
+        String[] permissions = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) ? new String[] {
+                Manifest.permission.BLUETOOTH_SCAN,
+                Manifest.permission.BLUETOOTH_CONNECT
+        }
+                : new String[] {
                         Manifest.permission.BLUETOOTH,
                         Manifest.permission.BLUETOOTH_ADMIN
                 };
 
         boolean hasConnect = (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) ||
                 ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.BLUETOOTH_CONNECT)
-                        == PackageManager.PERMISSION_GRANTED;
+                        Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED;
 
         boolean hasScan = (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) ||
                 ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.BLUETOOTH_SCAN)
-                        == PackageManager.PERMISSION_GRANTED;
+                        Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED;
 
         if (hasConnect && hasScan) {
             openBluetoothDialog();
@@ -314,8 +577,8 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == REQUEST_BLUETOOTH_PERMISSIONS) {
@@ -341,7 +604,8 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
     }
 
     public void showToast(@NonNull String string) {
-        if (toast != null) toast.cancel();
+        if (toast != null)
+            toast.cancel();
         toast = Toast.makeText(MainActivity.this, string, Toast.LENGTH_SHORT);
         toast.show();
     }
@@ -349,7 +613,8 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
     // ====================== MENU LATERAL =========================== //
 
     private void setupMenu() {
-        if (binding == null) return;
+        if (binding == null)
+            return;
 
         // Configura a largura do menu para 70% da tela
         View menuContainer = binding.menuDrawerContainer;
@@ -367,7 +632,8 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
         }
 
         // Configura os botões do menu
-        // menuContent é um include, então precisamos acessar o root view ou usar findViewById no container
+        // menuContent é um include, então precisamos acessar o root view ou usar
+        // findViewById no container
         if (menuContainer != null) {
             // Botão voltar do menu
             View btnVoltar = menuContainer.findViewById(R.id.btn_voltar);
@@ -443,7 +709,7 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
             if (btnInstagram != null) {
                 btnInstagram.setOnClickListener(v -> {
                     closeMenu();
-                    openInstagram();
+                    navigateToSocialFeed(Platform.instagram);
                 });
             }
 
@@ -452,7 +718,7 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
             if (btnYoutube != null) {
                 btnYoutube.setOnClickListener(v -> {
                     closeMenu();
-                    openYouTube();
+                    navigateToSocialFeed(Platform.youtube);
                 });
             }
 
@@ -479,7 +745,7 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
             if (btnConfiguracoes != null) {
                 btnConfiguracoes.setOnClickListener(v -> {
                     closeMenu();
-                    showNextVersionDialog();
+                    navigateToFragment(FRAGMENT.CONFIG);
                 });
             }
         }
@@ -496,12 +762,11 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
      * Abre o Instagram da rádio
      */
     private void openInstagram() {
-        if (data == null || data.radios == null || Constants.ID < 0 || Constants.ID >= data.radios.size()) {
-            Toast.makeText(this, "Dados da rádio não disponíveis", Toast.LENGTH_SHORT).show();
+        // OTIMIZADO: Usa RadioInfoCache para validação
+        Data.Radios radio = RadioInfoCache.getRadioSafely(data, Constants.ID, this);
+        if (radio == null)
             return;
-        }
 
-        Data.Radios radio = data.radios.get(Constants.ID);
         if (radio.instagram != null && !radio.instagram.isEmpty()) {
             Intents.app(this, Intents.Social.INSTAGRAM, radio.instagram);
         } else {
@@ -513,12 +778,11 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
      * Abre o YouTube da rádio
      */
     private void openYouTube() {
-        if (data == null || data.radios == null || Constants.ID < 0 || Constants.ID >= data.radios.size()) {
-            Toast.makeText(this, "Dados da rádio não disponíveis", Toast.LENGTH_SHORT).show();
+        // OTIMIZADO: Usa RadioInfoCache para validação
+        Data.Radios radio = RadioInfoCache.getRadioSafely(data, Constants.ID, this);
+        if (radio == null)
             return;
-        }
 
-        Data.Radios radio = data.radios.get(Constants.ID);
         if (radio.youtube != null && !radio.youtube.isEmpty()) {
             Intents.app(this, Intents.Social.YOUTUBE, radio.youtube);
         } else {
@@ -529,13 +793,12 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
     /**
      * Abre o WhatsApp da rádio
      */
-    private void openWhatsApp() {
-        if (data == null || data.radios == null || Constants.ID < 0 || Constants.ID >= data.radios.size()) {
-            Toast.makeText(this, "Dados da rádio não disponíveis", Toast.LENGTH_SHORT).show();
+    public void openWhatsApp() {
+        // OTIMIZADO: Usa RadioInfoCache para validação
+        Data.Radios radio = RadioInfoCache.getRadioSafely(data, Constants.ID, this);
+        if (radio == null)
             return;
-        }
 
-        Data.Radios radio = data.radios.get(Constants.ID);
         if (radio.whatsapp != null && !radio.whatsapp.isEmpty()) {
             Intents.app(this, Intents.Social.WHATSAPP, radio.whatsapp);
         } else {
@@ -547,12 +810,11 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
      * Abre o site da rádio
      */
     private void openWebsite() {
-        if (data == null || data.radios == null || Constants.ID < 0 || Constants.ID >= data.radios.size()) {
-            Toast.makeText(this, "Dados da rádio não disponíveis", Toast.LENGTH_SHORT).show();
+        // OTIMIZADO: Usa RadioInfoCache para validação
+        Data.Radios radio = RadioInfoCache.getRadioSafely(data, Constants.ID, this);
+        if (radio == null)
             return;
-        }
 
-        Data.Radios radio = data.radios.get(Constants.ID);
         if (radio.url_site != null && !radio.url_site.isEmpty()) {
             Intents.website_internal(this, radio.url_site);
         } else {
@@ -561,62 +823,114 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
     }
 
     public void openMenu() {
-        if (binding == null) return;
+        if (binding == null)
+            return;
+
+        // Verifica se o menu já está aberto
+        if (isMenuOpen) {
+            return; // Menu já está aberto, não faz nada
+        }
 
         View menuContainer = binding.menuDrawerContainer;
         View overlay = binding.menuOverlay;
 
         if (menuContainer != null && overlay != null) {
+            // Cancela animações anteriores se houver
+            menuContainer.clearAnimation();
+            overlay.clearAnimation();
+            menuContainer.animate().cancel();
+            overlay.animate().cancel();
+
+            // Marca o menu como aberto ANTES de animar
+            isMenuOpen = true;
+
             // Configura posição inicial (fora da tela à direita)
             int screenWidth = getResources().getDisplayMetrics().widthPixels;
             menuContainer.setTranslationX(screenWidth);
+            menuContainer.setAlpha(1f); // Garante alpha em 1 (não anima alpha para evitar piscar)
             menuContainer.setVisibility(View.VISIBLE);
+
+            // Garante que o overlay está no estado correto antes de animar
+            overlay.setAlpha(0f);
             overlay.setVisibility(View.VISIBLE);
 
-            // Animações
-            menuContainer.setAlpha(0f);
-            overlay.setAlpha(0f);
+            // Usa hardware layer para melhor performance e evitar piscar
+            overlay.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
-            // Anima o menu vindo da direita para a esquerda
-            menuContainer.animate()
-                    .translationX(0f)
-                    .alpha(1f)
-                    .setDuration(300)
-                    .start();
-
-            // Anima o overlay escuro
+            // Anima o overlay primeiro (mais rápido)
             overlay.animate()
                     .alpha(1f)
+                    .setDuration(250)
+                    .withEndAction(() -> {
+                        overlay.setLayerType(View.LAYER_TYPE_NONE, null);
+                    })
+                    .start();
+
+            // Anima o menu vindo da direita para a esquerda (SEM alterar alpha)
+            menuContainer.animate()
+                    .translationX(0f)
                     .setDuration(300)
                     .start();
         }
     }
 
     private void closeMenu() {
-        if (binding == null) return;
+        if (binding == null)
+            return;
+
+        // Verifica se o menu já está fechado
+        if (!isMenuOpen) {
+            return; // Menu já está fechado, não faz nada
+        }
 
         View menuContainer = binding.menuDrawerContainer;
         View overlay = binding.menuOverlay;
 
         if (menuContainer != null && overlay != null) {
+            // Cancela animações anteriores se houver
+            menuContainer.clearAnimation();
+            overlay.clearAnimation();
+            menuContainer.animate().cancel();
+            overlay.animate().cancel();
+
+            // Marca como fechado ANTES de animar para evitar chamadas duplicadas
+            isMenuOpen = false;
+
             int screenWidth = getResources().getDisplayMetrics().widthPixels;
 
-            // Anima o menu saindo para a direita
+            // Garante que o overlay está no estado correto antes de animar
+            // Isso evita o piscar causado por estados intermediários
+            float currentAlpha = overlay.getAlpha();
+            if (currentAlpha < 0.1f) {
+                // Se já está quase invisível, esconde imediatamente
+                overlay.setVisibility(View.GONE);
+                overlay.setAlpha(0f);
+            } else {
+                // Usa hardware layer para melhor performance e evitar piscar
+                overlay.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+
+                // Anima o overlay primeiro (mais rápido)
+                overlay.animate()
+                        .alpha(0f)
+                        .setDuration(250)
+                        .withEndAction(() -> {
+                            overlay.setLayerType(View.LAYER_TYPE_NONE, null);
+                            overlay.setAlpha(0f); // Garante alpha em 0
+                            overlay.setVisibility(View.GONE);
+                        })
+                        .start();
+            }
+
+            // Anima o menu saindo para a direita (SEM alterar alpha para evitar piscar)
             menuContainer.animate()
                     .translationX(screenWidth)
-                    .alpha(0f)
                     .setDuration(300)
                     .withEndAction(() -> {
+                        // Reseta tudo ANTES de esconder para evitar flash
+                        menuContainer.setTranslationX(screenWidth); // Mantém fora da tela
+                        menuContainer.setAlpha(1f); // Garante alpha em 1
                         menuContainer.setVisibility(View.GONE);
-                        menuContainer.setTranslationX(0f); // Reseta para próxima abertura
                     })
-                    .start();
-
-            // Anima o overlay escuro
-            overlay.animate()
-                    .alpha(0f)
-                    .setDuration(300)
-                    .withEndAction(() -> overlay.setVisibility(View.GONE))
                     .start();
         }
     }
@@ -633,7 +947,6 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
         startActivity(intent);
     }
 
-
     private void navigateToLocutoresActivity() {
         Intent intent = new Intent(this, LocutoresActivity.class);
         startActivity(intent);
@@ -641,5 +954,32 @@ public class MainActivity extends MediaActivity implements BluetoothDialogFragme
 
     private void navigateToNewsActivity() {
         navigateToFragment(FRAGMENT.NEWS);
+    }
+
+    /**
+     * Inicializa o SharedVideoManager e obtém referência ao container de
+     * background.
+     */
+    private void initializeSharedVideoManager() {
+        videoManager = br.com.fivecom.litoralfm.video.SharedVideoManager.getInstance();
+        videoManager.initialize(this);
+
+        backgroundVideoContainer = binding.backgroundVideoContainer;
+
+        android.util.Log.d("MainActivity", "✅ SharedVideoManager inicializado");
+    }
+
+    /**
+     * Retorna o container de vídeo em background para os fragments.
+     */
+    public android.widget.FrameLayout getBackgroundVideoContainer() {
+        return backgroundVideoContainer;
+    }
+
+    /**
+     * Retorna o SharedVideoManager.
+     */
+    public br.com.fivecom.litoralfm.video.SharedVideoManager getVideoManager() {
+        return videoManager;
     }
 }

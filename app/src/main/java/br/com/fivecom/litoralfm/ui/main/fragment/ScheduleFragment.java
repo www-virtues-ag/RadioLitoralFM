@@ -28,17 +28,20 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.List;
 
 import br.com.fivecom.litoralfm.R;
+import br.com.fivecom.litoralfm.models.Data;
 import br.com.fivecom.litoralfm.models.scheduler.DiaSemanaOption;
 import br.com.fivecom.litoralfm.models.scheduler.Programa;
 import br.com.fivecom.litoralfm.models.scheduler.ProgramaAPI;
 import br.com.fivecom.litoralfm.models.scheduler.RadioOption;
 import br.com.fivecom.litoralfm.services.ProgramacaoAPIService;
+import br.com.fivecom.litoralfm.utils.ServiceManager;
 import br.com.fivecom.litoralfm.services.ProgramacaoService;
 import br.com.fivecom.litoralfm.ui.main.MainActivity;
 import br.com.fivecom.litoralfm.ui.main.adapter.ScheduleAdapter;
 import br.com.fivecom.litoralfm.ui.spinners.SearchableSpinner;
 import br.com.fivecom.litoralfm.utils.constants.Constants;
 import br.com.fivecom.litoralfm.utils.core.Intents;
+import br.com.fivecom.litoralfm.utils.core.WebViewCacheManager;
 
 import static br.com.fivecom.litoralfm.utils.constants.Constants.data;
 
@@ -72,12 +75,12 @@ public class ScheduleFragment extends Fragment implements
     private ImageView btMenu;
     private ImageView btNotif;
     
-    // Navbar buttons
-    private ImageView btPromotion;
-    private ImageView btNews;
-    private ImageView btRadio;
-    private ImageView btProgram;
-    private ImageView btWhatsapp;
+    // Navbar buttons (agora são LinearLayout no include)
+    private View btPromotion;
+    private View btNews;
+    private View btRadio;
+    private View btProgram;
+    private View btWhatsapp;
     
     // WebView do banner
     private WebView webView;
@@ -131,8 +134,8 @@ public class ScheduleFragment extends Fragment implements
         programacaoService = new ProgramacaoService();
         programacaoService.setCallback(this);
 
-        // Serviço da nova API
-        programacaoAPIService = new ProgramacaoAPIService();
+        // Serviço da nova API (usa ServiceManager para compartilhar instância)
+        programacaoAPIService = ServiceManager.getProgramacaoService();
         programacaoAPIService.setCallback(this);
     }
 
@@ -172,11 +175,16 @@ public class ScheduleFragment extends Fragment implements
                 android.R.id.text1,
                 dias
         );
+        // Define layout personalizado para o dropdown
+        diaAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         spinnerWeekday.setAdapter(diaAdapter);
         
-        // Seleciona "TODOS" após configurar o adapter
+        // Seleciona "TODOS" após configurar o adapter e ajusta posição do dropdown
         spinnerWeekday.post(() -> {
             spinnerWeekday.selectItemByIndex(0);
+            // Posiciona o dropdown logo abaixo do spinner
+            int spinnerHeight = spinnerWeekday.getHeight();
+            spinnerWeekday.setDropDownVerticalOffset(spinnerHeight);
         });
 
         // Spinner de regiões
@@ -187,11 +195,16 @@ public class ScheduleFragment extends Fragment implements
                 android.R.id.text1,
                 radios
         );
+        // Define layout personalizado para o dropdown
+        radioAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         spinnerRegion.setAdapter(radioAdapter);
         
-        // Seleciona primeira rádio após configurar o adapter
+        // Seleciona primeira rádio após configurar o adapter e ajusta posição do dropdown
         spinnerRegion.post(() -> {
             spinnerRegion.selectItemByIndex(0);
+            // Posiciona o dropdown logo abaixo do spinner
+            int spinnerHeight = spinnerRegion.getHeight();
+            spinnerRegion.setDropDownVerticalOffset(spinnerHeight);
         });
 
         // Listeners dos spinners
@@ -306,7 +319,7 @@ public class ScheduleFragment extends Fragment implements
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
-        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT); // Usa cache quando disponível
         settings.setDomStorageEnabled(true);
 
         webView.setWebViewClient(new WebViewClient() {
@@ -341,8 +354,24 @@ public class ScheduleFragment extends Fragment implements
                     "Android " + Build.VERSION.RELEASE,
                     Build.MANUFACTURER + " - " + Build.MODEL
             );
-            webView.loadUrl(pubUrl);
-            Log.d(TAG, "✅ WebView carregando URL: " + pubUrl);
+            
+            // Verifica se a URL já está carregada na WebView
+            String currentUrl = webView.getUrl();
+            boolean urlChanged = !pubUrl.equals(currentUrl);
+            
+            // Verifica se precisa recarregar baseado no cache manager
+            boolean shouldReload = WebViewCacheManager.shouldReload(requireContext(), pubUrl);
+            
+            // Só recarrega se a URL mudou ou se o cache expirou
+            if (urlChanged || shouldReload) {
+                webView.setVisibility(View.VISIBLE);
+                webView.loadUrl(pubUrl);
+                Log.d(TAG, "✅ WebView carregando URL: " + pubUrl + (urlChanged ? " (URL mudou)" : " (cache expirado)"));
+            } else {
+                // URL já está carregada e cache ainda válido, apenas torna visível
+                webView.setVisibility(View.VISIBLE);
+                Log.d(TAG, "⏭️ WebView usando cache para URL: " + pubUrl);
+            }
         } else {
             Log.w(TAG, "⚠️ Dados da rádio não disponíveis para carregar o banner");
             webView.setVisibility(View.GONE);
@@ -357,6 +386,30 @@ public class ScheduleFragment extends Fragment implements
 
         // Carrega programação da nova API
         loadProgramacao();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Retoma o WebView do banner e verifica se precisa recarregar
+        if (webView != null) {
+            webView.onResume();
+            // Se o WebView está visível mas perdeu o conteúdo, recarrega
+            if (webView.getVisibility() == View.VISIBLE && 
+                (webView.getUrl() == null || webView.getUrl().isEmpty())) {
+                Log.d(TAG, "🔄 WebView do banner perdeu conteúdo, recarregando...");
+                setupWebView();
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Pausa o WebView do banner quando o fragment é pausado
+        if (webView != null && webView.getVisibility() == View.VISIBLE) {
+            webView.onPause();
+        }
     }
 
     @Override
@@ -417,13 +470,13 @@ public class ScheduleFragment extends Fragment implements
             // Já está na tela de programação
             // Não faz nada ou pode mostrar feedback visual
         } else if (id == R.id.bt_whatsapp) {
-            openWhatsApp();
+            openWhatsAppFromFirebase();
         }
     }
 
     private void navigateBack() {
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.MAIN);
+            ((MainActivity) getActivity()).handleBackPress();
         }
     }
 
@@ -469,23 +522,14 @@ public class ScheduleFragment extends Fragment implements
         }
     }
 
-    private void openWhatsApp() {
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(android.net.Uri.parse("https://wa.me/5527999999999"));
-            intent.setPackage("com.whatsapp");
-            startActivity(intent);
-        } catch (android.content.ActivityNotFoundException e) {
-            // Se o WhatsApp não estiver instalado, tenta abrir no navegador
-            try {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(android.net.Uri.parse("https://wa.me/5527999999999"));
-                startActivity(intent);
-            } catch (Exception ex) {
-                if (isAdded()) {
-                    Toast.makeText(requireContext(), "Erro ao abrir WhatsApp", Toast.LENGTH_SHORT).show();
-                }
-            }
+    private void openWhatsAppFromFirebase() {
+        if (data == null || data.radios == null || Constants.ID < 0 || Constants.ID >= data.radios.size()) {
+            return;
+        }
+
+        Data.Radios radio = data.radios.get(Constants.ID);
+        if (radio.whatsapp != null && !radio.whatsapp.isEmpty()) {
+            Intents.app(requireContext(), Intents.Social.WHATSAPP, radio.whatsapp);
         }
     }
 

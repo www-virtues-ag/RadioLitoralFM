@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_social_feed_gradient"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp">
+
+            <RelativeLayout
+                android:id="@+id/bt_back"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_40sdp">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                app:srcCompat="@drawable/back_feed" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:layout_toEndOf="@+id/back"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="@string/string_back"
+                android:textColor="#4360C6"
+                android:textSize="@dimen/_12sdp"
+                app:fontFamily="@font/montserrat_regular" />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/viewd_posts"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:visibility="visible"
+                android:layout_toStartOf="@+id/liked_posts"
+                app:srcCompat="@drawable/view_post_not_actived" />
+
+            <ImageView
+                android:id="@+id/liked_posts"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:visibility="visible"
+                android:layout_toStartOf="@+id/bookmark_posts"
+                app:srcCompat="@drawable/heart" />
+
+            <ImageView
+                android:id="@+id/bookmark_posts"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_bookmark_blue" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txt_social_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="Redes Sociais"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_20sdp"
+            app:fontFamily="@font/montserrat_bold" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/search_card"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
+            app:cardCornerRadius="22dp"
+            app:cardElevation="0dp"
+            app:cardUseCompatPadding="false"
+            app:cardPreventCornerOverlap="true"
+            app:cardBackgroundColor="#3A3A3C">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <EditText
+                    android:id="@+id/search_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:hint="Buscar..."
+                    android:textSize="@dimen/_12sdp"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="#80FFFFFF"
+                    android:drawableStart="@android:drawable/ic_menu_search"
+                    android:drawablePadding="@dimen/_8sdp"
+                    android:paddingStart="@dimen/_12sdp"
+                    android:paddingEnd="@dimen/_12sdp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:imeOptions="actionSearch"
+                    android:includeFontPadding="false"
+                    android:backgroundTint="@null"
+                    app:backgroundTint="@null"/>
+            </FrameLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_filters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:layout_marginBottom="@dimen/_4sdp"
+            app:selectionRequired="false"
+            app:singleSelection="false">
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/social_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:padding="@dimen/_8sdp" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/empty_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Nenhum post encontrado"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+        </FrameLayout>
+    </LinearLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

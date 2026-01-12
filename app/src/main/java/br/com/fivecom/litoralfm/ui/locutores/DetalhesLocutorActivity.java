@@ -25,6 +25,16 @@ import br.com.fivecom.litoralfm.R;
 import br.com.fivecom.litoralfm.models.locutores.Locutor;
 import br.com.fivecom.litoralfm.utils.constants.Constants;
 import br.com.fivecom.litoralfm.utils.core.Intents;
+import br.com.fivecom.litoralfm.utils.core.WebViewCacheManager;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import androidx.annotation.Nullable;
+import android.graphics.drawable.Drawable;
 
 import static br.com.fivecom.litoralfm.utils.constants.Constants.data;
 
@@ -33,10 +43,8 @@ public class DetalhesLocutorActivity extends AppCompatActivity {
 
     private ImageView btnVoltar;
     private ImageView imgLocutor;
-
     private TextView txtNome;
     private TextView txtBio;
-
     private ImageView btnFacebook;
     private ImageView btnInstagram;
     private ImageView btnWhatsapp;
@@ -56,7 +64,7 @@ public class DetalhesLocutorActivity extends AppCompatActivity {
 
         btnFacebook = findViewById(R.id.btn_facebook);
         btnInstagram = findViewById(R.id.btn_instagram);
-        btnWhatsapp = findViewById(R.id.btn_x);  // Reutilizando o botão X para WhatsApp
+        btnWhatsapp = findViewById(R.id.btn_x); // Reutilizando o botão X para WhatsApp
 
         btnVoltar.setOnClickListener(v -> finish());
 
@@ -79,7 +87,7 @@ public class DetalhesLocutorActivity extends AppCompatActivity {
         // Preenche UI
         carregarImagem(locutor);
         txtNome.setText(locutor.getNome());
-        txtBio.setText(locutor.getDescricao());
+        // txtBio mantém o texto fixo do XML conforme solicitado
 
         // Redes sociais (se não tiver, esconde o botão)
         setupSocial(btnFacebook, locutor.getFacebookUrl());
@@ -111,12 +119,27 @@ public class DetalhesLocutorActivity extends AppCompatActivity {
                 imgLocutor.setImageResource(drawableId);
             }
         } else {
-            // Carregar da URL usando Glide
+            // Carregar da URL usando Glide com listener para diagnóstico
             Glide.with(this)
                     .load(fotoUrl)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.circle_litoral)
                     .error(R.drawable.circle_litoral)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target,
+                                boolean isFirstResource) {
+                            Log.e(TAG, "❌ [Details] Falha ao carregar imagem: " + fotoUrl, e);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
+                                DataSource dataSource, boolean isFirstResource) {
+                            Log.d(TAG, "✅ [Details] Imagem carregada: " + fotoUrl + " (Fonte: " + dataSource + ")");
+                            return false;
+                        }
+                    })
                     .into(imgLocutor);
         }
     }
@@ -163,19 +186,21 @@ public class DetalhesLocutorActivity extends AppCompatActivity {
      */
     private void setupWebView() {
         webView = findViewById(R.id.webView);
-        if (webView == null) return;
+        if (webView == null)
+            return;
 
         webView.setBackgroundColor(0x00000000);
         webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
-        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT); // Usa cache quando disponível
         settings.setDomStorageEnabled(true);
 
         webView.setWebViewClient(new WebViewClient() {
             private boolean isActivityAlive() {
-                if (isFinishing()) return false;
+                if (isFinishing())
+                    return false;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && isDestroyed()) {
                     return false;
                 }
@@ -206,19 +231,34 @@ public class DetalhesLocutorActivity extends AppCompatActivity {
         });
 
         // Carrega a URL do banner
-        if (data != null && data.radios != null && !data.radios.isEmpty() && Constants.ID >= 0 && Constants.ID < data.radios.size()) {
+        if (data != null && data.radios != null && !data.radios.isEmpty() && Constants.ID >= 0
+                && Constants.ID < data.radios.size()) {
             String pubUrl = String.format(
                     Intents.decode(getString(R.string.pub)),
                     data.radios.get(Constants.ID).id,
                     "Android " + Build.VERSION.RELEASE,
-                    Build.MANUFACTURER + " - " + Build.MODEL
-            );
-            webView.loadUrl(pubUrl);
-            Log.d(TAG, "✅ WebView carregando URL: " + pubUrl);
+                    Build.MANUFACTURER + " - " + Build.MODEL);
+
+            // Verifica se a URL já está carregada na WebView
+            String currentUrl = webView.getUrl();
+            boolean urlChanged = !pubUrl.equals(currentUrl);
+
+            // Verifica se precisa recarregar baseado no cache manager
+            boolean shouldReload = WebViewCacheManager.shouldReload(this, pubUrl);
+
+            // Só recarrega se a URL mudou ou se o cache expirou
+            if (urlChanged || shouldReload) {
+                webView.setVisibility(View.VISIBLE);
+                webView.loadUrl(pubUrl);
+                Log.d(TAG, "✅ WebView carregando URL: " + pubUrl + (urlChanged ? " (URL mudou)" : " (cache expirado)"));
+            } else {
+                // URL já está carregada e cache ainda válido, apenas torna visível
+                webView.setVisibility(View.VISIBLE);
+                Log.d(TAG, "⏭️ WebView usando cache para URL: " + pubUrl);
+            }
         } else {
             Log.w(TAG, "⚠️ Dados da rádio não disponíveis para carregar o banner");
             webView.setVisibility(View.GONE);
         }
     }
 }
-

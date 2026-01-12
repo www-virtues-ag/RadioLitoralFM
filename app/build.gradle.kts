@@ -15,8 +15,8 @@ android {
         applicationId = "br.com.fivecom.litoralfm"
         minSdk = 24
         targetSdk = 36
-        versionCode = 36
-        versionName = "2025.12.31"
+        versionCode = 40
+        versionName = "2026.01.09"
         multiDexEnabled = true
 
         vectorDrawables.useSupportLibrary = true
@@ -55,6 +55,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
 
     buildFeatures {
@@ -81,6 +82,9 @@ dependencies {
 
     //DEX
     implementation(libs.multidex)
+    
+    //DESUGARING - Suporte para Java 8+ APIs
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
     //UI
     implementation(libs.appcompat)
@@ -137,7 +141,12 @@ dependencies {
 
     //implementation(libs.android.image.cropper)
     //implementation(libs.wasabeef.blurry)
-    ///implementation(libs.androidyoutubeplayer.core)
+    //implementation(libs.androidyoutubeplayer.core)
+    
+    // VIDEO - Dailymotion SDK
+    // VIDEO - Dailymotion SDK (REMOVIDO)
+    // implementation(libs.dailymotion.sdk)
+
     //implementation(libs.chromecast.sender)
     //implementation(libs.glidetovectoryou)
     //implementation(libs.shaperipplelibrary)

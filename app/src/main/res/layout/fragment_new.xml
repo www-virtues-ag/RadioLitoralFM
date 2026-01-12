@@ -7,8 +7,6 @@
     android:background="#EC1D23"
     android:fitsSystemWindows="true">
 
-
-    <!-- Backgrounds decorativos -->
     <ImageView
         android:id="@+id/BgUp"
         android:layout_width="@dimen/_80sdp"
@@ -29,7 +27,6 @@
         android:scaleType="fitXY"
         app:srcCompat="@drawable/bg_radio_baixo" />
 
-    <!-- Layout Principal com Scroll -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -51,76 +48,67 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Header -->
-                <RelativeLayout
-                    android:id="@+id/rlHeader"
+                <LinearLayout
+                    android:id="@+id/ll_top"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/_16sdp"
-                    android:paddingVertical="@dimen/_12sdp">
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:orientation="vertical">
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="@dimen/_15sdp">
 
                         <ImageView
                             android:id="@+id/bt_back"
-                            android:layout_width="@dimen/_45sdp"
-                            android:layout_height="@dimen/_30sdp"
-                            android:layout_marginBottom="@dimen/_8sdp"
-                            android:background="@android:color/transparent"
-                            android:contentDescription="Voltar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
                             app:srcCompat="@drawable/btn_voltar_radio_escuro" />
 
                         <ImageView
                             android:id="@+id/bt_home"
-                            android:layout_width="@dimen/_45sdp"
-                            android:layout_height="@dimen/_30sdp"
-                            android:background="@android:color/transparent"
-                            android:contentDescription="Home"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
                             app:srcCompat="@drawable/btn_home_radio_escuro" />
-
                     </LinearLayout>
 
                     <ImageView
-                        android:id="@+id/ivLogoRadio"
-                        android:layout_width="@dimen/_140sdp"
-                        android:layout_height="@dimen/_55sdp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:contentDescription="Logo Rádio Litoral"
+                        android:layout_width="@dimen/_130sdp"
+                        android:layout_height="@dimen/_90sdp"
+                        android:layout_marginStart="@dimen/_18sdp"
+                        android:layout_marginEnd="@dimen/_18sdp"
                         app:srcCompat="@drawable/logo_radio_escuro" />
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:gravity="end"
-                        android:orientation="vertical">
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="@dimen/_15sdp">
 
                         <ImageView
                             android:id="@+id/bt_menu"
-                            android:layout_width="@dimen/_45sdp"
-                            android:layout_height="@dimen/_30sdp"
-                            android:layout_marginBottom="@dimen/_8sdp"
-                            android:background="@android:color/transparent"
-                            android:contentDescription="Menu"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
                             app:srcCompat="@drawable/btn_menu_radio_escuro" />
 
                         <ImageView
                             android:id="@+id/bt_notif"
-                            android:layout_width="@dimen/_25sdp"
-                            android:layout_height="@dimen/_30sdp"
-                            android:layout_gravity="end"
-                            android:layout_marginEnd="@dimen/_10sdp"
-                            android:contentDescription="Notificações"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:padding="@dimen/_6sdp"
                             app:srcCompat="@drawable/btn_notif_radio_escuro" />
-
                     </LinearLayout>
-
-                </RelativeLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/lltxtnews"
@@ -136,7 +124,6 @@
 
                 </LinearLayout>
 
-                <!-- Publicidade -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -199,7 +186,6 @@
 
                 </RelativeLayout>
 
-                <!-- Texto CATEGORIAS -->
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -219,8 +205,6 @@
 
                 </RelativeLayout>
 
-                <!-- Grid de Categorias com ScrollView VERTICAL -->
-
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_120sdp"
@@ -235,7 +219,6 @@
                         android:layout_height="match_parent" />
 
                 </androidx.cardview.widget.CardView>
-
 
                 <ImageView
                     android:id="@+id/txt_pref_noticia"
@@ -262,5 +245,13 @@
 
         </FrameLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <include
+        android:id="@+id/rlNavBar"
+        layout="@layout/item_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_gravity="bottom"
+        android:elevation="@dimen/_8sdp" />
 
 </FrameLayout>

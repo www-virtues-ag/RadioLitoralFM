@@ -4,11 +4,11 @@ import android.util.Log;
 
 public class Locutor {
     private static final String TAG = "Locutor";
-    
+
     private String id;
     private String nome;
-    private String fotoUrl;         // URL da foto vinda da API
-    private String descricao;       // Descrição do locutor
+    private String fotoUrl; // URL da foto vinda da API
+    private String descricao; // Descrição do locutor
     private String facebookUrl;
     private String instagramUrl;
     private String whatsappUrl;
@@ -19,7 +19,7 @@ public class Locutor {
 
     // Construtor completo
     public Locutor(String id, String nome, String fotoUrl, String descricao,
-                   String facebookUrl, String instagramUrl, String whatsappUrl) {
+            String facebookUrl, String instagramUrl, String whatsappUrl) {
         this.id = id;
         this.nome = nome;
         this.fotoUrl = fotoUrl;
@@ -47,11 +47,12 @@ public class Locutor {
     }
 
     public String getFotoUrl() {
-        Log.d(TAG, "🖼️ [Locutor:" + nome + "] fotoURL - String: '" + fotoUrl + "'");
+        Log.d(TAG, "🖼️ [Locutor:" + nome + "] getFotoUrl: '" + fotoUrl + "'");
         return fotoUrl;
     }
 
     public void setFotoUrl(String fotoUrl) {
+        Log.d(TAG, "📝 Setting fotoURL for [" + nome + "]: '" + fotoUrl + "'");
         this.fotoUrl = fotoUrl;
     }
 
@@ -97,7 +98,7 @@ public class Locutor {
         // Formatar URL do WhatsApp
         String cleanNumber = whatsappUrl.replaceAll("[^0-9]", "");
         String formattedUrl = "https://wa.me/" + cleanNumber;
-        Log.d(TAG, "💬 [Locutor:" + nome + "] WhatsApp - String: '" + whatsappUrl + 
+        Log.d(TAG, "💬 [Locutor:" + nome + "] WhatsApp - String: '" + whatsappUrl +
                 "' → Clean: '" + cleanNumber + "' → URL: '" + formattedUrl + "'");
         return formattedUrl;
     }

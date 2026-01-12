@@ -1306,10 +1306,18 @@
       "client_info": {
         "mobilesdk_app_id": "1:296281533555:android:3197a4e443c52a4d",
         "android_client_info": {
-          "package_name": "br.com.fivecom.litoralfm"
+          "package_name": "app.radiolight"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "296281533555-me03pc3o9nuggc5sgp6lfedkm8e4iki0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.radiolight",
+            "certificate_hash": "6cc3cb321f6600a72216d1786581b2c48afe210c"
+          }
+        },
         {
           "client_id": "296281533555-c4aamhp0icnh6s0olu93jtublppgv6tn.apps.googleusercontent.com",
           "client_type": 3
@@ -6146,7 +6154,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:296281533555:android:515207dff544e08f",
         "android_client_info": {
-          "package_name": "br.com.fivecom.litoralfm"
+          "package_name": "radio.clube.cidade"
         }
       },
       "oauth_client": [

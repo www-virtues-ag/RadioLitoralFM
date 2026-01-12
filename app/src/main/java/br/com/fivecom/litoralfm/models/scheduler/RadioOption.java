@@ -37,7 +37,7 @@ public class RadioOption {
      */
     public static List<RadioOption> getTodas() {
         return Arrays.asList(
-            new RadioOption("10223", "Vitória"),
+            new RadioOption("10223", "GRANDE VITÓRIA"),
             new RadioOption("10225", "Noroeste"),
             new RadioOption("10226", "Norte"),
             new RadioOption("10224", "Sul")

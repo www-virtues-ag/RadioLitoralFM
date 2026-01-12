@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.com.fivecom.litoralfm.models.agenda.AgendaItem;
 import br.com.fivecom.litoralfm.models.agenda.AgendaResponse;
@@ -38,6 +40,20 @@ public class AgendaService {
     // ✅ Handler da Main Thread
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
+    // Cache de agenda (static para compartilhar entre instâncias)
+    private static class AgendaCacheEntry {
+        List<AgendaItem> agenda;
+        long timestamp;
+        
+        AgendaCacheEntry(List<AgendaItem> agenda, long timestamp) {
+            this.agenda = agenda;
+            this.timestamp = timestamp;
+        }
+    }
+    
+    private static AgendaCacheEntry agendaCache = null;
+    private static final long AGENDA_CACHE_DURATION_MS = 10 * 60 * 1000; // 10 minutos
+
     public interface AgendaCallback {
         void onSuccess(List<AgendaItem> agenda);
         void onError(String error);
@@ -60,6 +76,13 @@ public class AgendaService {
 
     public void fetchAgenda(AgendaCallback callback) {
         if (callback == null) return;
+
+        // Verifica cache antes de fazer request
+        if (agendaCache != null && (System.currentTimeMillis() - agendaCache.timestamp) < AGENDA_CACHE_DURATION_MS) {
+            Log.d(TAG, "💾 Retornando agenda do cache (" + agendaCache.agenda.size() + " itens)");
+            deliverSuccess(callback, new ArrayList<>(agendaCache.agenda));
+            return;
+        }
 
         String url = buildURL();
         Log.d(TAG, "🔄 Buscando agenda da URL: " + url);
@@ -137,6 +160,10 @@ public class AgendaService {
                         });
 
                         Log.d(TAG, "✅ Total de itens na agenda: " + agendaOrdenada.size());
+
+                        // Salva no cache
+                        agendaCache = new AgendaCacheEntry(new ArrayList<>(agendaOrdenada), System.currentTimeMillis());
+                        Log.d(TAG, "💾 Cache de agenda atualizado");
 
                         // Entrega sucesso na Main Thread
                         deliverSuccess(callback, agendaOrdenada);

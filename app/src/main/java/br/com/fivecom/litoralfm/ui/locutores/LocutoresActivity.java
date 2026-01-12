@@ -10,18 +10,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import br.com.fivecom.litoralfm.services.LocutorService;
 import br.com.fivecom.litoralfm.R;
 import br.com.fivecom.litoralfm.models.locutores.Locutor;
+import br.com.fivecom.litoralfm.services.LocutorService;
 
 public class LocutoresActivity extends AppCompatActivity {
-    private static final String TAG = "LocutoresActivity";
 
+    private static final String TAG = "LocutoresActivity";
     public static final String EXTRA_LOCUTOR_ID = "extra_locutor_id";
 
     private LocutorService locutorService;
@@ -38,36 +38,70 @@ public class LocutoresActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Configurar botão voltar
-        findViewById(R.id.btn_voltar).setOnClickListener(v -> finish());
+        // Botão voltar
+        if (findViewById(R.id.btn_voltar) != null) {
+            findViewById(R.id.btn_voltar).setOnClickListener(v -> finish());
+        }
 
-        // Configurar botões dos locutores
-        configurarBotoes();
+        // Inicia com placeholders do XML (ver renderLocutores se for necessário
+        // resetar)
 
         // Buscar locutores da API
         buscarLocutoresDaAPI();
     }
 
     /**
-     * Configura os botões dos locutores
+     * Renderiza os locutores nos 8 slots fixos
      */
-    private void configurarBotoes() {
-        // Map: id do botão -> id do locutor
-        Map<Integer, String> map = new HashMap<>();
-        map.put(R.id.btn_locutor_sol, "sol");
-        map.put(R.id.btn_locutor_cleide, "cleide");
-        map.put(R.id.btn_locutor_sergio, "sergio");
-        map.put(R.id.btn_locutor_bruninho, "bruninho");
-        map.put(R.id.btn_locutor_nat, "nat");
-        map.put(R.id.btn_locutor_alex, "alex");
-        map.put(R.id.btn_locutor_jonas, "jonas");
-        map.put(R.id.btn_locutor_roliber, "roliber");
+    private void renderLocutores(List<Locutor> locutores) {
+        if (locutores == null)
+            return;
 
-        for (Map.Entry<Integer, String> e : map.entrySet()) {
-            int viewId = e.getKey();
-            String locutorId = e.getValue();
+        for (int i = 1; i <= 8; i++) {
+            // IDs gerados dinamicamente
+            int btnId = getResources().getIdentifier("btn_locutor_" + i, "id", getPackageName());
+            int imgId = getResources().getIdentifier("img_locutor_" + i, "id", getPackageName());
+            int nameId = getResources().getIdentifier("name_locutor_" + i, "id", getPackageName());
 
-            findViewById(viewId).setOnClickListener(v -> abrirDetalhes(locutorId));
+            android.view.View btn = findViewById(btnId);
+            android.widget.ImageView img = findViewById(imgId);
+            android.widget.TextView name = findViewById(nameId);
+
+            if (btn == null)
+                continue;
+
+            if (i <= locutores.size()) {
+                Locutor loc = locutores.get(i - 1);
+                btn.setVisibility(android.view.View.VISIBLE);
+                if (name != null)
+                    name.setText(loc.getNome());
+
+                // Carregar imagem com Glide
+                if (img != null) {
+                    String fotoUrl = loc.getFotoUrl();
+                    if (fotoUrl != null && !fotoUrl.isEmpty()) {
+                        if (fotoUrl.startsWith("http")) {
+                            com.bumptech.glide.Glide.with(this)
+                                    .load(fotoUrl)
+                                    .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.ALL)
+                                    .placeholder(R.drawable.circle_litoral)
+                                    .error(R.drawable.circle_litoral)
+                                    .into(img);
+                        } else {
+                            int drawableId = getResources().getIdentifier(fotoUrl, "drawable", getPackageName());
+                            img.setImageResource(drawableId != 0 ? drawableId : R.drawable.circle_litoral);
+                        }
+                    } else {
+                        img.setImageResource(R.drawable.circle_litoral);
+                    }
+                }
+
+                // Click listener
+                btn.setOnClickListener(v -> abrirDetalhes(loc.getId()));
+            } else {
+                // Esconder slots extras
+                btn.setVisibility(android.view.View.GONE);
+            }
         }
     }
 
@@ -77,24 +111,44 @@ public class LocutoresActivity extends AppCompatActivity {
     private void buscarLocutoresDaAPI() {
         locutorService = new LocutorService();
 
-        Log.d(TAG, "🔄 Iniciando busca de locutores da API...");
+        // Recuperar o ID da rádio selecionada das SharedPreferences
+        android.content.SharedPreferences prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
+        int radioId = prefs.getInt("selected_radio_id", 10223); // Default Grande Vitória
+        String radioIdStr = String.valueOf(radioId);
 
-        locutorService.fetchLocutores(new LocutorService.LocutorCallback() {
+        Log.d(TAG, "🔄 Iniciando busca de locutores para rádio: " + radioIdStr);
+
+        locutorService.fetchLocutores(radioIdStr, new LocutorService.LocutorCallback() {
             @Override
             public void onSuccess(List<Locutor> locutores) {
+                if (locutores == null || locutores.isEmpty()) {
+                    Log.w(TAG, "⚠️ API retornou lista vazia de locutores");
+                    runOnUiThread(() -> mostrarAvisoVazio());
+                    return;
+                }
+
                 Log.d(TAG, "✅ Locutores carregados com sucesso: " + locutores.size());
                 LocutoresRepo.updateLocutores(locutores);
+                runOnUiThread(() -> renderLocutores(locutores));
             }
 
             @Override
             public void onError(String errorMessage) {
                 Log.e(TAG, "❌ Erro ao carregar locutores: " + errorMessage);
-                // Em caso de erro, os locutores padrão já estão carregados
-                Toast.makeText(LocutoresActivity.this,
-                        "Usando dados locais",
-                        Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> mostrarAvisoVazio());
             }
         });
+    }
+
+    /**
+     * Exibe um AlertDialog de aviso quando não há locutores
+     */
+    private void mostrarAvisoVazio() {
+        if (isFinishing())
+            return;
+
+        LocutoresMessageDialog dialog = LocutoresMessageDialog.newInstance();
+        dialog.show(getSupportFragmentManager(), "LocutoresMessageDialog");
     }
 
     /**

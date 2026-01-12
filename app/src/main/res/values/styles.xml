@@ -24,4 +24,15 @@
         <item name="cornerSize">@dimen/_12sdp</item>
     </style>
 
+    <style name="ThemeOverlay.Social.Material" parent="ThemeOverlay.MaterialComponents">
+        <!-- opcional: definir cores caso precise -->
+        <!-- <item name="colorPrimary">@color/colorPrimary</item> -->
+    </style>
+
+    <!-- opcional (recomendado): shape padrão arredondado do search -->
+    <style name="ShapeAppearance.Social.SearchRounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
 </resources>

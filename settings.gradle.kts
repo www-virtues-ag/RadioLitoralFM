@@ -32,6 +32,7 @@ dependencyResolutionManagement {
         maven(url = "https://plugins.gradle.org/m2/")
         maven(url = "https://oss.jfrog.org/libs-snapshot")
         maven(url = "https://dl.bintray.com/poldz123/maven/")
+        maven(url = "https://mvn.dailymotion.com/repository/releases/")
     }
 }
 rootProject.name = "Rádio Litoral FM"

@@ -58,6 +58,7 @@
     <color name="colorGrayDark">#858585</color>
 
     <color name="vermelho">#FF531414</color>
+    <color name="vermelho_letter">#740C0F</color>
     <color name="vermelho_dark">#FF531414</color>
     <color name="vermelho_claro">#EC1D23</color>
     <color name="vermelho_claro_dark">#FFEC1D23</color>

@@ -1,8 +1,6 @@
 package br.com.fivecom.litoralfm.ui.promocao;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +25,11 @@ import br.com.fivecom.litoralfm.R;
 import br.com.fivecom.litoralfm.models.promocao.Promocao;
 import br.com.fivecom.litoralfm.services.PromocaoService;
 import br.com.fivecom.litoralfm.ui.main.MainActivity;
+import br.com.fivecom.litoralfm.utils.core.Intents;
+import br.com.fivecom.litoralfm.utils.constants.Constants;
+import br.com.fivecom.litoralfm.models.Data;
+
+import static br.com.fivecom.litoralfm.utils.constants.Constants.data;
 
 /**
  * Fragment para exibir promoções
@@ -38,6 +41,7 @@ public class PromocaoFragment extends Fragment implements PromocaoService.Promoc
     private RecyclerView recyclerPromocoes;
     private ProgressBar progressPromocoes;
     private TextView txtEmptyPromocoes;
+    private TextView txtEmptyPromocoes2;
 
     // Buttons
     private ImageView btnVoltar;
@@ -45,8 +49,8 @@ public class PromocaoFragment extends Fragment implements PromocaoService.Promoc
     private ImageView btnNotificacoes;
     private ImageView btnMenu;
     
-    // Navbar buttons
-    private ImageView btnNav1, btnNav2, btnNav3, btnNav4, btnNav5;
+    // Navbar buttons (agora são LinearLayout no include)
+    private View btnNav1, btnNav2, btnNav3, btnNav4, btnNav5;
 
     // Service and Data
     private PromocaoService promocaoService;
@@ -93,16 +97,17 @@ public class PromocaoFragment extends Fragment implements PromocaoService.Promoc
         btnMenu = view.findViewById(R.id.bt_menu);
         
         // Navbar buttons
-        btnNav1 = view.findViewById(R.id.btnNav1);
-        btnNav2 = view.findViewById(R.id.btnNav2);
-        btnNav3 = view.findViewById(R.id.btnNav3);
-        btnNav4 = view.findViewById(R.id.btnNav4);
-        btnNav5 = view.findViewById(R.id.btnNav5);
+        btnNav1 = view.findViewById(R.id.bt_promotion);
+        btnNav2 = view.findViewById(R.id.bt_news);
+        btnNav3 = view.findViewById(R.id.bt_radio);
+        btnNav4 = view.findViewById(R.id.bt_program);
+        btnNav5 = view.findViewById(R.id.bt_whatsapp);
 
         // RecyclerView
         recyclerPromocoes = view.findViewById(R.id.rv_promo);
         progressPromocoes = view.findViewById(R.id.progress_promo);
         txtEmptyPromocoes = view.findViewById(R.id.txt_empty_promo);
+        txtEmptyPromocoes2 = view.findViewById(R.id.txt_empty_promo2);
     }
 
     private void setupRecyclerView(@NonNull View view) {
@@ -143,12 +148,7 @@ public class PromocaoFragment extends Fragment implements PromocaoService.Promoc
             });
         }
         if (btnNav2 != null) {
-            btnNav2.setOnClickListener(v -> {
-                // Notícias - em breve
-                if (isAdded() && getContext() != null) {
-                    Toast.makeText(getContext(), "Notícias - em breve", Toast.LENGTH_SHORT).show();
-                }
-            });
+            btnNav2.setOnClickListener(v -> navigateToNews());
         }
         if (btnNav3 != null) {
             btnNav3.setOnClickListener(v -> navigateToAudio());
@@ -173,9 +173,12 @@ public class PromocaoFragment extends Fragment implements PromocaoService.Promoc
         if (recyclerPromocoes != null) {
             recyclerPromocoes.setVisibility(show ? View.GONE : View.VISIBLE);
         }
-        // Esconder mensagem de lista vazia durante o carregamento
+        // Esconder mensagens de lista vazia durante o carregamento
         if (txtEmptyPromocoes != null) {
             txtEmptyPromocoes.setVisibility(View.GONE);
+        }
+        if (txtEmptyPromocoes2 != null) {
+            txtEmptyPromocoes2.setVisibility(View.GONE);
         }
     }
 
@@ -186,9 +189,12 @@ public class PromocaoFragment extends Fragment implements PromocaoService.Promoc
             recyclerPromocoes.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
         }
 
-        // Mostrar/esconder mensagem de lista vazia
+        // Mostrar/esconder mensagens de lista vazia
         if (txtEmptyPromocoes != null) {
             txtEmptyPromocoes.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        }
+        if (txtEmptyPromocoes2 != null) {
+            txtEmptyPromocoes2.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         }
 
         // Esconder ProgressBar
@@ -210,6 +216,15 @@ public class PromocaoFragment extends Fragment implements PromocaoService.Promoc
 
     @OptIn(markerClass = UnstableApi.class)
     private void navigateBack() {
+        // Usa handleBackPress para navegação correta com back stack
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).handleBackPress();
+            return;
+        }
+        // Fallback caso não seja MainActivity
+        if (getActivity() != null) {
+            getActivity().onBackPressed();
+        }
         // Navega para o MainFragment
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.MAIN);
@@ -232,6 +247,14 @@ public class PromocaoFragment extends Fragment implements PromocaoService.Promoc
         }
     }
 
+    @OptIn(markerClass = UnstableApi.class)
+    private void navigateToNews() {
+        // Navega para o NewsFragment (fragment_new)
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.NEWS);
+        }
+    }
+
     private void navigateToAudio() {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.AUDIO);
@@ -245,21 +268,19 @@ public class PromocaoFragment extends Fragment implements PromocaoService.Promoc
     }
 
     private void openWhatsApp() {
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("https://wa.me/5527999999999"));
-            intent.setPackage("com.whatsapp");
-            startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            // Se o WhatsApp não estiver instalado, tenta abrir no navegador
-            try {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://wa.me/5527999999999"));
-                startActivity(intent);
-            } catch (Exception ex) {
-                if (isAdded() && getContext() != null) {
-                    Toast.makeText(getContext(), "Erro ao abrir WhatsApp", Toast.LENGTH_SHORT).show();
-                }
+        if (data == null || data.radios == null || Constants.ID < 0 || Constants.ID >= data.radios.size()) {
+            if (isAdded() && getContext() != null) {
+                Toast.makeText(getContext(), "Dados da rádio não disponíveis", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+
+        Data.Radios radio = data.radios.get(Constants.ID);
+        if (radio.whatsapp != null && !radio.whatsapp.isEmpty()) {
+            Intents.app(requireContext(), Intents.Social.WHATSAPP, radio.whatsapp);
+        } else {
+            if (isAdded() && getContext() != null) {
+                Toast.makeText(getContext(), "WhatsApp não configurado", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -276,11 +297,7 @@ public class PromocaoFragment extends Fragment implements PromocaoService.Promoc
     @Override
     public void onError(String error) {
         showLoading(false);
-        // Show error message
-        if (isAdded() && getContext() != null) {
-            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
-        }
-        // Show empty state on error
+        // Show empty state on error (sem toast)
         updateUI();
     }
 }

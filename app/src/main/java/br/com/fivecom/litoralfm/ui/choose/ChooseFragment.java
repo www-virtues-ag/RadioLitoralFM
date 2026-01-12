@@ -12,23 +12,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
 import androidx.fragment.app.Fragment;
 import androidx.media3.common.util.UnstableApi;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.support.v4.media.session.MediaControllerCompat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.com.fivecom.litoralfm.R;
 import br.com.fivecom.litoralfm.databinding.FragmentChooseBinding;
+import br.com.fivecom.litoralfm.databinding.ItemRadioSpinnerBinding;
 import br.com.fivecom.litoralfm.ui.main.MainActivity;
 import br.com.fivecom.litoralfm.utils.constants.Constants;
 import br.com.fivecom.litoralfm.utils.constants.Extras;
@@ -48,10 +49,9 @@ public class ChooseFragment extends Fragment {
     private final Handler uiHandler = new Handler(Looper.getMainLooper());
     private Runnable pendingNavigateRunnable;
 
-    // Evita disparar navegação no spinner durante setup inicial
-    private boolean ignoreNextSpinnerEvent = false;
+    private RadioRecyclerAdapter adapter;
 
-    // Modelo simples para o spinner
+    // Modelo simples para as rádios
     private static class RadioOption {
         final String name;
         final int id;
@@ -59,12 +59,6 @@ public class ChooseFragment extends Fragment {
         RadioOption(String name, int id) {
             this.name = name;
             this.id = id;
-        }
-
-        @NonNull
-        @Override
-        public String toString() {
-            return name;
         }
     }
 
@@ -85,8 +79,7 @@ public class ChooseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         setupOptionsFromRemoteConfig();
-        setupSpinner(binding.spinnerRegiao);
-        setupActions();
+        setupRecyclerView();
     }
 
     @Override
@@ -108,31 +101,42 @@ public class ChooseFragment extends Fragment {
     private void setupOptionsFromRemoteConfig() {
         options.clear();
 
+        // Ordem específica: NOROESTE, GRANDE VITÓRIA, NORTE, SUL
+        int[] orderedIds = {10225, 10223, 10226, 10224}; // NOROESTE, GRANDE VITÓRIA, NORTE, SUL
+
         // 1) Tenta usar os dados vindos do remote_config (Constants.data)
         if (data != null && data.radios != null && !data.radios.isEmpty()) {
+            // Cria um mapa temporário para facilitar a busca
+            Map<Integer, RadioOption> radioMap = new HashMap<>();
+            
             for (int i = 0; i < data.radios.size(); i++) {
                 try {
                     String idStr = data.radios.get(i).id;
                     if (idStr == null) continue;
 
                     int id = Integer.parseInt(idStr);
-
-                    // Nome regional amigável
                     String regionalName = getRegionalNameById(id);
-
-                    options.add(new RadioOption(regionalName, id));
+                    radioMap.put(id, new RadioOption(regionalName, id));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
             }
+            
+            // Adiciona na ordem especificada
+            for (int id : orderedIds) {
+                RadioOption option = radioMap.get(id);
+                if (option != null) {
+                    options.add(option);
+                }
+            }
         }
 
-        // 2) Fallback se não tiver nada carregado
+        // 2) Fallback se não tiver nada carregado - usa a ordem especificada
         if (options.isEmpty()) {
-            options.add(new RadioOption("GRANDE VITÓRIA", 10223));
-            options.add(new RadioOption("SUL", 10224));
             options.add(new RadioOption("NOROESTE", 10225));
+            options.add(new RadioOption("GRANDE VITÓRIA", 10223));
             options.add(new RadioOption("NORTE", 10226));
+            options.add(new RadioOption("SUL", 10224));
         }
 
         // 3) Carrega última rádio salva nas preferências
@@ -172,102 +176,47 @@ public class ChooseFragment extends Fragment {
         }
     }
 
-    // ======================= SPINNER ======================= //
+    // ======================= RECYCLER VIEW ======================= //
 
-    private void setupSpinner(Spinner spinner) {
+    private void setupRecyclerView() {
+        if (binding == null || binding.rvRadios == null) return;
+
         Context ctx = getContext();
         if (ctx == null) return;
 
-        RadioSpinnerAdapter adapter = new RadioSpinnerAdapter(ctx, options);
-        spinner.setAdapter(adapter);
-
-        // Seleciona no spinner a rádio atual (sem disparar listener)
-        if (currentIndex >= 0 && currentIndex < options.size()) {
-            ignoreNextSpinnerEvent = true;
-            spinner.setSelection(currentIndex, false);
-        }
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent,
-                                       View view,
-                                       int position,
-                                       long id) {
-
-                // Ignora o primeiro evento do spinner ao setar seleção inicial
-                if (ignoreNextSpinnerEvent) {
-                    ignoreNextSpinnerEvent = false;
-                    return;
-                }
-
-                if (position >= 0 && position < options.size()) {
-                    RadioOption option = options.get(position);
-                    selectedRadioId = option.id;
-                    currentIndex = position;
-
-                    saveRadioSelectionSafe();
-                    updateConstantsIdFromRadioId(selectedRadioId);
-
-                    // Navega automaticamente
-                    navigateToMainFragmentSafe();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // nada
-            }
-        });
+        adapter = new RadioRecyclerAdapter(options, selectedRadioId, this::onRadioSelected);
+        
+        // LayoutManager vertical com centralização horizontal
+        LinearLayoutManager layoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
+        binding.rvRadios.setLayoutManager(layoutManager);
+        binding.rvRadios.setAdapter(adapter);
     }
 
-    private void navigateToPreviousRadio() {
-        if (options.isEmpty()) return;
+    private void onRadioSelected(RadioOption option, int position) {
+        if (option == null) return;
 
-        currentIndex--;
-        if (currentIndex < 0) {
-            currentIndex = options.size() - 1;
+        selectedRadioId = option.id;
+        currentIndex = position;
+
+        // Atualiza o adapter para refletir a nova seleção
+        if (adapter != null) {
+            adapter.setSelectedRadioId(selectedRadioId);
         }
 
-        updateSelectedRadio();
-    }
+        saveRadioSelectionSafe();
+        updateConstantsIdFromRadioId(selectedRadioId);
 
-    private void navigateToNextRadio() {
-        if (options.isEmpty()) return;
+        // Força o recarregamento do player de áudio quando a rádio muda
+        reloadAudioPlayer();
 
-        currentIndex++;
-        if (currentIndex >= options.size()) {
-            currentIndex = 0;
+        // Cancela navegação pendente anterior
+        if (pendingNavigateRunnable != null) {
+            uiHandler.removeCallbacks(pendingNavigateRunnable);
         }
 
-        updateSelectedRadio();
-    }
-
-    private void updateSelectedRadio() {
-        if (currentIndex >= 0 && currentIndex < options.size()) {
-            RadioOption option = options.get(currentIndex);
-            selectedRadioId = option.id;
-
-            // Atualiza spinner visualmente (sem disparar listener)
-            if (binding != null && binding.spinnerRegiao != null) {
-                ignoreNextSpinnerEvent = true;
-                binding.spinnerRegiao.setSelection(currentIndex, false);
-            }
-
-            saveRadioSelectionSafe();
-            updateConstantsIdFromRadioId(selectedRadioId);
-
-            // Força o recarregamento do player de áudio quando a rádio muda
-            reloadAudioPlayer();
-
-            // Cancela navegação pendente anterior
-            if (pendingNavigateRunnable != null) {
-                uiHandler.removeCallbacks(pendingNavigateRunnable);
-            }
-
-            // Agenda navegação com segurança
-            pendingNavigateRunnable = () -> navigateToMainFragmentSafe();
-            uiHandler.postDelayed(pendingNavigateRunnable, 500);
-        }
+        // Agenda navegação com segurança
+        pendingNavigateRunnable = () -> navigateToMainFragmentSafe();
+        uiHandler.postDelayed(pendingNavigateRunnable, 500);
     }
 
     /**
@@ -300,78 +249,97 @@ public class ChooseFragment extends Fragment {
                 .apply();
     }
 
-    private static class RadioSpinnerAdapter extends ArrayAdapter<RadioOption> {
+    // ======================= ADAPTER ======================= //
 
-        private final LayoutInflater inflater;
+    private static class RadioRecyclerAdapter extends RecyclerView.Adapter<RadioRecyclerAdapter.RadioViewHolder> {
 
-        RadioSpinnerAdapter(@NonNull Context context,
-                            @NonNull List<RadioOption> items) {
-            super(context, 0, items);
-            inflater = LayoutInflater.from(context);
+        private final List<RadioOption> options;
+        private int selectedRadioId;
+        private final OnRadioSelectedListener listener;
+
+        interface OnRadioSelectedListener {
+            void onRadioSelected(RadioOption option, int position);
+        }
+
+        RadioRecyclerAdapter(List<RadioOption> options, int selectedRadioId, OnRadioSelectedListener listener) {
+            this.options = options;
+            this.selectedRadioId = selectedRadioId;
+            this.listener = listener;
+        }
+
+        void setSelectedRadioId(int radioId) {
+            int oldPosition = findPositionById(selectedRadioId);
+            selectedRadioId = radioId;
+            int newPosition = findPositionById(selectedRadioId);
+            
+            if (oldPosition >= 0) {
+                notifyItemChanged(oldPosition);
+            }
+            if (newPosition >= 0 && newPosition != oldPosition) {
+                notifyItemChanged(newPosition);
+            }
+        }
+
+        private int findPositionById(int id) {
+            for (int i = 0; i < options.size(); i++) {
+                if (options.get(i).id == id) {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         @NonNull
         @Override
-        public View getView(int position,
-                            @Nullable View convertView,
-                            @NonNull ViewGroup parent) {
-            View view = convertView;
-            if (view == null) {
-                view = inflater.inflate(R.layout.spinnner_item_radio, parent, false);
-            }
-
-            TextView tv = null;
-            if (view != null) {
-                View textView = view.findViewById(R.id.txtRadioNm);
-                if (textView instanceof TextView) {
-                    tv = (TextView) textView;
-                }
-            }
-
-            RadioOption item = getItem(position);
-            if (item != null && tv != null) {
-                tv.setText(item.name);
-            }
-
-            return view;
+        public RadioViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ItemRadioSpinnerBinding binding = ItemRadioSpinnerBinding.inflate(
+                    LayoutInflater.from(parent.getContext()), parent, false);
+            return new RadioViewHolder(binding);
         }
 
-        @NonNull
         @Override
-        public View getDropDownView(int position,
-                                    @Nullable View convertView,
-                                    @NonNull ViewGroup parent) {
-            View view = convertView;
-            if (view == null) {
-                view = inflater.inflate(R.layout.spinner_dropdown_radio, parent, false);
+        public void onBindViewHolder(@NonNull RadioViewHolder holder, int position) {
+            RadioOption option = options.get(position);
+            if (option == null) return;
+
+            boolean isSelected = option.id == selectedRadioId;
+
+            // Define o texto
+            holder.binding.radioTitle.setText(option.name);
+
+            // Configura visibilidade e opacidade
+            if (isSelected) {
+                // Rádio selecionada: mostra fl_location e vw_space, opacidade normal
+                holder.binding.flLocation.setVisibility(View.VISIBLE);
+                holder.binding.vwSpace.setVisibility(View.VISIBLE);
+                holder.binding.container.setAlpha(1.0f);
+            } else {
+                // Rádio não selecionada: esconde fl_location e vw_space, opacidade reduzida
+                holder.binding.flLocation.setVisibility(View.GONE);
+                holder.binding.vwSpace.setVisibility(View.GONE);
+                holder.binding.container.setAlpha(0.5f);
             }
 
-            TextView tv = null;
-            if (view != null) {
-                View textView = view.findViewById(R.id.txtRadioNameDpdown);
-                if (textView instanceof TextView) {
-                    tv = (TextView) textView;
+            // Configura o clique
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onRadioSelected(option, position);
                 }
-            }
-
-            RadioOption item = getItem(position);
-            if (item != null && tv != null) {
-                tv.setText(item.name);
-            }
-
-            return view;
-        }
-    }
-
-    // ======================= AÇÕES ======================= //
-
-    private void setupActions() {
-        if (binding != null && binding.btUp != null) {
-            binding.btUp.setOnClickListener(v -> navigateToPreviousRadio());
+            });
         }
 
-        if (binding != null && binding.btDown != null) {
-            binding.btDown.setOnClickListener(v -> navigateToNextRadio());
+        @Override
+        public int getItemCount() {
+            return options.size();
+        }
+
+        static class RadioViewHolder extends RecyclerView.ViewHolder {
+            final ItemRadioSpinnerBinding binding;
+
+            RadioViewHolder(@NonNull ItemRadioSpinnerBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
         }
     }
 

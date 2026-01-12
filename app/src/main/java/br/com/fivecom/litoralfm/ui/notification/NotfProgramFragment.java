@@ -206,8 +206,14 @@ public class NotfProgramFragment extends Fragment {
     }
 
     private void navigateBack() {
+        // Usa handleBackPress para navegação correta com back stack
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.MAIN);
+            ((MainActivity) getActivity()).handleBackPress();
+            return;
+        }
+        // Fallback caso não seja MainActivity
+        if (getActivity() != null) {
+            getActivity().onBackPressed();
         }
     }
 

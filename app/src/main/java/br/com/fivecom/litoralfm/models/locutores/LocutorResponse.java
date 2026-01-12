@@ -36,8 +36,8 @@ public class LocutorResponse {
         @SerializedName("locutor")
         private String locutor;
 
-        @SerializedName("imagem")  // API usa "imagem", mas internamente usaremos "foto"
-        private String foto;
+        @SerializedName("imagem")
+        private String imagem;
 
         @SerializedName("instagram")
         private String instagram;
@@ -60,11 +60,11 @@ public class LocutorResponse {
         }
 
         public String getFoto() {
-            return foto;
+            return imagem;
         }
 
-        public void setFoto(String foto) {
-            this.foto = foto;
+        public void setFoto(String imagem) {
+            this.imagem = imagem;
         }
 
         public String getInstagram() {
@@ -100,4 +100,3 @@ public class LocutorResponse {
         }
     }
 }
-

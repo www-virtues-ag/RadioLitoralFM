@@ -274,19 +274,32 @@ public class NoticiaService {
 
     /**
      * Busca notícias com paginação.
+     * Otimizado para usar cache na primeira página e evitar requests desnecessários.
      * @param sectionSlug Slug da categoria (null para "Todas")
      * @param page Número da página (começa em 1)
      * @param itemsPerPage Quantidade de itens por página
      * @param callback Callback para retornar os resultados
      */
     public void fetchNoticiasPaginated(String sectionSlug, int page, int itemsPerPage, final NoticiasCallback callback) {
-        // Calcula a quantidade total de itens a buscar (offset + limit)
-        // Para página 1: q=20, página 2: q=40, página 3: q=60, etc.
-        int quantidade = page * itemsPerPage;
-        
         String cacheKey = sectionSlug != null ? sectionSlug : "todas";
-        // Para paginação, não usamos cache (ou apenas para primeira página)
-        // Vamos buscar diretamente da API
+        final long currentTime = System.currentTimeMillis();
+        
+        // Para primeira página, tenta usar cache primeiro
+        if (page == 1) {
+            CacheEntry cached = cache.get(cacheKey);
+            if (cached != null && (currentTime - cached.timestamp) < CACHE_DURATION_MS) {
+                // Cache válido: retorna apenas os itens da primeira página
+                int endIndex = Math.min(itemsPerPage, cached.noticias.size());
+                List<Noticia> pageNoticias = new ArrayList<>(cached.noticias.subList(0, endIndex));
+                Log.d(TAG, "💾 Página 1 retornada do cache: " + cacheKey + " (" + pageNoticias.size() + " de " + cached.noticias.size() + " notícias)");
+                callback.onSuccess(pageNoticias);
+                return;
+            }
+        }
+        
+        // Calcula a quantidade total de itens a buscar
+        // Para página 1: q=10, página 2: q=20, página 3: q=30, etc.
+        int quantidade = page * itemsPerPage;
         
         Log.d(TAG, "🔄 Buscando página " + page + " da categoria: " + cacheKey + " (q=" + quantidade + ")");
 
@@ -316,22 +329,30 @@ public class NoticiaService {
                     return;
                 }
 
-                // Converte apenas os itens necessários (mais eficiente)
+                // Converte todos os itens recebidos
+                List<Noticia> allNoticias = new ArrayList<>();
+                for (FeedItem feedItem : feedItems) {
+                    Noticia noticia = Noticia.fromFeedItem(feedItem);
+                    allNoticias.add(noticia);
+                }
+
+                // Atualiza cache com todos os itens (útil para primeira página)
+                if (page == 1 || !cache.containsKey(cacheKey)) {
+                    cache.put(cacheKey, new CacheEntry(new ArrayList<>(allNoticias), currentTime));
+                    Log.d(TAG, "💾 Cache atualizado: " + cacheKey + " (" + allNoticias.size() + " notícias)");
+                }
+
+                // Retorna apenas os itens da página atual
                 int offset = (page - 1) * itemsPerPage;
-                int endIndex = Math.min(offset + itemsPerPage, feedItems.size());
+                int endIndex = Math.min(offset + itemsPerPage, allNoticias.size());
                 
                 List<Noticia> pageNoticias = new ArrayList<>();
                 
-                if (offset < feedItems.size()) {
-                    // Converte apenas os itens da página atual
-                    for (int i = offset; i < endIndex; i++) {
-                        FeedItem feedItem = feedItems.get(i);
-                        Noticia noticia = Noticia.fromFeedItem(feedItem);
-                        pageNoticias.add(noticia);
-                    }
+                if (offset < allNoticias.size()) {
+                    pageNoticias = new ArrayList<>(allNoticias.subList(offset, endIndex));
                 }
 
-                Log.d(TAG, "📄 Página " + page + ": " + pageNoticias.size() + " itens (offset=" + offset + ", total recebido=" + feedItems.size() + ")");
+                Log.d(TAG, "📄 Página " + page + ": " + pageNoticias.size() + " itens (offset=" + offset + ", total recebido=" + allNoticias.size() + ")");
 
                 callback.onSuccess(pageNoticias);
             }
@@ -343,5 +364,27 @@ public class NoticiaService {
                 callback.onError(msg);
             }
         });
+    }
+
+    /**
+     * Verifica se há cache válido para uma categoria específica.
+     * @param sectionSlug Slug da categoria (null para "Todas")
+     * @return Lista de notícias do cache ou null se não houver cache válido
+     */
+    public List<Noticia> getCachedNoticias(String sectionSlug) {
+        String cacheKey = sectionSlug != null ? sectionSlug : "todas";
+        CacheEntry cached = cache.get(cacheKey);
+        
+        if (cached != null) {
+            long currentTime = System.currentTimeMillis();
+            if ((currentTime - cached.timestamp) < CACHE_DURATION_MS) {
+                Log.d(TAG, "💾 Cache válido encontrado: " + cacheKey + " (" + cached.noticias.size() + " notícias)");
+                return new ArrayList<>(cached.noticias);
+            } else {
+                Log.d(TAG, "⏰ Cache expirado: " + cacheKey);
+            }
+        }
+        
+        return null;
     }
 }

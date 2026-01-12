@@ -136,4 +136,11 @@
         <item name="colorAccent">@android:color/white</item>
     </style>
 
+    <!-- Tema Material Components para Chips -->
+    <style name="Theme.MaterialComponents" parent="Theme.MaterialComponents.Light">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
 </resources>

@@ -91,6 +91,10 @@ public class SocialPost {
             return Platform.facebook;
         } else if ("instagram".equalsIgnoreCase(platform)) {
             return Platform.instagram;
+        } else if ("youtube".equalsIgnoreCase(platform)) {
+            return Platform.youtube;
+        } else if ("x".equalsIgnoreCase(platform) || "twitter".equalsIgnoreCase(platform)) {
+            return Platform.x;
         }
         return null;
     }

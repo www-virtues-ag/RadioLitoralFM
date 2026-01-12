@@ -6,98 +6,15 @@
     android:background="@drawable/bg_promotion"
     android:fitsSystemWindows="true">
 
-    <RelativeLayout
+    <include
         android:id="@+id/rlNavBar"
+        layout="@layout/item_bottom_nav"
         android:layout_width="0dp"
         android:layout_height="@dimen/_50sdp"
-        android:background="@drawable/forma_barra_bottom"
+        android:elevation="@dimen/_8sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_55sdp"
-            android:layout_alignParentBottom="true"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:weightSum="6">
-
-            <ImageView
-                android:id="@+id/btnNav1"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:focusable="true"
-                android:onClick="onClick"
-                app:srcCompat="@drawable/btn_promo_barra_on" />
-
-            <ImageView
-                android:layout_width="@dimen/_2sdp"
-                android:layout_height="@dimen/_35sdp"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/traco_barra" />
-
-            <ImageView
-                android:id="@+id/btnNav2"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:focusable="true"
-                android:onClick="onClick"
-                app:srcCompat="@drawable/btn_noticia_barra_off" />
-
-            <ImageView
-                android:layout_width="@dimen/_2sdp"
-                android:layout_height="@dimen/_35sdp"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/traco_barra" />
-
-            <ImageView
-                android:id="@+id/btnNav3"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_25sdp"
-                android:layout_weight="2"
-                android:background="@android:color/transparent"
-                android:focusable="true"
-                android:onClick="onClick"
-                app:srcCompat="@drawable/btn_ao_vivo_barra_off" />
-
-            <ImageView
-                android:layout_width="@dimen/_2sdp"
-                android:layout_height="@dimen/_35sdp"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/traco_barra" />
-
-            <ImageView
-                android:id="@+id/btnNav4"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:focusable="true"
-                android:onClick="onClick"
-                app:srcCompat="@drawable/btn_prog_barra_off" />
-
-            <ImageView
-                android:layout_width="@dimen/_2sdp"
-                android:layout_height="@dimen/_35sdp"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/traco_barra" />
-
-            <ImageView
-                android:id="@+id/btnNav5"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:focusable="true"
-                android:onClick="onClick"
-                app:srcCompat="@drawable/btn_wp_barra" />
-        </LinearLayout>
-    </RelativeLayout>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <RelativeLayout
         android:id="@+id/rl_main"
@@ -107,65 +24,73 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/bt_back"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="@dimen/_12sdp"
-            android:background="@android:color/transparent"
-            android:contentDescription="Voltar"
-            app:srcCompat="@drawable/btn_voltar_radio" />
+        <LinearLayout
+            android:id="@+id/ll_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="@dimen/_160sdp"
-            android:layout_height="@dimen/_50sdp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/mt_logo"
-            android:contentDescription="Logo Rádio Litoral"
-            app:srcCompat="@drawable/logo_radio" />
+            <LinearLayout
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/_15sdp">
 
-        <ImageView
-            android:id="@+id/bt_menu"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="@dimen/_12sdp"
-            android:background="@android:color/transparent"
-            android:contentDescription="Menu"
-            app:srcCompat="@drawable/btn_menu_radio" />
+                <ImageView
+                    android:id="@+id/bt_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/btn_voltar_radio" />
 
-        <ImageView
-            android:id="@+id/bt_home"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_below="@id/bt_back"
-            android:layout_alignParentLeft="true"
-            android:layout_marginStart="@dimen/_12sdp"
-            android:background="@android:color/transparent"
-            android:contentDescription="Home"
-            app:srcCompat="@drawable/btn_home_radio" />
+                <ImageView
+                    android:id="@+id/bt_home"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/btn_home_radio" />
+            </LinearLayout>
 
-        <ImageView
-            android:id="@+id/bt_notif"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_alignTop="@id/bt_home"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/_23sdp"
-            android:background="@android:color/transparent"
-            android:contentDescription="Notificações"
-            app:srcCompat="@drawable/btn_notif_radio" />
+            <ImageView
+                android:layout_width="@dimen/_130sdp"
+                android:layout_height="@dimen/_90sdp"
+                android:layout_marginStart="@dimen/_18sdp"
+                android:layout_marginEnd="@dimen/_18sdp"
+                app:srcCompat="@drawable/logo_radio" />
+
+            <LinearLayout
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/_15sdp">
+
+                <ImageView
+                    android:id="@+id/bt_menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/btn_menu_radio" />
+
+                <ImageView
+                    android:id="@+id/bt_notif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:padding="@dimen/_6sdp"
+                    app:srcCompat="@drawable/bt_notification" />
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/txt_litoral"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/logo"
+            android:layout_below="@+id/ll_top"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/_30sdp"
             android:fontFamily="@font/insanibu"
@@ -180,7 +105,7 @@
             android:layout_below="@+id/txt_litoral"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/_10sdp"
-            app:srcCompat="@drawable/barra_programa_main" />
+            app:srcCompat="@drawable/bar_agenda" />
     </RelativeLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -209,12 +134,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Nenhuma promoção disponível"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_16sdp"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="Nenhuma promoção encontrada"
+                android:textColor="#531414"
+                android:textSize="@dimen/_13sdp"
                 android:visibility="gone"
-                android:fontFamily="@font/montserrat_medium"
-                app:fontFamily="@font/montserrat_medium"/>
+                app:fontFamily="@font/montserrat_bold" />
+
+            <TextView
+                android:id="@+id/txt_empty_promo2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="Não há promoções disponíveis no momento."
+                android:textColor="#383838"
+                android:textSize="@dimen/_10sdp"
+                android:visibility="gone"
+                app:fontFamily="@font/montserrat_semibold" />
 
             <ProgressBar
                 android:id="@+id/progress_promo"

@@ -3,7 +3,8 @@ package br.com.fivecom.litoralfm.models.social;
 public enum Platform {
     facebook,
     youtube,
-    instagram;
+    instagram,
+    x;
 
     public String getDisplayName() {
         switch (this) {
@@ -13,6 +14,8 @@ public enum Platform {
                 return "Instagram";
             case youtube:
                 return "YouTube";
+            case x:
+                return "X";
             default:
                 return name();
         }
@@ -24,6 +27,8 @@ public enum Platform {
                 return 0xFF1877F2;
             case instagram:
                 return 0xFFE4405F;
+            case x:
+                return 0xFF000000;
             default:
                 return 0xFF000000;
         }

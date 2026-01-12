@@ -267,6 +267,12 @@
             tools:ignore="DiscouragedApi" />
 
         <activity
+            android:name=".ui.video.FullscreenVideoActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.FullScreen" />
+
+        <activity
             android:name="br.com.fivecom.litoralfm.ui.removal.RemovalActivity"
             android:configChanges="orientation|navigation|uiMode|layoutDirection|density|screenLayout|smallestScreenSize|screenSize|keyboardHidden|keyboard|fontScale|touchscreen|locale|colorMode|mcc|mnc"
             android:launchMode="singleTask"

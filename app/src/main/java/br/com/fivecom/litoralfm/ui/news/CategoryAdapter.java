@@ -11,12 +11,17 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import br.com.fivecom.litoralfm.R;
 import br.com.fivecom.litoralfm.models.news.Categoria;
+import br.com.fivecom.litoralfm.ui.news.selection.CategorySelectionStrategy;
+import br.com.fivecom.litoralfm.ui.news.selection.RegularCategoryStrategy;
+import br.com.fivecom.litoralfm.ui.news.selection.TodosCategoryStrategy;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
@@ -24,6 +29,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     private Set<Integer> selectedCategoryIds;
     private Context context;
     private OnCategorySelectionListener listener;
+
+    // Strategy Pattern - elimina condicionais complexos
+    private final Map<Integer, CategorySelectionStrategy> strategies;
 
     public interface OnCategorySelectionListener {
         void onCategorySelectionChanged(Set<Integer> selectedIds);
@@ -33,6 +41,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         this.context = context;
         this.categorias = categorias != null ? categorias : new ArrayList<>();
         this.selectedCategoryIds = new HashSet<>();
+
+        // Inicializa strategies
+        this.strategies = new HashMap<>();
+        this.strategies.put(0, new TodosCategoryStrategy()); // ID 0 = "Todas"
+        // Todas as outras categorias usam RegularCategoryStrategy como padrão
     }
 
     public void setOnCategorySelectionListener(OnCategorySelectionListener listener) {
@@ -85,6 +98,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     class CategoryViewHolder extends RecyclerView.ViewHolder {
         private TextView txtCategory;
+        private final RegularCategoryStrategy defaultStrategy = new RegularCategoryStrategy();
 
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -95,6 +109,50 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             txtCategory.setText(categoria.getNome());
 
             // Atualiza visual baseado na seleção
+            updateVisualState(isSelected);
+
+            // Remove listener anterior para evitar múltiplos listeners
+            itemView.setOnClickListener(null);
+
+            // Define click listener com Strategy Pattern
+            itemView.setOnClickListener(v -> {
+                int categoryId = categoria.getId();
+
+                // Seleciona a estratégia apropriada
+                // ID 0 = TodosCategoryStrategy, outros = RegularCategoryStrategy
+                CategorySelectionStrategy strategy = strategies.getOrDefault(categoryId, defaultStrategy);
+
+                // Executa a estratégia e verifica se precisa atualizar todos os itens
+                boolean needsFullUpdate = strategy.handleClick(selectedCategoryIds, categoryId);
+
+                // Atualiza UI
+                if (needsFullUpdate) {
+                    // Atualiza todos os itens (quando "Todas" é selecionada/desmarcada)
+                    notifyDataSetChanged();
+                } else {
+                    // Atualiza apenas este item e o visual imediatamente
+                    boolean nowSelected = selectedCategoryIds.contains(categoryId);
+                    updateVisualState(nowSelected);
+
+                    // Garante consistência com RecyclerView
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        notifyItemChanged(position);
+                    }
+                }
+
+                // Notifica listener sobre mudança
+                if (listener != null) {
+                    listener.onCategorySelectionChanged(selectedCategoryIds);
+                }
+            });
+        }
+
+        /**
+         * Atualiza o visual do item baseado no estado de seleção.
+         * Método extraído para evitar duplicação de código.
+         */
+        private void updateVisualState(boolean isSelected) {
             if (isSelected) {
                 txtCategory.setBackgroundResource(R.drawable.bg_category_selected);
                 txtCategory.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -104,78 +162,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                 txtCategory.setTextColor(ContextCompat.getColor(context, R.color.white));
                 txtCategory.setAlpha(0.5f); // Opaca quando não selecionada
             }
-            
-            // Remove o listener anterior para evitar múltiplos listeners
-            itemView.setOnClickListener(null);
-
-            itemView.setOnClickListener(v -> {
-                int categoryId = categoria.getId();
-                
-                // Se clicou em "Todas" (ID 0)
-                if (categoryId == 0) {
-                    if (selectedCategoryIds.contains(0)) {
-                        // Se já estava selecionada, desmarca (segundo clique)
-                        // Mas não permite ficar sem nenhuma selecionada - mantém "Todas"
-                        // Na verdade, se clicar novamente em "Todas" já selecionada, mantém selecionada
-                        // (não desmarca para evitar estado vazio)
-                        return; // Não faz nada se já está selecionada
-                    } else {
-                        // Seleciona apenas "Todas" e desmarca todas as outras (primeiro clique)
-                        selectedCategoryIds.clear();
-                        selectedCategoryIds.add(0);
-                        notifyDataSetChanged(); // Atualiza todos os itens
-                    }
-                } else {
-                    // Se clicou em outra categoria
-                    if (selectedCategoryIds.contains(categoryId)) {
-                        // Desmarca a categoria (segundo clique)
-                        selectedCategoryIds.remove(categoryId);
-                        
-                        // Se não há mais nenhuma categoria selecionada, seleciona "Todas" como padrão
-                        if (selectedCategoryIds.isEmpty()) {
-                            selectedCategoryIds.add(0);
-                            notifyDataSetChanged(); // Atualiza todos os itens
-                        } else {
-                            // Força atualização do item desmarcado para garantir que fique opaco
-                            int position = getAdapterPosition();
-                            if (position != RecyclerView.NO_POSITION) {
-                                // Primeiro atualiza o visual imediatamente
-                                txtCategory.setBackgroundResource(R.drawable.bg_category);
-                                txtCategory.setTextColor(ContextCompat.getColor(context, R.color.white));
-                                txtCategory.setAlpha(0.5f); // Opaca quando não selecionada
-                                
-                                // Depois notifica o RecyclerView para garantir consistência
-                                notifyItemChanged(position);
-                            } else {
-                                notifyDataSetChanged(); // Fallback se posição inválida
-                            }
-                        }
-                    } else {
-                        // Remove "Todas" se estiver selecionada (primeiro clique)
-                        boolean hadTodas = selectedCategoryIds.contains(0);
-                        selectedCategoryIds.remove(0);
-                        // Adiciona a categoria selecionada
-                        selectedCategoryIds.add(categoryId);
-                        
-                        if (hadTodas) {
-                            // Se tinha "Todas" selecionada, atualiza todos os itens
-                            notifyDataSetChanged();
-                        } else {
-                            // Apenas atualiza este item
-                            int position = getAdapterPosition();
-                            if (position != RecyclerView.NO_POSITION) {
-                                notifyItemChanged(position);
-                            } else {
-                                notifyDataSetChanged(); // Fallback se posição inválida
-                            }
-                        }
-                    }
-                }
-                
-                if (listener != null) {
-                    listener.onCategorySelectionChanged(selectedCategoryIds);
-                }
-            });
         }
     }
 }

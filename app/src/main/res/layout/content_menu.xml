@@ -112,7 +112,7 @@
                 android:layout_width="@dimen/menu_icons_size"
                 android:layout_height="@dimen/menu_icons_size"
                 android:layout_marginHorizontal="@dimen/menu_icons_spacing"
-                app:srcCompat="@drawable/btn_noticias_menu" />
+                app:srcCompat="@drawable/btn_noticias_menu2" />
         </LinearLayout>
 
         <LinearLayout
@@ -158,7 +158,7 @@
                 android:layout_width="@dimen/menu_icons_size"
                 android:layout_height="@dimen/menu_icons_size"
                 android:layout_marginHorizontal="@dimen/menu_icons_spacing"
-                app:srcCompat="@drawable/btn_promo_menu" />
+                app:srcCompat="@drawable/btn_promo_menu2" />
         </LinearLayout>
 
         <LinearLayout
@@ -269,21 +269,20 @@
             android:id="@+id/btn_instagram"
             android:layout_width="@dimen/menu_icons_socials_size"
             android:layout_height="@dimen/menu_icons_socials_size"
-            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/_8sdp"
             app:srcCompat="@drawable/btn_it_menu" />
 
         <ImageView
             android:id="@+id/btn_youtube"
             android:layout_width="@dimen/menu_icons_socials_size"
             android:layout_height="@dimen/menu_icons_socials_size"
-            android:layout_weight="1"
             app:srcCompat="@drawable/btn_yt_menu" />
 
         <ImageView
             android:id="@+id/btn_whatsapp"
             android:layout_width="@dimen/menu_icons_socials_size"
             android:layout_height="@dimen/menu_icons_socials_size"
-            android:layout_weight="1"
+            android:layout_marginStart="@dimen/_8sdp"
             app:srcCompat="@drawable/btn_wp_menu" />
     </LinearLayout>
 
@@ -294,6 +293,7 @@
         android:clickable="true"
         android:focusable="true"
         android:fontFamily="@font/montserrat_semibold"
+        app:fontFamily="@font/montserrat_semibold"
         android:paddingVertical="@dimen/_10sdp"
         android:text="@string/url_radio_litoral"
         android:textAlignment="center"

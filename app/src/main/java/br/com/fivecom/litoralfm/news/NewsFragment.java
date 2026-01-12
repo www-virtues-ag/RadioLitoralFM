@@ -48,6 +48,7 @@ import br.com.fivecom.litoralfm.ui.news.network.NoticiasCallback;
 import br.com.fivecom.litoralfm.ui.news.network.NoticiaService;
 import br.com.fivecom.litoralfm.utils.constants.Constants;
 import br.com.fivecom.litoralfm.utils.core.Intents;
+import br.com.fivecom.litoralfm.utils.core.WebViewCacheManager;
 
 import static br.com.fivecom.litoralfm.utils.constants.Constants.data;
 
@@ -84,6 +85,13 @@ public class NewsFragment extends Fragment implements View.OnClickListener, Cate
 
     // WebView do banner
     private WebView webView;
+    
+    // Navbar buttons (agora são LinearLayout no include)
+    private View btPromotion;
+    private View btNews;
+    private View btRadio;
+    private View btProgram;
+    private View btWhatsapp;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,6 +113,13 @@ public class NewsFragment extends Fragment implements View.OnClickListener, Cate
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Components();
+        
+        // Atualiza o estado da NavBar quando o fragment é exibido
+        if (getActivity() instanceof MainActivity) {
+            view.post(() -> {
+                ((MainActivity) getActivity()).updateNavBarState(MainActivity.FRAGMENT.NEWS);
+            });
+        }
     }
 
     private void Components() {
@@ -129,6 +144,32 @@ public class NewsFragment extends Fragment implements View.OnClickListener, Cate
         }
         if (binding.btNotif != null) {
             binding.btNotif.setOnClickListener(this);
+        }
+        
+        // Navbar buttons
+        View navBarView = binding.getRoot().findViewById(R.id.rlNavBar);
+        if (navBarView != null) {
+            btPromotion = navBarView.findViewById(R.id.bt_promotion);
+            btNews = navBarView.findViewById(R.id.bt_news);
+            btRadio = navBarView.findViewById(R.id.bt_radio);
+            btProgram = navBarView.findViewById(R.id.bt_program);
+            btWhatsapp = navBarView.findViewById(R.id.bt_whatsapp);
+            
+            if (btPromotion != null) {
+                btPromotion.setOnClickListener(this);
+            }
+            if (btNews != null) {
+                btNews.setOnClickListener(this);
+            }
+            if (btRadio != null) {
+                btRadio.setOnClickListener(this);
+            }
+            if (btProgram != null) {
+                btProgram.setOnClickListener(this);
+            }
+            if (btWhatsapp != null) {
+                btWhatsapp.setOnClickListener(this);
+            }
         }
     }
 
@@ -232,7 +273,7 @@ public class NewsFragment extends Fragment implements View.OnClickListener, Cate
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
-        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT); // Usa cache quando disponível
         settings.setDomStorageEnabled(true);
 
         webView.setWebViewClient(new WebViewClient() {
@@ -267,8 +308,24 @@ public class NewsFragment extends Fragment implements View.OnClickListener, Cate
                     "Android " + Build.VERSION.RELEASE,
                     Build.MANUFACTURER + " - " + Build.MODEL
             );
-            webView.loadUrl(pubUrl);
-            Log.d("NewsFragment", "✅ WebView carregando URL: " + pubUrl);
+            
+            // Verifica se a URL já está carregada na WebView
+            String currentUrl = webView.getUrl();
+            boolean urlChanged = !pubUrl.equals(currentUrl);
+            
+            // Verifica se precisa recarregar baseado no cache manager
+            boolean shouldReload = WebViewCacheManager.shouldReload(requireContext(), pubUrl);
+            
+            // Só recarrega se a URL mudou ou se o cache expirou
+            if (urlChanged || shouldReload) {
+                webView.setVisibility(View.VISIBLE);
+                webView.loadUrl(pubUrl);
+                Log.d("NewsFragment", "✅ WebView carregando URL: " + pubUrl + (urlChanged ? " (URL mudou)" : " (cache expirado)"));
+            } else {
+                // URL já está carregada e cache ainda válido, apenas torna visível
+                webView.setVisibility(View.VISIBLE);
+                Log.d("NewsFragment", "⏭️ WebView usando cache para URL: " + pubUrl);
+            }
         } else {
             Log.w("NewsFragment", "⚠️ Dados da rádio não disponíveis para carregar o banner");
             webView.setVisibility(View.GONE);
@@ -386,49 +443,83 @@ public class NewsFragment extends Fragment implements View.OnClickListener, Cate
         final int totalRequests = slugs.size();
         final List<List<Noticia>> allResults = new ArrayList<>();
         final int[] completedRequests = {0};
+        final int[] pendingRequests = {0};
         final boolean[] hasError = {false};
         
         Log.d("NewsFragment", "🔄 Carregando " + totalRequests + " categorias: " + slugs);
         
-        // Faz requisições paralelas para cada slug
+        NoticiaService service = NoticiaService.getInstance();
+        
+        // Primeiro, verifica cache para cada categoria
         for (String slug : slugs) {
-            NoticiaService.getInstance().fetchNoticiasPaginated(slug, page, ITEMS_PER_PAGE, new NoticiasCallback() {
-                @Override
-                public void onSuccess(List<Noticia> noticias) {
-                    synchronized (allResults) {
-                        allResults.add(noticias);
-                        completedRequests[0]++;
-                        
-                        // Quando todas as requisições terminarem
-                        if (completedRequests[0] == totalRequests && isAdded()) {
-                            mergeAndDisplayResults(allResults, append);
-                        }
+            List<Noticia> cachedNoticias = service.getCachedNoticias(slug);
+            
+            if (cachedNoticias != null && page == 1) {
+                // Cache válido encontrado para primeira página
+                synchronized (allResults) {
+                    // Retorna apenas os itens da primeira página do cache
+                    int endIndex = Math.min(ITEMS_PER_PAGE, cachedNoticias.size());
+                    List<Noticia> pageNoticias = new ArrayList<>(cachedNoticias.subList(0, endIndex));
+                    allResults.add(pageNoticias);
+                    completedRequests[0]++;
+                    Log.d("NewsFragment", "💾 Cache usado para categoria: " + slug + " (" + pageNoticias.size() + " notícias)");
+                    
+                    // Se todas as categorias foram resolvidas do cache
+                    if (completedRequests[0] == totalRequests && isAdded()) {
+                        mergeAndDisplayResults(allResults, append);
+                        return;
                     }
                 }
+            } else {
+                // Não há cache válido, precisa fazer request
+                synchronized (allResults) {
+                    pendingRequests[0]++;
+                }
                 
-                @Override
-                public void onError(String error) {
-                    synchronized (allResults) {
-                        completedRequests[0]++;
-                        hasError[0] = true;
-                        Log.e("NewsFragment", "❌ Erro ao carregar categoria: " + error);
-                        
-                        // Quando todas as requisições terminarem (mesmo com erro)
-                        if (completedRequests[0] == totalRequests && isAdded()) {
-                            if (hasError[0] && allResults.isEmpty()) {
-                                isLoading = false;
-                                hasMoreItems = false;
-                                if (!append) {
-                                    Toast.makeText(requireContext(), "Erro ao carregar notícias", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
+                final String finalSlug = slug; // Torna final para uso no callback
+                
+                // Faz requisição para esta categoria
+                service.fetchNoticiasPaginated(finalSlug, page, ITEMS_PER_PAGE, new NoticiasCallback() {
+                    @Override
+                    public void onSuccess(List<Noticia> noticias) {
+                        synchronized (allResults) {
+                            allResults.add(noticias);
+                            completedRequests[0]++;
+                            
+                            // Quando todas as requisições terminarem
+                            if (completedRequests[0] == totalRequests && isAdded()) {
                                 mergeAndDisplayResults(allResults, append);
                             }
                         }
                     }
-                }
-            });
+                    
+                    @Override
+                    public void onError(String error) {
+                        synchronized (allResults) {
+                            completedRequests[0]++;
+                            hasError[0] = true;
+                            Log.e("NewsFragment", "❌ Erro ao carregar categoria " + finalSlug + ": " + error);
+                            
+                            // Quando todas as requisições terminarem (mesmo com erro)
+                            if (completedRequests[0] == totalRequests && isAdded()) {
+                                if (hasError[0] && allResults.isEmpty()) {
+                                    isLoading = false;
+                                    hasMoreItems = false;
+                                    if (!append) {
+                                        Toast.makeText(requireContext(), "Erro ao carregar notícias", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    mergeAndDisplayResults(allResults, append);
+                                }
+                            }
+                        }
+                    }
+                });
+            }
         }
+        
+        // Se todas foram resolvidas do cache, já retornou acima
+        // Caso contrário, as requisições serão processadas pelos callbacks
     }
 
     private void mergeAndDisplayResults(List<List<Noticia>> allResults, boolean append) {
@@ -486,7 +577,36 @@ public class NewsFragment extends Fragment implements View.OnClickListener, Cate
     }
 
     private void loadNoticiasForSlug(String sectionSlug, int page, boolean append) {
-        NoticiaService.getInstance().fetchNoticiasPaginated(sectionSlug, page, ITEMS_PER_PAGE, new NoticiasCallback() {
+        NoticiaService service = NoticiaService.getInstance();
+        
+        // Para primeira página, verifica cache primeiro
+        if (page == 1) {
+            List<Noticia> cachedNoticias = service.getCachedNoticias(sectionSlug);
+            if (cachedNoticias != null && isAdded() && newsAdapter != null) {
+                // Retorna apenas os itens da primeira página do cache
+                int endIndex = Math.min(ITEMS_PER_PAGE, cachedNoticias.size());
+                List<Noticia> pageNoticias = new ArrayList<>(cachedNoticias.subList(0, endIndex));
+                
+                isLoading = false;
+                
+                if (pageNoticias.isEmpty()) {
+                    hasMoreItems = false;
+                } else {
+                    // Verifica se há mais itens no cache
+                    hasMoreItems = endIndex < cachedNoticias.size();
+                    
+                    // Aplica filtro de busca se houver
+                    List<Noticia> filtered = applySearchFilterToList(pageNoticias);
+                    
+                    newsAdapter.setNoticias(filtered);
+                    Log.d("NewsFragment", "💾 Primeira página carregada do cache: " + (sectionSlug != null ? sectionSlug : "todas") + " (" + filtered.size() + " notícias)");
+                }
+                return;
+            }
+        }
+        
+        // Se não há cache ou não é primeira página, faz request
+        service.fetchNoticiasPaginated(sectionSlug, page, ITEMS_PER_PAGE, new NoticiasCallback() {
             @Override
             public void onSuccess(List<Noticia> noticias) {
                 if (isAdded() && newsAdapter != null) {
@@ -568,6 +688,30 @@ public class NewsFragment extends Fragment implements View.OnClickListener, Cate
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        // Retoma o WebView do banner e verifica se precisa recarregar
+        if (webView != null) {
+            webView.onResume();
+            // Se o WebView está visível mas perdeu o conteúdo, recarrega
+            if (webView.getVisibility() == View.VISIBLE && 
+                (webView.getUrl() == null || webView.getUrl().isEmpty())) {
+                Log.d("NewsFragment", "🔄 WebView do banner perdeu conteúdo, recarregando...");
+                setupWebView();
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Pausa o WebView do banner quando o fragment é pausado
+        if (webView != null && webView.getVisibility() == View.VISIBLE) {
+            webView.onPause();
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (searchRunnable != null) {
@@ -586,8 +730,9 @@ public class NewsFragment extends Fragment implements View.OnClickListener, Cate
         int id = v.getId();
         
         if (id == R.id.bt_back) {
+            // Usa handleBackPress para navegação correta com back stack
             if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.MAIN);
+                ((MainActivity) getActivity()).handleBackPress();
             }
         } else if (id == R.id.bt_home) {
             if (getActivity() instanceof MainActivity) {
@@ -600,6 +745,28 @@ public class NewsFragment extends Fragment implements View.OnClickListener, Cate
         } else if (id == R.id.bt_notif) {
             if (getActivity() instanceof MainActivity) {
                 ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.NOTF_PROGRAM);
+            }
+        } else if (id == R.id.bt_promotion) {
+            // Navega para Promoções
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.PROMOTION);
+            }
+        } else if (id == R.id.bt_news) {
+            // Já está na tela de notícias
+        } else if (id == R.id.bt_radio) {
+            // Navega para AudioFragment (Ao vivo)
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.AUDIO);
+            }
+        } else if (id == R.id.bt_program) {
+            // Navega para Programação
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.SCHEDULE);
+            }
+        } else if (id == R.id.bt_whatsapp) {
+            // Abre WhatsApp
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).openWhatsApp();
             }
         }
     }

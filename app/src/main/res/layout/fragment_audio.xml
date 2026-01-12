@@ -39,67 +39,76 @@
             android:scaleType="fitXY"
             app:srcCompat="@drawable/bg_radio_baixo" />
 
-        <ImageView
-            android:id="@+id/bt_back"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="@dimen/_12sdp"
-            android:background="@android:color/transparent"
-            android:contentDescription="Voltar"
-            app:srcCompat="@drawable/btn_voltar_radio" />
+        <LinearLayout
+            android:id="@+id/ll_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/ivLogoRadio"
-            android:layout_width="@dimen/_160sdp"
-            android:layout_height="@dimen/_50sdp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/mt_logo"
-            android:contentDescription="Logo Rádio Litoral"
-            app:srcCompat="@drawable/logo_radio" />
+            <LinearLayout
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/_15sdp">
 
-        <ImageView
-            android:id="@+id/bt_menu"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="@dimen/_12sdp"
-            android:background="@android:color/transparent"
-            android:contentDescription="Menu"
-            app:srcCompat="@drawable/btn_menu_radio" />
+                <ImageView
+                    android:id="@+id/bt_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/btn_voltar_radio" />
 
-        <ImageView
-            android:id="@+id/bt_home"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_below="@id/bt_back"
-            android:layout_alignParentLeft="true"
-            android:layout_marginStart="@dimen/_12sdp"
-            android:background="@android:color/transparent"
-            android:contentDescription="Home"
-            app:srcCompat="@drawable/btn_home_radio" />
+                <ImageView
+                    android:id="@+id/bt_home"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/btn_home_radio" />
+            </LinearLayout>
 
-        <ImageView
-            android:id="@+id/bt_notif"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_alignTop="@id/bt_home"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/_23sdp"
-            android:background="@android:color/transparent"
-            android:contentDescription="Notificações"
-            app:srcCompat="@drawable/btn_notif_radio" />
+            <ImageView
+                android:layout_width="@dimen/_130sdp"
+                android:layout_height="@dimen/_90sdp"
+                android:layout_marginStart="@dimen/_18sdp"
+                android:layout_marginEnd="@dimen/_18sdp"
+                app:srcCompat="@drawable/logo_radio" />
+
+            <LinearLayout
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/_15sdp">
+
+                <ImageView
+                    android:id="@+id/bt_menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/btn_menu_radio" />
+
+                <ImageView
+                    android:id="@+id/bt_notif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:padding="@dimen/_6sdp"
+                    app:srcCompat="@drawable/bt_notification" />
+            </LinearLayout>
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/rlPlayerContainer"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_180sdp"
-            android:layout_below="@id/ivLogoRadio">
+            android:layout_below="@id/ll_top">
 
             <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottie_audio2"
                 android:layout_width="@dimen/_65sdp"
                 android:layout_height="@dimen/_80sdp"
                 android:layout_alignStart="@+id/cover_placeholder"
@@ -123,6 +132,7 @@
             </ImageView>
 
             <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottie_audio1"
                 android:layout_width="@dimen/_65sdp"
                 android:layout_height="@dimen/_80sdp"
                 android:layout_alignEnd="@+id/cover_placeholder"
@@ -148,8 +158,7 @@
                     android:layout_height="@dimen/_120sdp"
                     android:contentDescription="Apresentador"
                     android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/ic_launcher"
-                    />
+                    app:srcCompat="@drawable/ic_launcher" />
 
             </androidx.cardview.widget.CardView>
 
@@ -201,19 +210,19 @@
 
             <ProgressBar
                 android:id="@+id/progress_bar"
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
-                android:layout_marginStart="@dimen/_40sdp"
-                android:layout_marginTop="@dimen/_30sdp"
-                android:background="@drawable/border_progress"
-                android:padding="@dimen/_3sdp" />
+                android:layout_width="@dimen/_55sdp"
+                android:layout_height="@dimen/_55sdp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/border_progress" />
+
         </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/llInfoPrograma"
                 android:layout_width="@dimen/_180sdp"
                 android:layout_height="@dimen/_50sdp"
-                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:background="@drawable/forma_prog_radio"
                 android:orientation="horizontal"
                 android:layout_below="@+id/rlPlayerContainer"
@@ -263,9 +272,9 @@
 
             <RelativeLayout
                 android:id="@+id/llInfoMusica"
-                android:layout_width="@dimen/_100sdp"
+                android:layout_width="@dimen/_110sdp"
                 android:layout_height="@dimen/_40sdp"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:layout_alignParentEnd="true"
                 android:layout_below="@+id/rlPlayerContainer">
 
@@ -277,7 +286,7 @@
 
                 <TextView
                     android:id="@+id/music_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/TextRun"
                     android:layout_marginTop="@dimen/_2sdp"
@@ -285,6 +294,12 @@
                     android:text="Nome música"
                     android:textColor="#4A1D1F"
                     android:textSize="@dimen/_9sdp"
+                    android:maxLines="1"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     app:fontFamily="@font/montserrat_bold" />
 
                 </RelativeLayout>
@@ -302,7 +317,7 @@
         <RelativeLayout
             android:id="@+id/rl_publi_live"
             android:layout_width="@dimen/_280sdp"
-            android:layout_height="@dimen/_110sdp"
+            android:layout_height="@dimen/_90sdp"
             android:layout_above="@+id/rlNavBar"
             android:layout_centerInParent="true">
 
@@ -312,7 +327,6 @@
                 android:layout_height="@dimen/_25sdp"
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="@dimen/_8sdp"
                 app:srcCompat="@drawable/btn_assita_radio" />
 
             <androidx.cardview.widget.CardView
@@ -321,7 +335,7 @@
                 android:layout_height="@dimen/_50sdp"
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_below="@+id/btn_watch_now"
-                android:layout_marginTop="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
                 app:cardCornerRadius="@dimen/_10sdp"
                 app:cardElevation="@dimen/_5sdp">
@@ -342,94 +356,13 @@
 
         </RelativeLayout>
 
-
-        <RelativeLayout
+        <include
             android:id="@+id/rlNavBar"
+            layout="@layout/item_bottom_nav"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/forma_barra_bottom">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_55sdp"
-                android:layout_alignParentBottom="true"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:weightSum="6">
-
-                <ImageView
-                    android:id="@+id/bt_promotion"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_30sdp"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:focusable="true"
-                    app:srcCompat="@drawable/btn_promo_barra_off" />
-
-                <ImageView
-                    android:layout_width="@dimen/_2sdp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/traco_barra" />
-
-                <ImageView
-                    android:id="@+id/bt_news"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_20sdp"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:focusable="true"
-                    app:srcCompat="@drawable/btn_noticia_barra_off" />
-
-                <ImageView
-                    android:layout_width="@dimen/_2sdp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/traco_barra" />
-
-                <ImageView
-                    android:id="@+id/bt_radio"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_25sdp"
-                    android:layout_weight="2"
-                    android:background="@android:color/transparent"
-                    android:focusable="true"
-                    app:srcCompat="@drawable/btn_ao_vivo_barra_on" />
-
-                <ImageView
-                    android:layout_width="@dimen/_2sdp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/traco_barra" />
-
-                <ImageView
-                    android:id="@+id/bt_program"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_20sdp"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:focusable="true"
-                    app:srcCompat="@drawable/btn_prog_barra_off" />
-
-                <ImageView
-                    android:layout_width="@dimen/_2sdp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/traco_barra" />
-
-                <ImageView
-                    android:id="@+id/bt_wpp"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_20sdp"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:focusable="true"
-                    app:srcCompat="@drawable/btn_wp_barra" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
+            android:elevation="@dimen/_8sdp"
+            android:layout_height="@dimen/_50sdp" />
 
     </RelativeLayout>
 

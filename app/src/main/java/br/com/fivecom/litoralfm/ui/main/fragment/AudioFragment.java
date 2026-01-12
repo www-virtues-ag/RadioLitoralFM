@@ -42,6 +42,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import br.com.fivecom.litoralfm.R;
+import br.com.fivecom.litoralfm.models.Data;
 import br.com.fivecom.litoralfm.ui.choose.ChooseFragment;
 import br.com.fivecom.litoralfm.ui.main.MainActivity;
 import br.com.fivecom.litoralfm.ui.main.MediaActivity;
@@ -52,6 +53,10 @@ import br.com.fivecom.litoralfm.services.ProgramacaoAPIService;
 import br.com.fivecom.litoralfm.utils.constants.Constants;
 import br.com.fivecom.litoralfm.utils.constants.Extras;
 import br.com.fivecom.litoralfm.utils.core.Intents;
+import br.com.fivecom.litoralfm.utils.core.WebViewCacheManager;
+import br.com.fivecom.litoralfm.utils.LottieHelper;
+import br.com.fivecom.litoralfm.utils.ServiceManager;
+import br.com.fivecom.litoralfm.utils.PrefsCache;
 import br.com.fivecom.litoralfm.utils.requests.RequestListener;
 import br.com.fivecom.litoralfm.utils.requests.RequestManager;
 
@@ -78,7 +83,9 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
     private TextView musicName;
     private CircularVolumeSeekBar volumeSeekBar;
     private CardView coverPlaceholder;
-    private ImageView btnNav1, btnNav2, btnNav3, btnNav4, btnNav5;
+    // Bottom nav (agora são LinearLayout no include)
+    private View btnNav1, btnNav2, btnNav3, btnNav4, btnNav5;
+    private ImageView btnWatchNow;
     private ProgressBar progressBar;
     private WebView webView;
 
@@ -89,8 +96,8 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
     private Handler metadataHandler;
     private Runnable metadataRunnable;
     private String currentSong = "";
-    private String currentProgram = "Rádio Litoral";
-    private String currentHost = "Ao Vivo";
+    private String currentProgram = "Radio Litoral FM";
+    private String currentHost = "Na litoral eu to legal";
     private String currentAlbumArtUrl = "";
     private MediaControllerCompat controller;
 
@@ -195,8 +202,12 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
         setupVolumeSeekBar();
         setupClickListeners();
         setupWebView();
+        updateWatchNowButtonVisibility();
         startMetadataUpdates();
         attachMediaController();
+        
+        // Aplica o estado de animação nos Lotties
+        applyLottieAnimationState();
 
         // Registra como listener da MediaActivity para receber callbacks de metadados/estado
         if (getActivity() instanceof MediaActivity) {
@@ -208,20 +219,28 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
     public void onStart() {
         super.onStart();
         attachMediaController();
+        updateWatchNowButtonVisibility();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         attachMediaController();
+        
+        // Cancela handlers quando fragment é pausado (garantia extra)
+        if (metadataHandler != null && metadataRunnable != null) {
+            metadataHandler.removeCallbacks(metadataRunnable);
+        }
 
         // Atualizar volume inicial + iniciar sync contínuo
         updateVolumeFromSystem();
         startVolumeSync();
+        
+        // Atualiza o estado dos Lotties quando o fragment volta a ficar visível
+        applyLottieAnimationState();
 
-        // Verifica se o usuário trocou de rádio no ChooseFragment
-        int savedRadioId = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                .getInt(KEY_RADIO_ID, selectedRadioId);
+        // Verifica se o usuário trocou de rádio no ChooseFragment (usa cache)
+        int savedRadioId = PrefsCache.getRadioId(requireContext());
 
         if (savedRadioId != lastSelectedRadioId && lastSelectedRadioId != -1) {
             Log.d(TAG, "🔄 Rádio mudou de " + lastSelectedRadioId + " para " + savedRadioId);
@@ -232,17 +251,53 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
             // Força o MediaService a trocar de rádio
             switchRadioStream();
 
+            // Atualiza a visibilidade do botão watch now
+            updateWatchNowButtonVisibility();
+
             lastSelectedRadioId = savedRadioId;
         } else if (lastSelectedRadioId == -1) {
             lastSelectedRadioId = savedRadioId;
+            // Atualiza a visibilidade do botão watch now na primeira vez
+            updateWatchNowButtonVisibility();
+        }
+        
+        // Retoma o WebView do banner e verifica se precisa recarregar
+        if (webView != null) {
+            webView.onResume();
+            // Se o WebView está visível mas perdeu o conteúdo, recarrega
+            if (webView.getVisibility() == View.VISIBLE && 
+                (webView.getUrl() == null || webView.getUrl().isEmpty())) {
+                Log.d(TAG, "🔄 WebView do banner perdeu conteúdo, recarregando...");
+                setupWebView();
+            }
         }
     }
 
     @Override
     public void onStop() {
         stopVolumeSync();
+        
+        // Cancela handlers quando fragment é pausado
+        if (metadataHandler != null && metadataRunnable != null) {
+            metadataHandler.removeCallbacks(metadataRunnable);
+        }
+        
         detachMediaController();
         super.onStop();
+    }
+    
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Cancela handlers quando fragment é pausado
+        if (metadataHandler != null && metadataRunnable != null) {
+            metadataHandler.removeCallbacks(metadataRunnable);
+        }
+        stopVolumeSync();
+        // Pausa o WebView do banner quando o fragment é pausado
+        if (webView != null && webView.getVisibility() == View.VISIBLE) {
+            webView.onPause();
+        }
     }
 
     @Override
@@ -252,9 +307,17 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
             ((MediaActivity) getActivity()).removeMediaStateListener(this);
         }
 
-        if (metadataHandler != null && metadataRunnable != null) {
-            metadataHandler.removeCallbacks(metadataRunnable);
+        // Cancela todos os handlers
+        if (metadataHandler != null) {
+            metadataHandler.removeCallbacksAndMessages(null);
+            metadataHandler = null;
         }
+        metadataRunnable = null;
+        
+        if (volumeHandler != null) {
+            volumeHandler.removeCallbacksAndMessages(null);
+        }
+        volumeRunnable = null;
 
         stopVolumeSync();
 
@@ -269,7 +332,15 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
         musicName = null;
         volumeSeekBar = null;
         progressBar = null;
-        webView = null;
+        
+        // Pausa o WebView do banner mas NÃO destrói para manter o carregamento entre navegações
+        if (webView != null) {
+            webView.onPause();
+            // Não seta como null para manter o banner carregado entre navegações
+            // webView = null;
+        }
+        
+        isMediaControllerAttached = false;
 
         super.onDestroyView();
     }
@@ -312,7 +383,14 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
         });
     }
 
+    private boolean isMediaControllerAttached = false;
+    
     private void attachMediaController() {
+        // Evita múltiplas chamadas desnecessárias
+        if (isMediaControllerAttached && controller != null) {
+            return;
+        }
+        
         try {
             controller = MediaControllerCompat.getMediaController(requireActivity());
             if (controller != null) {
@@ -322,6 +400,7 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
                 if (metadata != null) {
                     onMetadataChanged(metadata);
                 }
+                isMediaControllerAttached = true;
             }
         } catch (Exception ignored) {
         }
@@ -381,12 +460,15 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
         btnNav2 = view.findViewById(R.id.bt_news);
         btnNav3 = view.findViewById(R.id.bt_radio);
         btnNav4 = view.findViewById(R.id.bt_program);
-        btnNav5 = view.findViewById(R.id.bt_wpp);
+        btnNav5 = view.findViewById(R.id.bt_whatsapp);
+
+        btnWatchNow = view.findViewById(R.id.btn_watch_now);
 
         webView = view.findViewById(R.id.webView);
 
         requestManager = new RequestManager();
-        programacaoAPIService = new ProgramacaoAPIService();
+        // Usa ServiceManager para compartilhar instância
+        programacaoAPIService = ServiceManager.getProgramacaoService();
         programacaoAPIService.setCallback(new ProgramacaoAPIService.ProgramacaoAPICallback() {
             @Override
             public void onProgramasLoaded(List<ProgramaAPI> programas) {
@@ -406,13 +488,22 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
                 Log.e(TAG, "Erro ao buscar programação: " + errorMessage);
                 if (getActivity() == null) return;
                 requireActivity().runOnUiThread(() -> {
-                    currentProgram = "Rádio Litoral";
-                    currentHost = "Ao Vivo";
+                    currentProgram = "Radio Litoral FM";
+                    currentHost = "Na litoral eu to legal";
                     updateProgramInfo();
                 });
             }
         });
         metadataHandler = new Handler(Looper.getMainLooper());
+        
+        // Configura o TextView music_name para o marquee funcionar
+        if (musicName != null) {
+            musicName.setSelected(true);
+            musicName.setEllipsize(android.text.TextUtils.TruncateAt.MARQUEE);
+            musicName.setMarqueeRepeatLimit(-1); // marquee_forever
+            musicName.setSingleLine(true);
+            musicName.setHorizontallyScrolling(true);
+        }
     }
 
     private void setupAudioManager() {
@@ -503,6 +594,24 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
         if (btnNav3 != null) btnNav3.setOnClickListener(this);
         if (btnNav4 != null) btnNav4.setOnClickListener(this);
         if (btnNav5 != null) btnNav5.setOnClickListener(this);
+        if (btnWatchNow != null) btnWatchNow.setOnClickListener(this);
+    }
+
+    /**
+     * Atualiza a visibilidade do botão "watch now" baseado no ID da rádio
+     * O botão só aparece para a rádio "Grande Vitória" (ID 10223)
+     */
+    private void updateWatchNowButtonVisibility() {
+        if (btnWatchNow == null) return;
+
+        // Usa cache para evitar leituras repetidas de SharedPreferences
+        int currentRadioId = PrefsCache.getRadioId(requireContext());
+
+        // Mostra o botão apenas para Grande Vitória (ID 10223)
+        boolean isGrandeVitoria = (currentRadioId == 10223);
+        btnWatchNow.setVisibility(isGrandeVitoria ? View.VISIBLE : View.GONE);
+
+        Log.d(TAG, "📺 Botão watch now: " + (isGrandeVitoria ? "VISÍVEL" : "OCULTO") + " (Rádio ID: " + currentRadioId + ")");
     }
 
     /**
@@ -516,7 +625,7 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
-        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT); // Usa cache quando disponível
         settings.setDomStorageEnabled(true);
 
         webView.setWebViewClient(new WebViewClient() {
@@ -551,8 +660,29 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
                     "Android " + Build.VERSION.RELEASE,
                     Build.MANUFACTURER + " - " + Build.MODEL
             );
-            webView.loadUrl(pubUrl);
-            Log.d(TAG, "✅ WebView carregando URL: " + pubUrl);
+            
+            // Verifica se a URL já está carregada na WebView
+            String currentUrl = webView.getUrl();
+            // Se já tem conteúdo e a URL é a mesma, não precisa recarregar
+            if (currentUrl != null && !currentUrl.isEmpty() && currentUrl.equals(pubUrl)) {
+                Log.d(TAG, "✅ WebView do banner já tem o conteúdo correto, mantendo carregado: " + currentUrl);
+                return; // Já tem o conteúdo correto, não precisa recarregar
+            }
+            boolean urlChanged = !pubUrl.equals(currentUrl);
+            
+            // Verifica se precisa recarregar baseado no cache manager
+            boolean shouldReload = WebViewCacheManager.shouldReload(requireContext(), pubUrl);
+            
+            // Só recarrega se a URL mudou ou se o cache expirou
+            if (urlChanged || shouldReload) {
+                webView.setVisibility(View.VISIBLE);
+                webView.loadUrl(pubUrl);
+                Log.d(TAG, "✅ WebView carregando URL: " + pubUrl + (urlChanged ? " (URL mudou)" : " (cache expirado)"));
+            } else {
+                // URL já está carregada e cache ainda válido, apenas torna visível
+                webView.setVisibility(View.VISIBLE);
+                Log.d(TAG, "⏭️ WebView usando cache para URL: " + pubUrl);
+            }
         } else {
             Log.w(TAG, "⚠️ Dados da rádio não disponíveis para carregar o banner");
             webView.setVisibility(View.GONE);
@@ -568,9 +698,9 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
         if (id == R.id.bt_play) {
             togglePlayPause();
         } else if (id == R.id.bt_back) {
-            // Navega para o MainFragment
+            // Usa handleBackPress para navegação correta com back stack
             if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.MAIN);
+                ((MainActivity) getActivity()).handleBackPress();
             }
         } else if (id == R.id.bt_menu) {
             if (getActivity() instanceof MainActivity) {
@@ -591,8 +721,13 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
             // Já está na tela de rádio
         } else if (id == R.id.bt_program) {
             navigateToSchedule();
-        } else if (id == R.id.bt_wpp) {
-            openWhatsApp();
+        } else if (id == R.id.bt_whatsapp) {
+            openWhatsAppFromFirebase();
+        } else if (id == R.id.btn_watch_now) {
+            // Navega para o RadioFragment (vídeo)
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).navigateToFragment(MainActivity.FRAGMENT.RADIO);
+            }
         }
     }
 
@@ -628,21 +763,14 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
         }
     }
 
-    private void openWhatsApp() {
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(android.net.Uri.parse("https://wa.me/5527999999999"));
-            intent.setPackage("com.whatsapp");
-            startActivity(intent);
-        } catch (android.content.ActivityNotFoundException e) {
-            // Se o WhatsApp não estiver instalado, tenta abrir no navegador
-            try {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(android.net.Uri.parse("https://wa.me/5527999999999"));
-                startActivity(intent);
-            } catch (Exception ex) {
-                // Ignora
-            }
+    private void openWhatsAppFromFirebase() {
+        if (data == null || data.radios == null || Constants.ID < 0 || Constants.ID >= data.radios.size()) {
+            return;
+        }
+
+        Data.Radios radio = data.radios.get(Constants.ID);
+        if (radio.whatsapp != null && !radio.whatsapp.isEmpty()) {
+            Intents.app(requireContext(), Intents.Social.WHATSAPP, radio.whatsapp);
         }
     }
 
@@ -669,8 +797,8 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
         }
 
         currentSong = "";
-        currentProgram = "Rádio Litoral";
-        currentHost = "Ao Vivo";
+        currentProgram = "Radio Litoral FM";
+        currentHost = "Na litoral eu to legal";
         currentAlbumArtUrl = "";
 
         updateProgramInfo();
@@ -695,7 +823,7 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
     // ======================= METADADOS ======================= //
 
     private void startMetadataUpdates() {
-        updateMetadata("Rádio Litoral", "Ao Vivo", "");
+        updateMetadata("Radio Litoral FM", "Na litoral eu to legal", "Na Litoral eu tô legal");
 
         metadataRunnable = new Runnable() {
             @Override
@@ -727,8 +855,8 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
             programacaoAPIService.fetchProgramacao(radioIdForApi, "");
         } catch (Exception e) {
             Log.e(TAG, "Erro ao montar requisição do programa atual", e);
-            currentProgram = "Rádio Litoral";
-            currentHost = "Ao Vivo";
+            currentProgram = "Radio Litoral FM";
+            currentHost = "Na litoral eu to legal";
             updateProgramInfo();
         }
     }
@@ -738,8 +866,8 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
      */
     private void encontrarProgramaAtual(List<ProgramaAPI> programas) {
         if (programas == null || programas.isEmpty()) {
-            currentProgram = "Rádio Litoral";
-            currentHost = "Ao Vivo";
+            currentProgram = "Radio Litoral FM";
+            currentHost = "Na litoral eu to legal";
             updateProgramInfo();
             Log.d(TAG, "⚠️ Nenhum programa encontrado, usando placeholders");
             return;
@@ -840,19 +968,19 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
         if (programaAtual != null) {
             currentProgram = (programaAtual.getTitle() != null && !programaAtual.getTitle().isEmpty())
                     ? programaAtual.getTitle()
-                    : "Rádio Litoral";
+                    : "Radio Litoral FM";
 
             currentHost = (programaAtual.getNmLocutor() != null && !programaAtual.getNmLocutor().isEmpty())
                     ? programaAtual.getNmLocutor()
-                    : "Ao Vivo";
+                    : "Na litoral eu to legal";
 
             Log.d(TAG, "✅ Programa atual: " + currentProgram +
                     " com " + currentHost +
                     " (" + programaAtual.getHrInicio() +
                     " até " + programaAtual.getHrFinal() + ")");
         } else {
-            currentProgram = "Rádio Litoral";
-            currentHost = "Ao Vivo";
+            currentProgram = "Radio Litoral FM";
+            currentHost = "Na litoral eu to legal";
             Log.d(TAG, "⚠️ Nenhum programa no ar, usando placeholders");
         }
 
@@ -891,7 +1019,7 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
             nameProgram.setText(
                     currentProgram != null && !currentProgram.isEmpty()
                             ? currentProgram
-                            : "Rádio Litoral"
+                            : "Radio Litoral FM"
             );
         }
 
@@ -899,7 +1027,7 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
             nameLocutor.setText(
                     currentHost != null && !currentHost.isEmpty()
                             ? currentHost
-                            : "Ao Vivo"
+                            : "Na litoral eu to legal"
             );
         }
 
@@ -908,11 +1036,17 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
 
     private void updateSongInfo() {
         if (musicName != null) {
-            musicName.setText(
-                    currentSong != null && !currentSong.isEmpty()
-                            ? currentSong
-                            : ""
-            );
+            String textToShow = currentSong != null && !currentSong.isEmpty()
+                    ? currentSong
+                    : "Na Litoral eu tô legal";
+            
+            musicName.setText(textToShow);
+            
+            // Garante que o TextView tenha foco para o marquee funcionar
+            if (textToShow.length() > 0) {
+                musicName.setSelected(true);
+                musicName.requestFocus();
+            }
         }
 
         Log.d(TAG, "🎵 Música atualizada: " + currentSong);
@@ -939,6 +1073,20 @@ public class AudioFragment extends Fragment implements View.OnClickListener, Med
             Glide.with(requireContext())
                     .load(R.drawable.ic_launcher)
                     .into(coverAlbum);
+        }
+    }
+    
+    /**
+     * Aplica o estado de animação nos Lotties baseado no modo estático
+     */
+    private void applyLottieAnimationState() {
+        if (getView() != null) {
+            LottieHelper.setAnimationStateForLotties(
+                getView(),
+                requireContext(),
+                R.id.lottie_audio1,
+                R.id.lottie_audio2
+            );
         }
     }
 }
